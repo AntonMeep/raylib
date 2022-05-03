@@ -1,4 +1,4 @@
-with Interfaces.C; use Interfaces.C;
+with Interfaces;
 
 package RayLib is
    Version : constant String := "4.0";
@@ -28,8 +28,10 @@ package RayLib is
    end record with
       Convention => C_Pass_By_Copy;
 
+   subtype Unsigned_8 is Interfaces.Unsigned_8;
+
    type Color is record
-      R, G, B, A : unsigned_char;
+      R, G, B, A : Unsigned_8;
    end record with
       Convention => C_Pass_By_Copy;
 
@@ -37,8 +39,6 @@ package RayLib is
       X, Y, Width, Height : Float;
    end record with
       Convention => C_Pass_By_Copy;
-
-      --  TODO: rest of the definitons
 
    Light_Gray  : constant Color := (200, 200, 200, 255);
    Gray        : constant Color := (130, 130, 130, 255);
@@ -88,12 +88,12 @@ package RayLib is
       Convention    => C,
       External_Name => "EndDrawing";
 
-   procedure Set_Target_FPS (FPS : int) with
+   procedure Set_Target_FPS (FPS : Natural) with
       Import        => True,
       Convention    => C,
       External_Name => "SetTargetFPS";
 
    procedure Draw_Text
-     (Text  : String; Position_X, Position_Y : int; Font_Size : int;
+     (Text  : String; Position_X, Position_Y : Natural; Font_Size : Natural;
       Color : RayLib.Color);
 end RayLib;

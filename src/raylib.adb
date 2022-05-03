@@ -27,7 +27,7 @@ package body RayLib is
    end Window_Should_Close;
 
    procedure Draw_Text
-     (Text  : String; Position_X, Position_Y : int; Font_Size : int;
+     (Text  : String; Position_X, Position_Y : Natural; Font_Size : Natural;
       Color : RayLib.Color)
    is
       procedure Internal
@@ -39,7 +39,9 @@ package body RayLib is
 
       Text_Copy : chars_ptr := New_String (Text);
    begin
-      Internal (Text_Copy, Position_X, Position_Y, Font_Size, Color);
+      Internal
+        (Text_Copy, int (Position_X), int (Position_Y), int (Font_Size),
+         Color);
       Free (Text_Copy);
    end Draw_Text;
 end RayLib;
