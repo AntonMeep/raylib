@@ -1386,7 +1386,7 @@ package RayLib is
    function Get_Window_Position return RayLib.Vector2;
 
    --  Get window scale DPI factor
-   function Get_Window_Scale_D_P_I return RayLib.Vector2;
+   function Get_Window_Scale_DPI return RayLib.Vector2;
 
    --  Get the human-readable, UTF-8 encoded name of the primary monitor
    function Get_Monitor_Name (Monitor : Integer) return String;
@@ -1552,10 +1552,10 @@ package RayLib is
       return RayLib.Vector2;
 
    --  Set target FPS (maximum)
-   procedure Set_Target_F_P_S (Fps : Integer);
+   procedure Set_Target_FPS (Fps : Integer);
 
    --  Get current FPS
-   function Get_F_P_S return Integer;
+   function Get_FPS return Integer;
 
    --  Get time in seconds for last frame drawn (delta time)
    function Get_Frame_Time return Float;
@@ -1691,7 +1691,7 @@ package RayLib is
    function Load_Storage_Value (Position : Natural) return Integer;
 
    --  Open URL with default system browser (if available)
-   procedure Open_U_R_L (Url : String);
+   procedure Open_URL (Url : String);
 
    --  Check if a key has been pressed once
    function Is_Key_Pressed (Key : Integer) return Boolean;
@@ -2190,7 +2190,7 @@ package RayLib is
      (Image : in out RayLib.Image; New_Width : Integer; New_Height : Integer);
 
    --  Resize image (Nearest-Neighbor scaling algorithm)
-   procedure Image_Resize_N_N
+   procedure Image_Resize_NN
      (Image : in out RayLib.Image; New_Width : Integer; New_Height : Integer);
 
    --  Resize canvas and fill with color
@@ -2429,10 +2429,10 @@ package RayLib is
      (Normalized : RayLib.Vector4) return RayLib.Color;
 
    --  Get HSV values for a Color, hue [0..360], saturation/value [0..1]
-   function Color_To_H_S_V (Color : RayLib.Color) return RayLib.Vector3;
+   function Color_To_HSV (Color : RayLib.Color) return RayLib.Vector3;
 
    --  Get a Color from HSV values, hue [0..360], saturation/value [0..1]
-   function Color_From_H_S_V
+   function Color_From_HSV
      (Hue : Float; Saturation : Float; Value : Float) return RayLib.Color;
 
    --  Get color with alpha applied, alpha goes from 0.0f to 1.0f
@@ -2487,7 +2487,7 @@ package RayLib is
      (Font : RayLib.Font; File_Name : String) return Boolean;
 
    --  Draw current FPS
-   procedure Draw_F_P_S (Pos_X : Integer; Pos_Y : Integer);
+   procedure Draw_FPS (Pos_X : Integer; Pos_Y : Integer);
 
    --  Draw text (using default font)
    procedure Draw_Text
@@ -2548,7 +2548,7 @@ package RayLib is
      (Text : String; Bytes_Processed : out Integer) return Integer;
 
    --  Encode one codepoint into UTF-8 byte array (array length returned as parameter)
-   function Codepoint_To_U_T_F8 (Codepoint : Integer) return String;
+   function Codepoint_To_UTF8 (Codepoint : Integer) return String;
 
    --  Encode text as codepoints array into UTF-8 text string (WARNING: memory must be freed!)
    function Text_Codepoints_To_UTF8 (Codepoints : Integer_Array) return String;
