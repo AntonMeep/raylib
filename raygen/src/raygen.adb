@@ -76,6 +76,42 @@ procedure RayGen is
          return "Unsigned_8";
       elsif Equal_Case_Insensitive (Value, "void *") then
          return "System.Address";
+      elsif Equal_Case_Insensitive (Value, "char[32]") then
+         return "String(1 .. 32)";
+      elsif Equal_Case_Insensitive (Value, "rectangle *") then
+         return "Rectangle_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "materialmap *") then
+         return "Material_Map_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "glyphinfo *") then
+         return "Glyph_Info_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "mesh *") then
+         return "Mesh_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "material *") then
+         return "Material_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "boneinfo *") then
+         return "Bone_Info_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "transform *") then
+         return "Transform_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "transform **") then
+         return "Transform_Array_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "matrix[2]") then
+         return "Matrix_Array(1 .. 2)";
+      elsif Equal_Case_Insensitive (Value, "float *") then
+         return "Float_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "float[4]") then
+         return "Float_Array(1 .. 4)";
+      elsif Equal_Case_Insensitive (Value, "float[2]") then
+         return "Float_Array(1 .. 2)";
+      elsif Equal_Case_Insensitive (Value, "unsigned int *") then
+         return "Natural_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "unsigned short *") then
+         return "Unsigned_16_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "int *") then
+         return "Integer_Array_Access";
+      elsif Equal_Case_Insensitive (Value, "raudiobuffer *")
+        or else Equal_Case_Insensitive (Value, "raudioprocessor *")
+      then
+         return "System.Address";
       elsif Index (Value, "*") /= 0 or else Index (Value, "[") /= 0 then
          return Value & " --  not sure here";
       else
@@ -167,6 +203,38 @@ begin
       Put_Line
         (Output_Spec.all,
          INDENT & "subtype Unsigned_8 is Interfaces.Unsigned_8;");
+      Put_Line
+        (Output_Spec.all,
+         INDENT & "subtype Unsigned_16 is Interfaces.Unsigned_16;");
+      New_Line (Output_Spec.all);
+      Put_Line
+        (Output_Spec.all,
+         INDENT &
+         "type Unsigned_16_Array is array (Natural range <>) of Unsigned_16;");
+      Put_Line
+        (Output_Spec.all,
+         INDENT &
+         "type Unsigned_16_Array_Access is access all Unsigned_16_Array;");
+      Put_Line
+        (Output_Spec.all,
+         INDENT & "type Float_Array is array (Natural range <>) of Float;");
+      Put_Line
+        (Output_Spec.all,
+         INDENT & "type Float_Array_Access is access all Float_Array;");
+      Put_Line
+        (Output_Spec.all,
+         INDENT &
+         "type Natural_Array is array (Natural range <>) of Natural;");
+      Put_Line
+        (Output_Spec.all,
+         INDENT & "type Natural_Array_Access is access all Natural_Array;");
+      Put_Line
+        (Output_Spec.all,
+         INDENT &
+         "type Integer_Array is array (Natural range <>) of Integer;");
+      Put_Line
+        (Output_Spec.all,
+         INDENT & "type Integer_Array_Access is access all Integer_Array;");
       New_Line (Output_Spec.all);
 
       Put_Line ("> Processing struct definitions");
@@ -194,9 +262,19 @@ begin
             end if;
          end loop;
 
+         Put_Line (Output_Spec.all, INDENT & "end record;");
+         New_Line (Output_Spec.all);
+
          Put_Line
            (Output_Spec.all,
-            INDENT & "end record with Convention => C_Pass_By_Copy;");
+            INDENT & "type " & To_Ada_Name (Struct ("name")) &
+            "_Array is array (Natural range <>) of " &
+            To_Ada_Name (Struct ("name")) & ";");
+         Put_Line
+           (Output_Spec.all,
+            INDENT & "type " & To_Ada_Name (Struct ("name")) &
+            "_Array_Access is access all " & To_Ada_Name (Struct ("name")) &
+            "_Array;");
          New_Line (Output_Spec.all);
       end loop;
 
