@@ -8,3 +8,12 @@ tags = ["game", "gamedev", "graphics", "opengl"]
 authors = ["Anton Fediushin"]
 maintainers = ["Anton Fediushin <imantonmeep@gmail.com>"]
 maintainers-logins = ["AntonMeep"]
+
+[gpr-externals]
+RAYLIB_OS = ["windows", "linux", "macos"]
+[gpr-set-externals."case(os)".windows]
+RAYLIB_OS = "windows"
+[gpr-set-externals."case(os)".linux]
+RAYLIB_OS = "linux"
+[gpr-set-externals."case(os)".macos]
+RAYLIB_OS = "macos"

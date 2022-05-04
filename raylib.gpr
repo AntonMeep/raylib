@@ -19,6 +19,9 @@ project RayLib is
    type Build_Kind is ("debug", "optimize");
    Build_Mode : Build_Kind := External ("RAYLIB_BUILD_MODE", "optimize");
 
+   type OS_Kind is ("windows", "linux", "macos");
+   OS : OS_Kind := External ("RAYLIB_OS", "linux");
+
    Source_Files := (
       "raylib.ads",
       "raylib.adb"
@@ -105,6 +108,13 @@ project RayLib is
    end Binder;
 
    package Linker is
-      for Linker_Options use ("-lwinmm", "-lgdi32");
+      case OS is
+         when "windows" =>
+            for Linker_Options use ("-lopengl32", "-lgdi32", "-lwinmm");
+         when "linux" =>
+            for Linker_Options use ("-lX11", "-lGL", "-lc", "-lm", "-lpthread", "-ldl", "-lrt");
+         when "macos" =>
+            for Linker_Options use ("-framework OpenGL", "-framework Cocoa", "-framework IOKit", "-framework CoreAudio", "-framework CoreVideo");
+      end case;
    end Linker;
 end RayLib;
