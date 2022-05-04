@@ -68,14 +68,18 @@ procedure RayGen is
          return "Natural";
       elsif Equal_Case_Insensitive (Value, "bool") then
          return "Boolean";
+      elsif Equal_Case_Insensitive (Value, "float") then
+         return "Float";
       elsif Equal_Case_Insensitive (Value, "unsigned char *") then
          return "Stream_Element_Array";
       elsif Equal_Case_Insensitive (Value, "unsigned char") then
          return "Unsigned_8";
       elsif Equal_Case_Insensitive (Value, "void *") then
          return "System.Address";
+      elsif Index (Value, "*") /= 0 or else Index (Value, "[") /= 0 then
+         return Value & " --  not sure here";
       else
-         return To_Train_Case (Value);
+         return "RayLib." & To_Train_Case (Value);
       end if;
    end Adaify_Type;
 
@@ -88,12 +92,14 @@ procedure RayGen is
          return "Natural";
       elsif Equal_Case_Insensitive (Value, "bool") then
          return "Boolean";
+      elsif Equal_Case_Insensitive (Value, "float") then
+         return "Float";
       elsif Equal_Case_Insensitive (Value, "const char *") then
          return "String";
       elsif Equal_Case_Insensitive (Value, "unsigned char *") then
          return "Stream_Element_Array";
       else
-         return To_Train_Case (Value);
+         return "RayLib." & To_Train_Case (Value);
       end if;
    end Adaify_Parameter;
 
@@ -151,7 +157,17 @@ begin
    begin
       Put_Line ("Successfully opened " & Args.String_Value ("INFILE"));
 
+      Put_Line (Output_Spec.all, "with Ada.Streams; use Ada.Streams;");
+      Put_Line (Output_Spec.all, "with Ada.Calendar; use Ada.Calendar;");
+      New_Line (Output_Spec.all);
+      Put_Line (Output_Spec.all, "with Interfaces;");
+      Put_Line (Output_Spec.all, "with System;");
+      New_Line (Output_Spec.all);
       Put_Line (Output_Spec.all, "package RayLib is");
+      Put_Line
+        (Output_Spec.all,
+         INDENT & "subtype Unsigned_8 is Interfaces.Unsigned_8;");
+      New_Line (Output_Spec.all);
 
       Put_Line ("> Processing struct definitions");
       for Struct of Value ("structs") loop
@@ -178,7 +194,53 @@ begin
             end if;
          end loop;
 
-         Put_Line (Output_Spec.all, "   end record;");
+         Put_Line
+           (Output_Spec.all,
+            INDENT & "end record with Convention => C_Pass_By_Copy;");
+         New_Line (Output_Spec.all);
+      end loop;
+
+      Put_Line ("> Processing aliases");
+      for Alias of Value ("aliases") loop
+         Put_Line (">> " & Alias ("name").Value);
+
+         if Alias ("description").Value /= "" then
+            Put_Line
+              (Output_Spec.all, INDENT & "--  " & Alias ("description").Value);
+         end if;
+         Put_Line
+           (Output_Spec.all,
+            INDENT & "subtype " & To_Ada_Name (Alias ("name")) & " is " &
+            To_Ada_Type (Alias ("type")) & ";");
+         New_Line (Output_Spec.all);
+      end loop;
+
+      Put_Line ("> Processing enumerations");
+      for Enum of Value ("enums") loop
+         Put_Line (">> " & Enum ("name").Value);
+
+         if Enum ("description").Value /= "" then
+            Put_Line
+              (Output_Spec.all, INDENT & "--  " & Enum ("description").Value);
+         end if;
+         Put_Line
+           (Output_Spec.all,
+            INDENT & "subtype " & To_Ada_Name (Enum ("name")) &
+            " is Integer;");
+         New_Line (Output_Spec.all);
+
+         for Entity of Enum ("values") loop
+            if Entity ("description").Value /= "" then
+               Put_Line
+                 (Output_Spec.all,
+                  INDENT & "--  " & Entity ("description").Value);
+            end if;
+            Put_Line
+              (Output_Spec.all,
+               INDENT & Entity ("name").Value & " : constant " &
+               To_Ada_Name (Enum ("name")) & " := " & Entity ("value").Image &
+               ";");
+         end loop;
          New_Line (Output_Spec.all);
       end loop;
 
