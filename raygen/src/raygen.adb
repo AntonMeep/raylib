@@ -66,15 +66,43 @@ procedure RayGen is
          return "Integer";
       elsif Equal_Case_Insensitive (Value, "unsigned int") then
          return "Natural";
+      elsif Equal_Case_Insensitive (Value, "bool") then
+         return "Boolean";
+      elsif Equal_Case_Insensitive (Value, "unsigned char *") then
+         return "Stream_Element_Array";
+      elsif Equal_Case_Insensitive (Value, "unsigned char") then
+         return "Unsigned_8";
+      elsif Equal_Case_Insensitive (Value, "void *") then
+         return "System.Address";
       else
          return To_Train_Case (Value);
       end if;
    end Adaify_Type;
 
+   function Adaify_Parameter (Value : String) return String is
+      use Ada.Strings;
+   begin
+      if Equal_Case_Insensitive (Value, "int") then
+         return "Integer";
+      elsif Equal_Case_Insensitive (Value, "unsigned int") then
+         return "Natural";
+      elsif Equal_Case_Insensitive (Value, "bool") then
+         return "Boolean";
+      elsif Equal_Case_Insensitive (Value, "const char *") then
+         return "String";
+      elsif Equal_Case_Insensitive (Value, "unsigned char *") then
+         return "Stream_Element_Array";
+      else
+         return To_Train_Case (Value);
+      end if;
+   end Adaify_Parameter;
+
    function To_Ada_Name (Value : JSON_Value) return String is
      (Adaify_Name (Value.Value));
    function To_Ada_Type (Value : JSON_Value) return String is
      (Adaify_Type (Value.Value));
+   function To_Ada_Parameter (Value : JSON_Value) return String is
+     (Adaify_Parameter (Value.Value));
 begin
    Args.Add_Option
      (Make_Boolean_Option, "help", 'h', Usage => "Display program help");
@@ -126,7 +154,6 @@ begin
       Put_Line (Output_Spec.all, "package RayLib is");
 
       Put_Line ("> Processing struct definitions");
-
       for Struct of Value ("structs") loop
          Put_Line (">> " & Struct ("name").Value);
 
@@ -152,6 +179,48 @@ begin
          end loop;
 
          Put_Line (Output_Spec.all, "   end record;");
+         New_Line (Output_Spec.all);
+      end loop;
+
+      Put_Line ("> Processing function definitions");
+      for Func of Value ("functions") loop
+         Put_Line (">> " & Func ("name").Value);
+
+         if Func ("description").Value /= "" then
+            Put_Line
+              (Output_Spec.all, INDENT & "--  " & Func ("description").Value);
+         end if;
+
+         if Func ("returnType").Value = "void" then
+            Put (Output_Spec.all, INDENT & "procedure ");
+         else
+            Put (Output_Spec.all, INDENT & "function ");
+         end if;
+
+         Put (Output_Spec.all, To_Ada_Name (Func ("name")));
+
+         if Func.Contains ("params") then
+            Put (Output_Spec.all, " (");
+
+            for I in 1 .. Func ("params").Length loop
+               if I /= 1 then
+                  Put (Output_Spec.all, "; ");
+               end if;
+               Put
+                 (Output_Spec.all,
+                  To_Ada_Name (Func ("params") (I) ("name")) & " : " &
+                  To_Ada_Parameter (Func ("params") (I) ("type")));
+            end loop;
+
+            Put (Output_Spec.all, ")");
+         end if;
+
+         if Func ("returnType").Value /= "void" then
+            Put
+              (Output_Spec.all,
+               " return " & To_Ada_Parameter (Func ("returnType")));
+         end if;
+         Put_Line (Output_Spec.all, ";");
          New_Line (Output_Spec.all);
       end loop;
 
