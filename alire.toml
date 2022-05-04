@@ -1,6 +1,9 @@
 name = "raylib"
 description = "Ada wrapper to raylib, a library to enjoy games programming"
-version = "0.0.0"
+version = "3.0.0"
+website = "https://github.com/AntonMeep/raylib"
+licenses = "Zlib"
+tags = ["game", "gamedev", "graphics", "opengl"]
 
 authors = ["Anton Fediushin"]
 maintainers = ["Anton Fediushin <imantonmeep@gmail.com>"]
