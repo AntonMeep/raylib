@@ -13,6 +13,8 @@ package RayLib is
 
    Max_Material_Maps : constant := 12;
    --  TODO: move to global configuration
+   Rl_Max_Shader_Locations : constant := 32;
+   --  TODO: move to global configuration
 
    Version : constant String := "4.0";
    --  Version of the underlying raylib
@@ -35,7 +37,6 @@ package RayLib is
    type Natural_Array is array (Natural range <>) of Natural;
    type Natural_Array_Access is access all Natural_Array;
    type Integer_Array is array (Natural range <>) of Integer;
-   type Integer_Array_Access is access all Integer_Array;
 
    type Vector2 is record
       X : Float;
@@ -287,9 +288,9 @@ package RayLib is
       --  Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
       Indices : Unsigned_16_Array_Access;
       --  Vertex indices (in case vertex data comes indexed)
-      Anim_Vertices : Float_Array_Access;
+      Anim_Vertices : Vector3_Array (1 .. Vertex_Count);
       --  Animated vertex positions (after bones transformations)
-      Anim_Normals : Float_Array_Access;
+      Anim_Normals : Vector3_Array (1 .. Vertex_Count);
       --  Animated normals (after bones transformations)
       Bone_Ids : access Stream_Element_Array;
       --  Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
@@ -303,12 +304,11 @@ package RayLib is
    --  Mesh, vertex data and vao/vbo
 
    type Mesh_Array is array (Natural range <>) of access Mesh;
-   type Mesh_Array_Access is access all Mesh_Array;
 
    type Shader is record
       Id : Natural;
       --  Shader program id
-      Locs : Integer_Array_Access;
+      Locs : Integer_Array (1 .. Rl_Max_Shader_Locations);
       --  Shader locations array (RL_MAX_SHADER_LOCATIONS)
    end record;
    --  Shader
@@ -324,7 +324,6 @@ package RayLib is
    --  MaterialMap
 
    type Material_Map_Array is array (Natural range <>) of Material_Map;
-   type Material_Map_Array_Access is access all Material_Map_Array;
 
    type Material is record
       Shader : RayLib.Shader;
@@ -337,7 +336,6 @@ package RayLib is
    --  Material, includes shader and maps
 
    type Material_Array is array (Natural range <>) of Material;
-   type Material_Array_Access is access all Material_Array;
 
    type Transform is record
       Translation : RayLib.Vector3;
@@ -350,10 +348,6 @@ package RayLib is
    --  Transform, vectex transformation data
 
    type Transform_Array is array (Natural range <>) of Transform;
-   type Transform_Array_Access is access all Transform_Array;
-   type Transform_Array_Array is
-     array (Natural range <>, Natural range <>) of Transform;
-   type Transform_Array_Array_Access is access all Transform_Array_Array;
 
    type Bone_Info is record
       Name : String (1 .. 32);
@@ -364,7 +358,6 @@ package RayLib is
    --  Bone, skeletal animation bone
 
    type Bone_Info_Array is array (Natural range <>) of Bone_Info;
-   type Bone_Info_Array_Access is access all Bone_Info_Array;
 
    type Model (Mesh_Count, Material_Count, Bone_Count : Natural) is record
       --  Number of meshes
@@ -376,11 +369,11 @@ package RayLib is
       --  Meshes array
       Materials : Material_Array (1 .. Material_Count);
       --  Materials array
-      Mesh_Material : Integer_Array_Access;
+      Mesh_Material : Integer_Array (1 .. Mesh_Count);
       --  Mesh material number
       Bones : Bone_Info_Array (1 .. Bone_Count);
       --  Bones information (skeleton)
-      Bind_Pose : Transform_Array_Access;
+      Bind_Pose : Transform_Array (1 .. Bone_Count);
       --  Bones base transformation (pose)
    end record;
    --  Model, meshes, materials and animation data
