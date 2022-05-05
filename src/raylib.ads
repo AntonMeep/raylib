@@ -1,8 +1,8 @@
 with Ada.Streams;  use Ada.Streams;
 with Ada.Calendar; use Ada.Calendar;
+with Ada.Containers.Indefinite_Holders;
 with Ada.Numerics;
 
-with Interfaces;
 with Interfaces.C;
 with System;
 
@@ -12,6 +12,8 @@ package RayLib is
    ------------------------------
 
    Max_Material_Maps : constant := 12;
+   --  TODO: move to global configuration
+   Max_Mesh_Vertex_Buffers : constant := 7;
    --  TODO: move to global configuration
    Rl_Max_Shader_Locations : constant := 32;
    --  TODO: move to global configuration
@@ -28,521 +30,17 @@ package RayLib is
    RAD2DEG : constant := 180.0 / Pi;
    --  Provded only for compatibility with raylib.h
 
-   subtype Unsigned_16 is Interfaces.Unsigned_16;
+   type OpenGL_Id is new Interfaces.C.unsigned;
 
-   type Unsigned_16_Array is array (Natural range <>) of Unsigned_16;
-   type Unsigned_16_Array_Access is access all Unsigned_16_Array;
+   type OpenGL_Id_Array is array (Natural range <>) of OpenGL_Id;
+
    type Float_Array is array (Natural range <>) of Float;
-   type Float_Array_Access is access all Float_Array;
-   type Natural_Array is array (Natural range <>) of Natural;
-   type Natural_Array_Access is access all Natural_Array;
+
    type Integer_Array is array (Natural range <>) of Integer;
-
-   type Vector2 is record
-      X : Float;
-      --  Vector x component
-      Y : Float;
-      --  Vector y component
-   end record;
-   --  Vector2, 2 components
-
-   type Vector2_Array is array (Natural range <>) of Vector2;
-
-   type Vector3 is record
-      X : Float;
-      --  Vector x component
-      Y : Float;
-      --  Vector y component
-      Z : Float;
-      --  Vector z component
-   end record;
-   --  Vector3, 3 components
-
-   type Vector3_Array is array (Natural range <>) of Vector3;
-
-   type Vector4 is record
-      X : Float;
-      --  Vector x component
-      Y : Float;
-      --  Vector y component
-      Z : Float;
-      --  Vector z component
-      W : Float;
-      --  Vector w component
-   end record;
-   --  Vector4, 4 components
-
-   subtype Quaternion is RayLib.Vector4;
-   --  Quaternion, 4 components (Vector4 alias)
-
-   type Vector4_Array is array (Natural range <>) of Vector4;
-
-   type Matrix is record
-      M0 : Float;
-      --  Matrix first row (4 components)
-      M4 : Float;
-      --  Matrix first row (4 components)
-      M8 : Float;
-      --  Matrix first row (4 components)
-      M12 : Float;
-      --  Matrix first row (4 components)
-      M1 : Float;
-      --  Matrix second row (4 components)
-      M5 : Float;
-      --  Matrix second row (4 components)
-      M9 : Float;
-      --  Matrix second row (4 components)
-      M13 : Float;
-      --  Matrix second row (4 components)
-      M2 : Float;
-      --  Matrix third row (4 components)
-      M6 : Float;
-      --  Matrix third row (4 components)
-      M10 : Float;
-      --  Matrix third row (4 components)
-      M14 : Float;
-      --  Matrix third row (4 components)
-      M3 : Float;
-      --  Matrix fourth row (4 components)
-      M7 : Float;
-      --  Matrix fourth row (4 components)
-      M11 : Float;
-      --  Matrix fourth row (4 components)
-      M15 : Float;
-      --  Matrix fourth row (4 components)
-   end record;
-   --  Matrix, 4x4 components, column major, OpenGL style, right handed
-
-   type Matrix_Array is array (Natural range <>) of Matrix;
 
    type Color_Component is mod 256;
    --  Single 8-bit color component
    for Color_Component'Size use 8;
-
-   type Color is record
-      R : Color_Component;
-      --  Color red value
-      G : Color_Component;
-      --  Color green value
-      B : Color_Component;
-      --  Color blue value
-      A : Color_Component;
-      --  Color alpha value
-   end record;
-   --  Color, 4 components, R8G8B8A8 (32bit)
-
-   type Color_Array is array (Natural range <>) of Color;
-
-   type Rectangle is record
-      X : Float;
-      --  Rectangle top-left corner position x
-      Y : Float;
-      --  Rectangle top-left corner position y
-      Width : Float;
-      --  Rectangle width
-      Height : Float;
-      --  Rectangle height
-   end record;
-   --  Rectangle, 4 components
-
-   type Rectangle_Array is array (Natural range <>) of Rectangle;
-
-   type Image is record
-      Data : System.Address;
-      --  Image raw data
-      Width : Integer;
-      --  Image base width
-      Height : Integer;
-      --  Image base height
-      Mipmaps : Integer;
-      --  Mipmap levels, 1 by default
-      Format : Integer;
-      --  Data format (PixelFormat type)
-   end record;
-   --  Image, pixel data stored in CPU memory (RAM)
-
-   type Texture is record
-      Id : Natural;
-      --  OpenGL texture id
-      Width : Integer;
-      --  Texture base width
-      Height : Integer;
-      --  Texture base height
-      Mipmaps : Integer;
-      --  Mipmap levels, 1 by default
-      Format : Integer;
-      --  Data format (PixelFormat type)
-   end record;
-   --  Texture, tex data stored in GPU memory (VRAM)
-
-   subtype Texture2D is RayLib.Texture;
-   --  Texture2D, same as Texture
-
-   subtype Texture_Cubemap is RayLib.Texture;
-   --  TextureCubemap, same as Texture
-
-   type Render_Texture is record
-      Id : Natural;
-      --  OpenGL framebuffer object id
-      Texture : RayLib.Texture;
-      --  Color buffer attachment texture
-      Depth : RayLib.Texture;
-      --  Depth buffer attachment texture
-   end record;
-   --  RenderTexture, fbo for texture rendering
-
-   subtype Render_Texture2D is RayLib.Render_Texture;
-   --  RenderTexture2D, same as RenderTexture
-
-   type N_Patch_Info is record
-      Source : RayLib.Rectangle;
-      --  Texture source rectangle
-      Left : Integer;
-      --  Left border offset
-      Top : Integer;
-      --  Top border offset
-      Right : Integer;
-      --  Right border offset
-      Bottom : Integer;
-      --  Bottom border offset
-      Layout : Integer;
-      --  Layout of the n-patch: 3x3, 1x3 or 3x1
-   end record;
-   --  NPatchInfo, n-patch layout info
-
-   type Glyph_Info is record
-      Value : Integer;
-      --  Character value (Unicode)
-      Offset_X : Integer;
-      --  Character offset X when drawing
-      Offset_Y : Integer;
-      --  Character offset Y when drawing
-      Advance_X : Integer;
-      --  Character advance position X
-      Image : RayLib.Image;
-      --  Character image data
-   end record;
-   --  GlyphInfo, font characters glyphs info
-
-   type Glyph_Info_Array is array (Natural range <>) of Glyph_Info;
-
-   type Font (Glyph_Count : Natural) is record
-      --  Number of glyph characters
-      Base_Size : Integer;
-      --  Base size (default chars height)
-      Glyph_Padding : Integer;
-      --  Padding around the glyph characters
-      Texture : RayLib.Texture2D;
-      --  Texture atlas containing the glyphs
-      Recs : Rectangle_Array (1 .. Glyph_Count);
-      --  Rectangles in texture for the glyphs
-      Glyphs : Glyph_Info_Array (1 .. Glyph_Count);
-      --  Glyphs info data
-   end record;
-   --  Font, font texture and GlyphInfo array data
-
-   type Camera3D is record
-      Position : RayLib.Vector3;
-      --  Camera position
-      Target : RayLib.Vector3;
-      --  Camera target it looks-at
-      Up : RayLib.Vector3;
-      --  Camera up vector (rotation over its axis)
-      Fovy : Float;
-      --  Camera field-of-view apperture in Y (degrees) in perspective, used as near plane width in orthographic
-      Projection : Integer;
-      --  Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
-   end record;
-   --  Camera, defines position/orientation in 3d space
-
-   subtype Camera is RayLib.Camera3D;
-   --  Camera type fallback, defaults to Camera3D
-
-   type Camera2D is record
-      Offset : RayLib.Vector2;
-      --  Camera offset (displacement from target)
-      Target : RayLib.Vector2;
-      --  Camera target (rotation and zoom origin)
-      Rotation : Float;
-      --  Camera rotation in degrees
-      Zoom : Float;
-      --  Camera zoom (scaling), should be 1.0f by default
-   end record;
-   --  Camera2D, defines position/orientation in 2d space
-
-   type Mesh (Vertex_Count : Natural) is record
-      --  Number of vertices stored in arrays
-      Triangle_Count : Integer;
-      --  Number of triangles stored (indexed or not)
-      Vertices : Vector3_Array (1 .. Vertex_Count);
-      --  Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
-      Texcoords : Vector2_Array (1 .. Vertex_Count);
-      --  Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-      Texcoords2 : Vector2_Array (1 .. Vertex_Count);
-      --  Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
-      Normals : Vector3_Array (1 .. Vertex_Count);
-      --  Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
-      Tangents : Vector4_Array (1 .. Vertex_Count);
-   --  Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
-      Colors : Color_Array (1 .. Vertex_Count);
-      --  Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-      Indices : Unsigned_16_Array_Access;
-      --  Vertex indices (in case vertex data comes indexed)
-      Anim_Vertices : Vector3_Array (1 .. Vertex_Count);
-      --  Animated vertex positions (after bones transformations)
-      Anim_Normals : Vector3_Array (1 .. Vertex_Count);
-      --  Animated normals (after bones transformations)
-      Bone_Ids : access Stream_Element_Array;
-      --  Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
-      Bone_Weights : Float_Array_Access;
-      --  Vertex bone weight, up to 4 bones influence by vertex (skinning)
-      Vao_Id : Natural;
-      --  OpenGL Vertex Array Object id
-      Vbo_Id : Natural_Array_Access;
-      --  OpenGL Vertex Buffer Objects id (default vertex data)
-   end record;
-   --  Mesh, vertex data and vao/vbo
-
-   type Mesh_Array is array (Natural range <>) of access Mesh;
-
-   type Shader is record
-      Id : Natural;
-      --  Shader program id
-      Locs : Integer_Array (1 .. Rl_Max_Shader_Locations);
-      --  Shader locations array (RL_MAX_SHADER_LOCATIONS)
-   end record;
-   --  Shader
-
-   type Material_Map is record
-      Texture : RayLib.Texture2D;
-      --  Material map texture
-      Color : RayLib.Color;
-      --  Material map color
-      Value : Float;
-      --  Material map value
-   end record;
-   --  MaterialMap
-
-   type Material_Map_Array is array (Natural range <>) of Material_Map;
-
-   type Material is record
-      Shader : RayLib.Shader;
-      --  Material shader
-      Maps : Material_Map_Array (1 .. Max_Material_Maps);
-      --  Material maps array (MAX_MATERIAL_MAPS)
-      Params : Float_Array (1 .. 4);
-      --  Material generic parameters (if required)
-   end record;
-   --  Material, includes shader and maps
-
-   type Material_Array is array (Natural range <>) of Material;
-
-   type Transform is record
-      Translation : RayLib.Vector3;
-      --  Translation
-      Rotation : RayLib.Quaternion;
-      --  Rotation
-      Scale : RayLib.Vector3;
-      --  Scale
-   end record;
-   --  Transform, vectex transformation data
-
-   type Transform_Array is array (Natural range <>) of Transform;
-
-   type Bone_Info is record
-      Name : String (1 .. 32);
-      --  Bone name
-      Parent : Integer;
-      --  Bone parent
-   end record;
-   --  Bone, skeletal animation bone
-
-   type Bone_Info_Array is array (Natural range <>) of Bone_Info;
-
-   type Model (Mesh_Count, Material_Count, Bone_Count : Natural) is record
-      --  Number of meshes
-      --  Number of materials
-      --  Number of bones
-      Transform : RayLib.Matrix;
-      --  Local transform matrix
-      Meshes : Mesh_Array (1 .. Mesh_Count);
-      --  Meshes array
-      Materials : Material_Array (1 .. Material_Count);
-      --  Materials array
-      Mesh_Material : Integer_Array (1 .. Mesh_Count);
-      --  Mesh material number
-      Bones : Bone_Info_Array (1 .. Bone_Count);
-      --  Bones information (skeleton)
-      Bind_Pose : Transform_Array (1 .. Bone_Count);
-      --  Bones base transformation (pose)
-   end record;
-   --  Model, meshes, materials and animation data
-
-   type Model_Animation (Bone_Count, Frame_Count : Natural) is record
-      --  Number of bones
-      --  Number of animation frames
-      Bones : Bone_Info_Array (1 .. Bone_Count);
-      --  Bones information (skeleton)
-      Frame_Poses : Transform_Array (1 .. Frame_Count);
-      --  Poses array by frame
-   end record;
-   --  ModelAnimation
-
-   type Model_Animation_Array is array (Natural range <>) of Model_Animation;
-
-   type Ray is record
-      Position : RayLib.Vector3;
-      --  Ray position (origin)
-      Direction : RayLib.Vector3;
-      --  Ray direction
-   end record;
-   --  Ray, ray for raycasting
-
-   type Ray_Collision is record
-      Hit : Boolean;
-      --  Did the ray hit something?
-      Distance : Float;
-      --  Distance to nearest hit
-      Point : RayLib.Vector3;
-      --  Point of nearest hit
-      Normal : RayLib.Vector3;
-      --  Surface normal of hit
-   end record;
-   --  RayCollision, ray hit information
-
-   type Bounding_Box is record
-      Min : RayLib.Vector3;
-      --  Minimum vertex box-corner
-      Max : RayLib.Vector3;
-      --  Maximum vertex box-corner
-   end record;
-   --  BoundingBox
-
-   type Wave is record
-      Frame_Count : Natural;
-      --  Total number of frames (considering channels)
-      Sample_Rate : Natural;
-      --  Frequency (samples per second)
-      Sample_Size : Natural;
-      --  Bit depth (bits per sample): 8, 16, 32 (24 not supported)
-      Channels : Natural;
-      --  Number of channels (1-mono, 2-stereo, ...)
-      Data : System.Address;
-      --  Buffer data pointer
-   end record;
-   --  Wave, audio wave data
-
-   type Audio_Stream is record
-      Buffer : System.Address;
-      --  Pointer to internal data used by the audio system
-      Processor : System.Address;
-      --  Pointer to internal data processor, useful for audio effects
-      Sample_Rate : Natural;
-      --  Frequency (samples per second)
-      Sample_Size : Natural;
-      --  Bit depth (bits per sample): 8, 16, 32 (24 not supported)
-      Channels : Natural;
-      --  Number of channels (1-mono, 2-stereo, ...)
-   end record;
-   --  AudioStream, custom audio stream
-
-   type Sound is record
-      Stream : RayLib.Audio_Stream;
-      --  Audio stream
-      Frame_Count : Natural;
-      --  Total number of frames (considering channels)
-   end record;
-   --  Sound
-
-   type Music is record
-      Stream : RayLib.Audio_Stream;
-      --  Audio stream
-      Frame_Count : Natural;
-      --  Total number of frames (considering channels)
-      Looping : Boolean;
-      --  Music looping enable
-      Ctx_Type : Integer;
-      --  Type of music context (audio filetype)
-      Ctx_Data : System.Address;
-      --  Audio context data, depends on type
-   end record;
-   --  Music, audio stream, anything longer than ~10 seconds should be streamed
-
-   type VR_Device_Info is record
-      H_Resolution : Integer;
-      --  Horizontal resolution in pixels
-      V_Resolution : Integer;
-      --  Vertical resolution in pixels
-      H_Screen_Size : Float;
-      --  Horizontal size in meters
-      V_Screen_Size : Float;
-      --  Vertical size in meters
-      V_Screen_Center : Float;
-      --  Screen center in meters
-      Eye_To_Screen_Distance : Float;
-      --  Distance between eye and display in meters
-      Lens_Separation_Distance : Float;
-      --  Lens separation distance in meters
-      Interpupillary_Distance : Float;
-      --  IPD (distance between pupils) in meters
-      Lens_Distortion_Values : Float_Array (1 .. 4);
-      --  Lens distortion constant parameters
-      Chroma_Ab_Correction : Float_Array (1 .. 4);
-      --  Chromatic aberration correction parameters
-   end record;
-   --  VrDeviceInfo, Head-Mounted-Display device parameters
-
-   type VR_Stereo_Config is record
-      Projection : Matrix_Array (1 .. 2);
-      --  VR projection matrices (per eye)
-      View_Offset : Matrix_Array (1 .. 2);
-      --  VR view offset matrices (per eye)
-      Left_Lens_Center : Float_Array (1 .. 2);
-      --  VR left lens center
-      Right_Lens_Center : Float_Array (1 .. 2);
-      --  VR right lens center
-      Left_Screen_Center : Float_Array (1 .. 2);
-      --  VR left screen center
-      Right_Screen_Center : Float_Array (1 .. 2);
-      --  VR right screen center
-      Scale : Float_Array (1 .. 2);
-      --  VR distortion scale
-      Scale_In : Float_Array (1 .. 2);
-      --  VR distortion scale in
-   end record;
-   --  VrStereoConfig, VR stereo rendering configuration for simulator
-
-   --  Some Basic Colors
-   --  NOTE: Custom raylib color palette for amazing visuals
-   --   on WHITE background
-
-   Light_Gray  : constant Color := (200, 200, 200, 255);
-   Gray        : constant Color := (130, 130, 130, 255);
-   Dark_Gray   : constant Color := (80, 80, 80, 255);
-   Yellow      : constant Color := (253, 249, 0, 255);
-   Gold        : constant Color := (255, 203, 0, 255);
-   Orange      : constant Color := (255, 161, 0, 255);
-   Pink        : constant Color := (255, 109, 194, 255);
-   Red         : constant Color := (230, 41, 55, 255);
-   Maroon      : constant Color := (190, 33, 55, 255);
-   Green       : constant Color := (0, 228, 48, 255);
-   Lime        : constant Color := (0, 158, 47, 255);
-   Dark_Green  : constant Color := (0, 117, 44, 255);
-   Sky_Blue    : constant Color := (102, 191, 255, 255);
-   Blue        : constant Color := (0, 121, 241, 255);
-   Dark_Blue   : constant Color := (0, 82, 172, 255);
-   Purple      : constant Color := (200, 122, 255, 255);
-   Violet      : constant Color := (135, 60, 190, 255);
-   Dark_Purple : constant Color := (112, 31, 126, 255);
-   Beige       : constant Color := (211, 176, 131, 255);
-   Brown       : constant Color := (127, 106, 79, 255);
-   Dark_Brown  : constant Color := (127, 106, 79, 255);
-
-   White     : constant Color := (255, 255, 255, 255);
-   Black     : constant Color := (0, 0, 0, 255);
-   Blank     : constant Color := (0, 0, 0, 0);
-   Magenta   : constant Color := (255, 0, 255, 255);
-   Ray_White : constant Color := (245, 245, 245, 255);
 
    ------------------------------
    --  Enumerations definition
@@ -1509,6 +1007,515 @@ package RayLib is
    type Save_File_Text_Callback is access function
      (File_Name, Text : String) return Boolean;
 
+   type Vector2 is record
+      X : Float;
+      --  Vector x component
+      Y : Float;
+      --  Vector y component
+   end record;
+   --  Vector2, 2 components
+
+   type Vector2_Array is array (Natural range <>) of Vector2;
+
+   type Vector3 is record
+      X : Float;
+      --  Vector x component
+      Y : Float;
+      --  Vector y component
+      Z : Float;
+      --  Vector z component
+   end record;
+   --  Vector3, 3 components
+
+   type Vector3_Array is array (Natural range <>) of Vector3;
+
+   type Vector4 is record
+      X : Float;
+      --  Vector x component
+      Y : Float;
+      --  Vector y component
+      Z : Float;
+      --  Vector z component
+      W : Float;
+      --  Vector w component
+   end record;
+   --  Vector4, 4 components
+
+   subtype Quaternion is RayLib.Vector4;
+   --  Quaternion, 4 components (Vector4 alias)
+
+   type Vector4_Array is array (Natural range <>) of Vector4;
+
+   type Matrix is record
+      M0 : Float;
+      --  Matrix first row (4 components)
+      M4 : Float;
+      --  Matrix first row (4 components)
+      M8 : Float;
+      --  Matrix first row (4 components)
+      M12 : Float;
+      --  Matrix first row (4 components)
+      M1 : Float;
+      --  Matrix second row (4 components)
+      M5 : Float;
+      --  Matrix second row (4 components)
+      M9 : Float;
+      --  Matrix second row (4 components)
+      M13 : Float;
+      --  Matrix second row (4 components)
+      M2 : Float;
+      --  Matrix third row (4 components)
+      M6 : Float;
+      --  Matrix third row (4 components)
+      M10 : Float;
+      --  Matrix third row (4 components)
+      M14 : Float;
+      --  Matrix third row (4 components)
+      M3 : Float;
+      --  Matrix fourth row (4 components)
+      M7 : Float;
+      --  Matrix fourth row (4 components)
+      M11 : Float;
+      --  Matrix fourth row (4 components)
+      M15 : Float;
+      --  Matrix fourth row (4 components)
+   end record;
+   --  Matrix, 4x4 components, column major, OpenGL style, right handed
+
+   type Matrix_Array is array (Natural range <>) of Matrix;
+
+   type Color is record
+      R : Color_Component;
+      --  Color red value
+      G : Color_Component;
+      --  Color green value
+      B : Color_Component;
+      --  Color blue value
+      A : Color_Component;
+      --  Color alpha value
+   end record;
+   --  Color, 4 components, R8G8B8A8 (32bit)
+
+   type Color_Array is array (Natural range <>) of Color;
+
+   type Rectangle is record
+      X : Float;
+      --  Rectangle top-left corner position x
+      Y : Float;
+      --  Rectangle top-left corner position y
+      Width : Float;
+      --  Rectangle width
+      Height : Float;
+      --  Rectangle height
+   end record;
+   --  Rectangle, 4 components
+
+   type Rectangle_Array is array (Natural range <>) of Rectangle;
+
+   type Image is record
+      Data : System.Address;
+      --  Image raw data
+      Width : Integer;
+      --  Image base width
+      Height : Integer;
+      --  Image base height
+      Mipmaps : Integer;
+      --  Mipmap levels, 1 by default
+      Format : Pixel_Format;
+      --  Data format (PixelFormat type)
+   end record;
+   --  Image, pixel data stored in CPU memory (RAM)
+
+   type Texture is record
+      Id : OpenGL_Id;
+      --  OpenGL texture id
+      Width : Integer;
+      --  Texture base width
+      Height : Integer;
+      --  Texture base height
+      Mipmaps : Integer;
+      --  Mipmap levels, 1 by default
+      Format : Pixel_Format;
+      --  Data format (PixelFormat type)
+   end record;
+   --  Texture, tex data stored in GPU memory (VRAM)
+
+   subtype Texture2D is RayLib.Texture;
+   --  Texture2D, same as Texture
+
+   subtype Texture_Cubemap is RayLib.Texture;
+   --  TextureCubemap, same as Texture
+
+   type Render_Texture is record
+      Id : OpenGL_Id;
+      --  OpenGL framebuffer object id
+      Texture : RayLib.Texture;
+      --  Color buffer attachment texture
+      Depth : RayLib.Texture;
+      --  Depth buffer attachment texture
+   end record;
+   --  RenderTexture, fbo for texture rendering
+
+   subtype Render_Texture2D is RayLib.Render_Texture;
+   --  RenderTexture2D, same as RenderTexture
+
+   type N_Patch_Info is record
+      Source : RayLib.Rectangle;
+      --  Texture source rectangle
+      Left : Integer;
+      --  Left border offset
+      Top : Integer;
+      --  Top border offset
+      Right : Integer;
+      --  Right border offset
+      Bottom : Integer;
+      --  Bottom border offset
+      Layout : N_Patch_Layout;
+      --  Layout of the n-patch: 3x3, 1x3 or 3x1
+   end record;
+   --  NPatchInfo, n-patch layout info
+
+   type Glyph_Info is record
+      Value : Integer;
+      --  Character value (Unicode)
+      Offset_X : Integer;
+      --  Character offset X when drawing
+      Offset_Y : Integer;
+      --  Character offset Y when drawing
+      Advance_X : Integer;
+      --  Character advance position X
+      Image : RayLib.Image;
+      --  Character image data
+   end record;
+   --  GlyphInfo, font characters glyphs info
+
+   type Glyph_Info_Array is array (Natural range <>) of Glyph_Info;
+
+   type Font (Glyph_Count : Natural) is record
+      --  Number of glyph characters
+      Base_Size : Integer;
+      --  Base size (default chars height)
+      Glyph_Padding : Integer;
+      --  Padding around the glyph characters
+      Texture : RayLib.Texture2D;
+      --  Texture atlas containing the glyphs
+      Recs : Rectangle_Array (1 .. Glyph_Count);
+      --  Rectangles in texture for the glyphs
+      Glyphs : Glyph_Info_Array (1 .. Glyph_Count);
+      --  Glyphs info data
+   end record;
+   --  Font, font texture and GlyphInfo array data
+
+   type Camera3D is record
+      Position : RayLib.Vector3;
+      --  Camera position
+      Target : RayLib.Vector3;
+      --  Camera target it looks-at
+      Up : RayLib.Vector3;
+      --  Camera up vector (rotation over its axis)
+      Fovy : Float;
+      --  Camera field-of-view apperture in Y (degrees) in perspective, used as near plane width in orthographic
+      Projection : Camera_Projection;
+      --  Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
+   end record;
+   --  Camera, defines position/orientation in 3d space
+
+   subtype Camera is RayLib.Camera3D;
+   --  Camera type fallback, defaults to Camera3D
+
+   type Camera2D is record
+      Offset : RayLib.Vector2;
+      --  Camera offset (displacement from target)
+      Target : RayLib.Vector2;
+      --  Camera target (rotation and zoom origin)
+      Rotation : Float;
+      --  Camera rotation in degrees
+      Zoom : Float;
+      --  Camera zoom (scaling), should be 1.0f by default
+   end record;
+   --  Camera2D, defines position/orientation in 2d space
+
+   type Mesh (Vertex_Count, Triangle_Count : Natural) is record
+      --  Number of vertices stored in arrays
+      --  Number of triangles stored (indexed or not)
+      Vertices : Vector3_Array (1 .. Vertex_Count);
+      --  Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
+      Texcoords : Vector2_Array (1 .. Vertex_Count);
+      --  Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+      Texcoords2 : Vector2_Array (1 .. Vertex_Count);
+      --  Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
+      Normals : Vector3_Array (1 .. Vertex_Count);
+      --  Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
+      Tangents : Vector4_Array (1 .. Vertex_Count);
+   --  Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
+      Colors : Color_Array (1 .. Vertex_Count);
+      --  Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
+      Indices : Integer_Array (1 .. Vertex_Count);
+      --  Vertex indices (in case vertex data comes indexed)
+      Anim_Vertices : Vector3_Array (1 .. Vertex_Count);
+      --  Animated vertex positions (after bones transformations)
+      Anim_Normals : Vector3_Array (1 .. Vertex_Count);
+      --  Animated normals (after bones transformations)
+      Bone_Ids : Stream_Element_Array (1 .. 255);
+      --  Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
+      Bone_Weights : Float_Array (1 .. Vertex_Count); -- * 4
+      --  Vertex bone weight, up to 4 bones influence by vertex (skinning)
+      VAO_Id : OpenGL_Id;
+      --  OpenGL Vertex Array Object id
+      VBO_Id : OpenGL_Id_Array (1 .. Max_Mesh_Vertex_Buffers);
+      --  OpenGL Vertex Buffer Objects id (default vertex data)
+   end record;
+   --  Mesh, vertex data and vao/vbo
+
+   package Mesh_Holders is new Ada.Containers.Indefinite_Holders (Mesh);
+   subtype Mesh_Holder is Mesh_Holders.Holder;
+
+   type Mesh_Array is array (Natural range <>) of Mesh_Holder;
+
+   type Shader is record
+      Id : OpenGL_Id;
+      --  Shader program id
+      Locations : Integer_Array (1 .. Rl_Max_Shader_Locations);
+      --  Shader locations array (RL_MAX_SHADER_LOCATIONS)
+   end record;
+   --  Shader
+
+   type Material_Map is record
+      Texture : RayLib.Texture2D;
+      --  Material map texture
+      Color : RayLib.Color;
+      --  Material map color
+      Value : Float;
+      --  Material map value
+   end record;
+   --  MaterialMap
+
+   type Material_Map_Array is array (Natural range <>) of Material_Map;
+
+   type Material is record
+      Shader : RayLib.Shader;
+      --  Material shader
+      Maps : Material_Map_Array (1 .. Max_Material_Maps);
+      --  Material maps array (MAX_MATERIAL_MAPS)
+      Params : Float_Array (1 .. 4);
+      --  Material generic parameters (if required)
+   end record;
+   --  Material, includes shader and maps
+
+   type Material_Array is array (Natural range <>) of Material;
+
+   type Transform is record
+      Translation : RayLib.Vector3;
+      --  Translation
+      Rotation : RayLib.Quaternion;
+      --  Rotation
+      Scale : RayLib.Vector3;
+      --  Scale
+   end record;
+   --  Transform, vectex transformation data
+
+   type Transform_Array is array (Natural range <>) of Transform;
+
+   type Bone_Info is record
+      Name : String (1 .. 32);
+      --  Bone name
+      Parent : Integer;
+      --  Bone parent
+   end record;
+   --  Bone, skeletal animation bone
+
+   type Bone_Info_Array is array (Natural range <>) of Bone_Info;
+
+   type Model (Mesh_Count, Material_Count, Bone_Count : Natural) is record
+      --  Number of meshes
+      --  Number of materials
+      --  Number of bones
+      Transform : RayLib.Matrix;
+      --  Local transform matrix
+      Meshes : Mesh_Array (1 .. Mesh_Count);
+      --  Meshes array
+      Materials : Material_Array (1 .. Material_Count);
+      --  Materials array
+      Mesh_Material : Integer_Array (1 .. Mesh_Count);
+      --  Mesh material number
+      Bones : Bone_Info_Array (1 .. Bone_Count);
+      --  Bones information (skeleton)
+      Bind_Pose : Transform_Array (1 .. Bone_Count);
+      --  Bones base transformation (pose)
+   end record;
+   --  Model, meshes, materials and animation data
+
+   type Model_Animation (Bone_Count, Frame_Count : Natural) is record
+      --  Number of bones
+      --  Number of animation frames
+      Bones : Bone_Info_Array (1 .. Bone_Count);
+      --  Bones information (skeleton)
+      Frame_Poses : Transform_Array (1 .. Frame_Count);
+      --  Poses array by frame
+   end record;
+   --  ModelAnimation
+
+   package Model_Animation_Holders is new Ada.Containers.Indefinite_Holders
+     (Model_Animation);
+   subtype Model_Animation_Holder is Model_Animation_Holders.Holder;
+
+   type Model_Animation_Array is
+     array (Natural range <>) of Model_Animation_Holder;
+
+   type Ray is record
+      Position : RayLib.Vector3;
+      --  Ray position (origin)
+      Direction : RayLib.Vector3;
+      --  Ray direction
+   end record;
+   --  Ray, ray for raycasting
+
+   type Ray_Collision is record
+      Hit : Boolean;
+      --  Did the ray hit something?
+      Distance : Float;
+      --  Distance to nearest hit
+      Point : RayLib.Vector3;
+      --  Point of nearest hit
+      Normal : RayLib.Vector3;
+      --  Surface normal of hit
+   end record;
+   --  RayCollision, ray hit information
+
+   type Bounding_Box is record
+      Min : RayLib.Vector3;
+      --  Minimum vertex box-corner
+      Max : RayLib.Vector3;
+      --  Maximum vertex box-corner
+   end record;
+   --  BoundingBox
+
+   type Wave is record
+      Frame_Count : Natural;
+      --  Total number of frames (considering channels)
+      Sample_Rate : Natural;
+      --  Frequency (samples per second)
+      Sample_Size : Natural;
+      --  Bit depth (bits per sample): 8, 16, 32 (24 not supported)
+      Channels : Natural;
+      --  Number of channels (1-mono, 2-stereo, ...)
+      Data : System.Address;
+      --  Buffer data pointer
+   end record;
+   --  Wave, audio wave data
+
+   type Audio_Stream is record
+      Buffer : System.Address;
+      --  Pointer to internal data used by the audio system
+      Processor : System.Address;
+      --  Pointer to internal data processor, useful for audio effects
+      Sample_Rate : Natural;
+      --  Frequency (samples per second)
+      Sample_Size : Natural;
+      --  Bit depth (bits per sample): 8, 16, 32 (24 not supported)
+      Channels : Natural;
+      --  Number of channels (1-mono, 2-stereo, ...)
+   end record;
+   --  AudioStream, custom audio stream
+
+   type Sound is record
+      Stream : RayLib.Audio_Stream;
+      --  Audio stream
+      Frame_Count : Natural;
+      --  Total number of frames (considering channels)
+   end record;
+   --  Sound
+
+   type Music is record
+      Stream : RayLib.Audio_Stream;
+      --  Audio stream
+      Frame_Count : Natural;
+      --  Total number of frames (considering channels)
+      Looping : Boolean;
+      --  Music looping enable
+      Ctx_Type : Integer;
+      --  Type of music context (audio filetype)
+      Ctx_Data : System.Address;
+      --  Audio context data, depends on type
+   end record;
+   --  Music, audio stream, anything longer than ~10 seconds should be streamed
+
+   type VR_Device_Info is record
+      H_Resolution : Integer;
+      --  Horizontal resolution in pixels
+      V_Resolution : Integer;
+      --  Vertical resolution in pixels
+      H_Screen_Size : Float;
+      --  Horizontal size in meters
+      V_Screen_Size : Float;
+      --  Vertical size in meters
+      V_Screen_Center : Float;
+      --  Screen center in meters
+      Eye_To_Screen_Distance : Float;
+      --  Distance between eye and display in meters
+      Lens_Separation_Distance : Float;
+      --  Lens separation distance in meters
+      Interpupillary_Distance : Float;
+      --  IPD (distance between pupils) in meters
+      Lens_Distortion_Values : Float_Array (1 .. 4);
+      --  Lens distortion constant parameters
+      Chroma_Ab_Correction : Float_Array (1 .. 4);
+      --  Chromatic aberration correction parameters
+   end record;
+   --  VrDeviceInfo, Head-Mounted-Display device parameters
+
+   type VR_Stereo_Config is record
+      Projection : Matrix_Array (1 .. 2);
+      --  VR projection matrices (per eye)
+      View_Offset : Matrix_Array (1 .. 2);
+      --  VR view offset matrices (per eye)
+      Left_Lens_Center : Float_Array (1 .. 2);
+      --  VR left lens center
+      Right_Lens_Center : Float_Array (1 .. 2);
+      --  VR right lens center
+      Left_Screen_Center : Float_Array (1 .. 2);
+      --  VR left screen center
+      Right_Screen_Center : Float_Array (1 .. 2);
+      --  VR right screen center
+      Scale : Float_Array (1 .. 2);
+      --  VR distortion scale
+      Scale_In : Float_Array (1 .. 2);
+      --  VR distortion scale in
+   end record;
+   --  VrStereoConfig, VR stereo rendering configuration for simulator
+
+   --  Some Basic Colors
+   --  NOTE: Custom raylib color palette for amazing visuals
+   --   on WHITE background
+
+   Light_Gray  : constant Color := (200, 200, 200, 255);
+   Gray        : constant Color := (130, 130, 130, 255);
+   Dark_Gray   : constant Color := (80, 80, 80, 255);
+   Yellow      : constant Color := (253, 249, 0, 255);
+   Gold        : constant Color := (255, 203, 0, 255);
+   Orange      : constant Color := (255, 161, 0, 255);
+   Pink        : constant Color := (255, 109, 194, 255);
+   Red         : constant Color := (230, 41, 55, 255);
+   Maroon      : constant Color := (190, 33, 55, 255);
+   Green       : constant Color := (0, 228, 48, 255);
+   Lime        : constant Color := (0, 158, 47, 255);
+   Dark_Green  : constant Color := (0, 117, 44, 255);
+   Sky_Blue    : constant Color := (102, 191, 255, 255);
+   Blue        : constant Color := (0, 121, 241, 255);
+   Dark_Blue   : constant Color := (0, 82, 172, 255);
+   Purple      : constant Color := (200, 122, 255, 255);
+   Violet      : constant Color := (135, 60, 190, 255);
+   Dark_Purple : constant Color := (112, 31, 126, 255);
+   Beige       : constant Color := (211, 176, 131, 255);
+   Brown       : constant Color := (127, 106, 79, 255);
+   Dark_Brown  : constant Color := (127, 106, 79, 255);
+
+   White     : constant Color := (255, 255, 255, 255);
+   Black     : constant Color := (0, 0, 0, 255);
+   Blank     : constant Color := (0, 0, 0, 0);
+   Magenta   : constant Color := (255, 0, 255, 255);
+   Ray_White : constant Color := (245, 245, 245, 255);
+
    ------------------------------
    --  Windows and graphics device functions
    ------------------------------
@@ -2095,7 +2102,7 @@ package RayLib is
    function Get_Touch_Point_Count return Integer;
    --  Get number of touch points
 
-   procedure Set_Gestures_Enabled (Flags : Natural);
+   procedure Set_Gestures_Enabled (Flags : RayLib.Gesture);
    --  Enable a set of gestures using flags
 
    function Is_Gesture_Detected (Gesture : RayLib.Gesture) return Boolean;
