@@ -366,45 +366,36 @@ package RayLib is
    type Bone_Info_Array is array (Natural range <>) of Bone_Info;
    type Bone_Info_Array_Access is access all Bone_Info_Array;
 
-   type Model is record
+   type Model (Mesh_Count, Material_Count, Bone_Count : Natural) is record
+      --  Number of meshes
+      --  Number of materials
+      --  Number of bones
       Transform : RayLib.Matrix;
       --  Local transform matrix
-      Mesh_Count : Integer;
-      --  Number of meshes
-      Material_Count : Integer;
-      --  Number of materials
-      Meshes : Mesh_Array_Access;
+      Meshes : Mesh_Array (1 .. Mesh_Count);
       --  Meshes array
-      Materials : Material_Array_Access;
+      Materials : Material_Array (1 .. Material_Count);
       --  Materials array
       Mesh_Material : Integer_Array_Access;
       --  Mesh material number
-      Bone_Count : Integer;
-      --  Number of bones
-      Bones : Bone_Info_Array_Access;
+      Bones : Bone_Info_Array (1 .. Bone_Count);
       --  Bones information (skeleton)
       Bind_Pose : Transform_Array_Access;
       --  Bones base transformation (pose)
    end record;
    --  Model, meshes, materials and animation data
 
-   type Model_Array is array (Natural range <>) of Model;
-   type Model_Array_Access is access all Model_Array;
-
-   type Model_Animation is record
-      Bone_Count : Integer;
+   type Model_Animation (Bone_Count, Frame_Count : Natural) is record
       --  Number of bones
-      Frame_Count : Integer;
       --  Number of animation frames
-      Bones : Bone_Info_Array_Access;
+      Bones : Bone_Info_Array (1 .. Bone_Count);
       --  Bones information (skeleton)
-      Frame_Poses : Transform_Array_Array_Access;
+      Frame_Poses : Transform_Array (1 .. Frame_Count);
       --  Poses array by frame
    end record;
    --  ModelAnimation
 
    type Model_Animation_Array is array (Natural range <>) of Model_Animation;
-   type Model_Animation_Array_Access is access all Model_Animation_Array;
 
    type Ray is record
       Position : RayLib.Vector3;
@@ -413,9 +404,6 @@ package RayLib is
       --  Ray direction
    end record;
    --  Ray, ray for raycasting
-
-   type Ray_Array is array (Natural range <>) of Ray;
-   type Ray_Array_Access is access all Ray_Array;
 
    type Ray_Collision is record
       Hit : Boolean;
@@ -429,9 +417,6 @@ package RayLib is
    end record;
    --  RayCollision, ray hit information
 
-   type Ray_Collision_Array is array (Natural range <>) of Ray_Collision;
-   type Ray_Collision_Array_Access is access all Ray_Collision_Array;
-
    type Bounding_Box is record
       Min : RayLib.Vector3;
       --  Minimum vertex box-corner
@@ -439,9 +424,6 @@ package RayLib is
       --  Maximum vertex box-corner
    end record;
    --  BoundingBox
-
-   type Bounding_Box_Array is array (Natural range <>) of Bounding_Box;
-   type Bounding_Box_Array_Access is access all Bounding_Box_Array;
 
    type Wave is record
       Frame_Count : Natural;
@@ -457,9 +439,6 @@ package RayLib is
    end record;
    --  Wave, audio wave data
 
-   type Wave_Array is array (Natural range <>) of Wave;
-   type Wave_Array_Access is access all Wave_Array;
-
    type Audio_Stream is record
       Buffer : System.Address;
       --  Pointer to internal data used by the audio system
@@ -474,9 +453,6 @@ package RayLib is
    end record;
    --  AudioStream, custom audio stream
 
-   type Audio_Stream_Array is array (Natural range <>) of Audio_Stream;
-   type Audio_Stream_Array_Access is access all Audio_Stream_Array;
-
    type Sound is record
       Stream : RayLib.Audio_Stream;
       --  Audio stream
@@ -484,9 +460,6 @@ package RayLib is
       --  Total number of frames (considering channels)
    end record;
    --  Sound
-
-   type Sound_Array is array (Natural range <>) of Sound;
-   type Sound_Array_Access is access all Sound_Array;
 
    type Music is record
       Stream : RayLib.Audio_Stream;
@@ -501,9 +474,6 @@ package RayLib is
       --  Audio context data, depends on type
    end record;
    --  Music, audio stream, anything longer than ~10 seconds should be streamed
-
-   type Music_Array is array (Natural range <>) of Music;
-   type Music_Array_Access is access all Music_Array;
 
    type VR_Device_Info is record
       H_Resolution : Integer;
@@ -529,9 +499,6 @@ package RayLib is
    end record;
    --  VrDeviceInfo, Head-Mounted-Display device parameters
 
-   type VR_Device_Info_Array is array (Natural range <>) of VR_Device_Info;
-   type VR_Device_Info_Array_Access is access all VR_Device_Info_Array;
-
    type VR_Stereo_Config is record
       Projection : Matrix_Array (1 .. 2);
       --  VR projection matrices (per eye)
@@ -551,9 +518,6 @@ package RayLib is
       --  VR distortion scale in
    end record;
    --  VrStereoConfig, VR stereo rendering configuration for simulator
-
-   type VR_Stereo_Config_Array is array (Natural range <>) of VR_Stereo_Config;
-   type VR_Stereo_Config_Array_Access is access all VR_Stereo_Config_Array;
 
    --  Some Basic Colors
    --  NOTE: Custom raylib color palette for amazing visuals
