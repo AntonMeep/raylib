@@ -11,6 +11,9 @@ package RayLib is
    --  Basic defines
    ------------------------------
 
+   Max_Material_Maps : constant := 12;
+   --  TODO: move to global configuration
+
    Version : constant String := "4.0";
    --  Version of the underlying raylib
 
@@ -23,7 +26,6 @@ package RayLib is
    RAD2DEG : constant := 180.0 / Pi;
    --  Provded only for compatibility with raylib.h
 
-   subtype Unsigned_8 is Interfaces.Unsigned_8;
    subtype Unsigned_16 is Interfaces.Unsigned_16;
 
    type Unsigned_16_Array is array (Natural range <>) of Unsigned_16;
@@ -44,7 +46,6 @@ package RayLib is
    --  Vector2, 2 components
 
    type Vector2_Array is array (Natural range <>) of Vector2;
-   type Vector2_Array_Access is access all Vector2_Array;
 
    type Vector3 is record
       X : Float;
@@ -57,7 +58,6 @@ package RayLib is
    --  Vector3, 3 components
 
    type Vector3_Array is array (Natural range <>) of Vector3;
-   type Vector3_Array_Access is access all Vector3_Array;
 
    type Vector4 is record
       X : Float;
@@ -75,7 +75,6 @@ package RayLib is
    --  Quaternion, 4 components (Vector4 alias)
 
    type Vector4_Array is array (Natural range <>) of Vector4;
-   type Vector4_Array_Access is access all Vector4_Array;
 
    type Matrix is record
       M0 : Float;
@@ -114,22 +113,24 @@ package RayLib is
    --  Matrix, 4x4 components, column major, OpenGL style, right handed
 
    type Matrix_Array is array (Natural range <>) of Matrix;
-   type Matrix_Array_Access is access all Matrix_Array;
+
+   type Color_Component is mod 256;
+   --  Single 8-bit color component
+   for Color_Component'Size use 8;
 
    type Color is record
-      R : Unsigned_8;
+      R : Color_Component;
       --  Color red value
-      G : Unsigned_8;
+      G : Color_Component;
       --  Color green value
-      B : Unsigned_8;
+      B : Color_Component;
       --  Color blue value
-      A : Unsigned_8;
+      A : Color_Component;
       --  Color alpha value
    end record;
    --  Color, 4 components, R8G8B8A8 (32bit)
 
    type Color_Array is array (Natural range <>) of Color;
-   type Color_Array_Access is access all Color_Array;
 
    type Rectangle is record
       X : Float;
@@ -144,7 +145,6 @@ package RayLib is
    --  Rectangle, 4 components
 
    type Rectangle_Array is array (Natural range <>) of Rectangle;
-   type Rectangle_Array_Access is access all Rectangle_Array;
 
    type Image is record
       Data : System.Address;
@@ -159,9 +159,6 @@ package RayLib is
       --  Data format (PixelFormat type)
    end record;
    --  Image, pixel data stored in CPU memory (RAM)
-
-   type Image_Array is array (Natural range <>) of Image;
-   type Image_Array_Access is access all Image_Array;
 
    type Texture is record
       Id : Natural;
@@ -183,9 +180,6 @@ package RayLib is
    subtype Texture_Cubemap is RayLib.Texture;
    --  TextureCubemap, same as Texture
 
-   type Texture_Array is array (Natural range <>) of Texture;
-   type Texture_Array_Access is access all Texture_Array;
-
    type Render_Texture is record
       Id : Natural;
       --  OpenGL framebuffer object id
@@ -198,9 +192,6 @@ package RayLib is
 
    subtype Render_Texture2D is RayLib.Render_Texture;
    --  RenderTexture2D, same as RenderTexture
-
-   type Render_Texture_Array is array (Natural range <>) of Render_Texture;
-   type Render_Texture_Array_Access is access all Render_Texture_Array;
 
    type N_Patch_Info is record
       Source : RayLib.Rectangle;
@@ -218,9 +209,6 @@ package RayLib is
    end record;
    --  NPatchInfo, n-patch layout info
 
-   type N_Patch_Info_Array is array (Natural range <>) of N_Patch_Info;
-   type N_Patch_Info_Array_Access is access all N_Patch_Info_Array;
-
    type Glyph_Info is record
       Value : Integer;
       --  Character value (Unicode)
@@ -236,26 +224,21 @@ package RayLib is
    --  GlyphInfo, font characters glyphs info
 
    type Glyph_Info_Array is array (Natural range <>) of Glyph_Info;
-   type Glyph_Info_Array_Access is access all Glyph_Info_Array;
 
-   type Font is record
+   type Font (Glyph_Count : Natural) is record
+      --  Number of glyph characters
       Base_Size : Integer;
       --  Base size (default chars height)
-      Glyph_Count : Integer;
-      --  Number of glyph characters
       Glyph_Padding : Integer;
       --  Padding around the glyph characters
       Texture : RayLib.Texture2D;
       --  Texture atlas containing the glyphs
-      Recs : Rectangle_Array_Access;
+      Recs : Rectangle_Array (1 .. Glyph_Count);
       --  Rectangles in texture for the glyphs
-      Glyphs : Glyph_Info_Array_Access;
+      Glyphs : Glyph_Info_Array (1 .. Glyph_Count);
       --  Glyphs info data
    end record;
    --  Font, font texture and GlyphInfo array data
-
-   type Font_Array is array (Natural range <>) of Font;
-   type Font_Array_Access is access all Font_Array;
 
    type Camera3D is record
       Position : RayLib.Vector3;
@@ -274,9 +257,6 @@ package RayLib is
    subtype Camera is RayLib.Camera3D;
    --  Camera type fallback, defaults to Camera3D
 
-   type Camera3D_Array is array (Natural range <>) of Camera3D;
-   type Camera3D_Array_Access is access all Camera3D_Array;
-
    type Camera2D is record
       Offset : RayLib.Vector2;
       --  Camera offset (displacement from target)
@@ -289,25 +269,21 @@ package RayLib is
    end record;
    --  Camera2D, defines position/orientation in 2d space
 
-   type Camera2D_Array is array (Natural range <>) of Camera2D;
-   type Camera2D_Array_Access is access all Camera2D_Array;
-
-   type Mesh is record
-      Vertex_Count : Integer;
+   type Mesh (Vertex_Count : Natural) is record
       --  Number of vertices stored in arrays
       Triangle_Count : Integer;
       --  Number of triangles stored (indexed or not)
-      Vertices : Float_Array_Access;
+      Vertices : Vector3_Array (1 .. Vertex_Count);
       --  Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
-      Texcoords : Float_Array_Access;
+      Texcoords : Vector2_Array (1 .. Vertex_Count);
       --  Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-      Texcoords2 : Float_Array_Access;
+      Texcoords2 : Vector2_Array (1 .. Vertex_Count);
       --  Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
-      Normals : Float_Array_Access;
+      Normals : Vector3_Array (1 .. Vertex_Count);
       --  Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
-      Tangents : Float_Array_Access;
+      Tangents : Vector4_Array (1 .. Vertex_Count);
    --  Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
-      Colors : access Stream_Element_Array;
+      Colors : Color_Array (1 .. Vertex_Count);
       --  Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
       Indices : Unsigned_16_Array_Access;
       --  Vertex indices (in case vertex data comes indexed)
@@ -326,7 +302,7 @@ package RayLib is
    end record;
    --  Mesh, vertex data and vao/vbo
 
-   type Mesh_Array is array (Natural range <>) of Mesh;
+   type Mesh_Array is array (Natural range <>) of access Mesh;
    type Mesh_Array_Access is access all Mesh_Array;
 
    type Shader is record
@@ -336,9 +312,6 @@ package RayLib is
       --  Shader locations array (RL_MAX_SHADER_LOCATIONS)
    end record;
    --  Shader
-
-   type Shader_Array is array (Natural range <>) of Shader;
-   type Shader_Array_Access is access all Shader_Array;
 
    type Material_Map is record
       Texture : RayLib.Texture2D;
@@ -356,7 +329,7 @@ package RayLib is
    type Material is record
       Shader : RayLib.Shader;
       --  Material shader
-      Maps : Material_Map_Array_Access;
+      Maps : Material_Map_Array (1 .. Max_Material_Maps);
       --  Material maps array (MAX_MATERIAL_MAPS)
       Params : Float_Array (1 .. 4);
       --  Material generic parameters (if required)
