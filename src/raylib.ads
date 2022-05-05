@@ -605,670 +605,681 @@ package RayLib is
    type Config_Flags is new Interfaces.C.unsigned;
 
    --  Set to try enabling V-Sync on GPU
-   FLAG_VSYNC_HINT : constant Config_Flags := 16#0000_0040#;
+   Flag_Vsync_Hint : constant Config_Flags := 16#0000_0040#;
    --  Set to run program in fullscreen
-   FLAG_FULLSCREEN_MODE : constant Config_Flags := 16#0000_0002#;
+   Flag_Fullscreen_Mode : constant Config_Flags := 16#0000_0002#;
    --  Set to allow resizable window
-   FLAG_WINDOW_RESIZABLE : constant Config_Flags := 16#0000_0004#;
+   Flag_Window_Resizable : constant Config_Flags := 16#0000_0004#;
    --  Set to disable window decoration (frame and buttons)
-   FLAG_WINDOW_UNDECORATED : constant Config_Flags := 16#0000_0008#;
+   Flag_Window_Undecorated : constant Config_Flags := 16#0000_0008#;
    --  Set to hide window
-   FLAG_WINDOW_HIDDEN : constant Config_Flags := 16#0000_0080#;
+   Flag_Window_Hidden : constant Config_Flags := 16#0000_0080#;
    --  Set to minimize window (iconify)
-   FLAG_WINDOW_MINIMIZED : constant Config_Flags := 16#0000_0200#;
+   Flag_Window_Minimized : constant Config_Flags := 16#0000_0200#;
    --  Set to maximize window (expanded to monitor)
-   FLAG_WINDOW_MAXIMIZED : constant Config_Flags := 16#0000_0400#;
+   Flag_Window_Maximized : constant Config_Flags := 16#0000_0400#;
    --  Set to window non focused
-   FLAG_WINDOW_UNFOCUSED : constant Config_Flags := 16#0000_0800#;
+   Flag_Window_Unfocused : constant Config_Flags := 16#0000_0800#;
    --  Set to window always on top
-   FLAG_WINDOW_TOPMOST : constant Config_Flags := 16#0000_1000#;
+   Flag_Window_Topmost : constant Config_Flags := 16#0000_1000#;
    --  Set to allow windows running while minimized
-   FLAG_WINDOW_ALWAYS_RUN : constant Config_Flags := 16#0000_0100#;
+   Flag_Window_Always_Run : constant Config_Flags := 16#0000_0100#;
    --  Set to allow transparent framebuffer
-   FLAG_WINDOW_TRANSPARENT : constant Config_Flags := 16#0000_0010#;
+   Flag_Window_Transparent : constant Config_Flags := 16#0000_0010#;
    --  Set to support HighDPI
-   FLAG_WINDOW_HIGHDPI : constant Config_Flags := 16#0000_2000#;
+   Flag_Window_HighDPI : constant Config_Flags := 16#0000_2000#;
    --  Set to try enabling MSAA 4X
-   FLAG_MSAA_4X_HINT : constant Config_Flags := 16#0000_0020#;
+   Flag_MSAA_4x_Hint : constant Config_Flags := 16#0000_0020#;
    --  Set to try enabling interlaced video format (for V3D)
-   FLAG_INTERLACED_HINT : constant Config_Flags := 16#0001_0000#;
+   Flag_Interlaced_Hint : constant Config_Flags := 16#0001_0000#;
 
    --  Trace log level
    type Trace_Log_Level is
-     (
+     (Log_All,
    --  Display all logs
-   Log_All,
-   --  Trace logging, intended for internal use only
    Log_Trace,
-   --  Debug logging, used for internal debugging, it should be disabled on release builds
+   --  Trace logging, intended for internal use only
    Log_Debug,
-   --  Info logging, used for program execution info
+   --  Debug logging, used for internal debugging, it should be disabled on release builds
    Log_Info,
-   --  Warning logging, used on recoverable failures
+   --  Info logging, used for program execution info
    Log_Warning,
-   --  Error logging, used on unrecoverable failures
+   --  Warning logging, used on recoverable failures
    Log_Error,
-   --  Fatal logging, used to abort program: exit(EXIT_FAILURE)
+   --  Error logging, used on unrecoverable failures
 
       Log_Fatal,
-   --  Disable logging
-   Log_None);
+   --  Fatal logging, used to abort program: exit(EXIT_FAILURE)
+   Log_None
+      --  Disable logging
+      );
 
    --  Keyboard keys (US keyboard layout)
    type Keyboard_Key is new Interfaces.C.unsigned;
 
    --  Key: NULL, used for no key pressed
-   KEY_NULL : constant Keyboard_Key := 0;
+   Key_Null : constant Keyboard_Key := 0;
    --  Key: '
-   KEY_APOSTROPHE : constant Keyboard_Key := 39;
+   Key_Apostrophe : constant Keyboard_Key := 39;
    --  Key: ,
-   KEY_COMMA : constant Keyboard_Key := 44;
+   Key_Comma : constant Keyboard_Key := 44;
    --  Key: -
-   KEY_MINUS : constant Keyboard_Key := 45;
+   Key_Minus : constant Keyboard_Key := 45;
    --  Key: .
-   KEY_PERIOD : constant Keyboard_Key := 46;
+   Key_Period : constant Keyboard_Key := 46;
    --  Key: /
-   KEY_SLASH : constant Keyboard_Key := 47;
+   Key_Slash : constant Keyboard_Key := 47;
    --  Key: 0
-   KEY_ZERO : constant Keyboard_Key := 48;
+   Key_Zero : constant Keyboard_Key := 48;
    --  Key: 1
-   KEY_ONE : constant Keyboard_Key := 49;
+   Key_One : constant Keyboard_Key := 49;
    --  Key: 2
-   KEY_TWO : constant Keyboard_Key := 50;
+   Key_Two : constant Keyboard_Key := 50;
    --  Key: 3
-   KEY_THREE : constant Keyboard_Key := 51;
+   Key_Three : constant Keyboard_Key := 51;
    --  Key: 4
-   KEY_FOUR : constant Keyboard_Key := 52;
+   Key_Four : constant Keyboard_Key := 52;
    --  Key: 5
-   KEY_FIVE : constant Keyboard_Key := 53;
+   Key_Five : constant Keyboard_Key := 53;
    --  Key: 6
-   KEY_SIX : constant Keyboard_Key := 54;
+   Key_Six : constant Keyboard_Key := 54;
    --  Key: 7
-   KEY_SEVEN : constant Keyboard_Key := 55;
+   Key_Seven : constant Keyboard_Key := 55;
    --  Key: 8
-   KEY_EIGHT : constant Keyboard_Key := 56;
+   Key_Eight : constant Keyboard_Key := 56;
    --  Key: 9
-   KEY_NINE : constant Keyboard_Key := 57;
+   Key_Nine : constant Keyboard_Key := 57;
    --  Key: ;
-   KEY_SEMICOLON : constant Keyboard_Key := 59;
+   Key_Semicolon : constant Keyboard_Key := 59;
    --  Key: =
-   KEY_EQUAL : constant Keyboard_Key := 61;
+   Key_Equal : constant Keyboard_Key := 61;
    --  Key: A | a
-   KEY_A : constant Keyboard_Key := 65;
+   Key_A : constant Keyboard_Key := 65;
    --  Key: B | b
-   KEY_B : constant Keyboard_Key := 66;
+   Key_B : constant Keyboard_Key := 66;
    --  Key: C | c
-   KEY_C : constant Keyboard_Key := 67;
+   Key_C : constant Keyboard_Key := 67;
    --  Key: D | d
-   KEY_D : constant Keyboard_Key := 68;
+   Key_D : constant Keyboard_Key := 68;
    --  Key: E | e
-   KEY_E : constant Keyboard_Key := 69;
+   Key_E : constant Keyboard_Key := 69;
    --  Key: F | f
-   KEY_F : constant Keyboard_Key := 70;
+   Key_F : constant Keyboard_Key := 70;
    --  Key: G | g
-   KEY_G : constant Keyboard_Key := 71;
+   Key_G : constant Keyboard_Key := 71;
    --  Key: H | h
-   KEY_H : constant Keyboard_Key := 72;
+   Key_H : constant Keyboard_Key := 72;
    --  Key: I | i
-   KEY_I : constant Keyboard_Key := 73;
+   Key_I : constant Keyboard_Key := 73;
    --  Key: J | j
-   KEY_J : constant Keyboard_Key := 74;
+   Key_J : constant Keyboard_Key := 74;
    --  Key: K | k
-   KEY_K : constant Keyboard_Key := 75;
+   Key_K : constant Keyboard_Key := 75;
    --  Key: L | l
-   KEY_L : constant Keyboard_Key := 76;
+   Key_L : constant Keyboard_Key := 76;
    --  Key: M | m
-   KEY_M : constant Keyboard_Key := 77;
+   Key_M : constant Keyboard_Key := 77;
    --  Key: N | n
-   KEY_N : constant Keyboard_Key := 78;
+   Key_N : constant Keyboard_Key := 78;
    --  Key: O | o
-   KEY_O : constant Keyboard_Key := 79;
+   Key_O : constant Keyboard_Key := 79;
    --  Key: P | p
-   KEY_P : constant Keyboard_Key := 80;
+   Key_P : constant Keyboard_Key := 80;
    --  Key: Q | q
-   KEY_Q : constant Keyboard_Key := 81;
+   Key_Q : constant Keyboard_Key := 81;
    --  Key: R | r
-   KEY_R : constant Keyboard_Key := 82;
+   Key_R : constant Keyboard_Key := 82;
    --  Key: S | s
-   KEY_S : constant Keyboard_Key := 83;
+   Key_S : constant Keyboard_Key := 83;
    --  Key: T | t
-   KEY_T : constant Keyboard_Key := 84;
+   Key_T : constant Keyboard_Key := 84;
    --  Key: U | u
-   KEY_U : constant Keyboard_Key := 85;
+   Key_U : constant Keyboard_Key := 85;
    --  Key: V | v
-   KEY_V : constant Keyboard_Key := 86;
+   Key_V : constant Keyboard_Key := 86;
    --  Key: W | w
-   KEY_W : constant Keyboard_Key := 87;
+   Key_W : constant Keyboard_Key := 87;
    --  Key: X | x
-   KEY_X : constant Keyboard_Key := 88;
+   Key_X : constant Keyboard_Key := 88;
    --  Key: Y | y
-   KEY_Y : constant Keyboard_Key := 89;
+   Key_Y : constant Keyboard_Key := 89;
    --  Key: Z | z
-   KEY_Z : constant Keyboard_Key := 90;
+   Key_Z : constant Keyboard_Key := 90;
    --  Key: [
-   KEY_LEFT_BRACKET : constant Keyboard_Key := 91;
+   Key_Left_Bracket : constant Keyboard_Key := 91;
    --  Key: '\'
-   KEY_BACKSLASH : constant Keyboard_Key := 92;
+   Key_Backslash : constant Keyboard_Key := 92;
    --  Key: ]
-   KEY_RIGHT_BRACKET : constant Keyboard_Key := 93;
+   Key_Right_Bracket : constant Keyboard_Key := 93;
    --  Key: `
-   KEY_GRAVE : constant Keyboard_Key := 96;
+   Key_Grave : constant Keyboard_Key := 96;
    --  Key: Space
-   KEY_SPACE : constant Keyboard_Key := 32;
+   Key_Space : constant Keyboard_Key := 32;
    --  Key: Esc
-   KEY_ESCAPE : constant Keyboard_Key := 256;
+   Key_Escape : constant Keyboard_Key := 256;
    --  Key: Enter
-   KEY_ENTER : constant Keyboard_Key := 257;
+   Key_Enter : constant Keyboard_Key := 257;
    --  Key: Tab
-   KEY_TAB : constant Keyboard_Key := 258;
+   Key_Tab : constant Keyboard_Key := 258;
    --  Key: Backspace
-   KEY_BACKSPACE : constant Keyboard_Key := 259;
+   Key_Backspace : constant Keyboard_Key := 259;
    --  Key: Ins
-   KEY_INSERT : constant Keyboard_Key := 260;
+   Key_Insert : constant Keyboard_Key := 260;
    --  Key: Del
-   KEY_DELETE : constant Keyboard_Key := 261;
+   Key_Delete : constant Keyboard_Key := 261;
    --  Key: Cursor right
-   KEY_RIGHT : constant Keyboard_Key := 262;
+   Key_Right : constant Keyboard_Key := 262;
    --  Key: Cursor left
-   KEY_LEFT : constant Keyboard_Key := 263;
+   Key_Left : constant Keyboard_Key := 263;
    --  Key: Cursor down
-   KEY_DOWN : constant Keyboard_Key := 264;
+   Key_Down : constant Keyboard_Key := 264;
    --  Key: Cursor up
-   KEY_UP : constant Keyboard_Key := 265;
+   Key_Up : constant Keyboard_Key := 265;
    --  Key: Page up
-   KEY_PAGE_UP : constant Keyboard_Key := 266;
+   Key_Page_Up : constant Keyboard_Key := 266;
    --  Key: Page down
-   KEY_PAGE_DOWN : constant Keyboard_Key := 267;
+   Key_Page_Down : constant Keyboard_Key := 267;
    --  Key: Home
-   KEY_HOME : constant Keyboard_Key := 268;
+   Key_Home : constant Keyboard_Key := 268;
    --  Key: End
-   KEY_END : constant Keyboard_Key := 269;
+   Key_End : constant Keyboard_Key := 269;
    --  Key: Caps lock
-   KEY_CAPS_LOCK : constant Keyboard_Key := 280;
+   Key_Caps_Lock : constant Keyboard_Key := 280;
    --  Key: Scroll down
-   KEY_SCROLL_LOCK : constant Keyboard_Key := 281;
+   Key_Scroll_Lock : constant Keyboard_Key := 281;
    --  Key: Num lock
-   KEY_NUM_LOCK : constant Keyboard_Key := 282;
+   Key_Num_Lock : constant Keyboard_Key := 282;
    --  Key: Print screen
-   KEY_PRINT_SCREEN : constant Keyboard_Key := 283;
+   Key_Print_Screen : constant Keyboard_Key := 283;
    --  Key: Pause
-   KEY_PAUSE : constant Keyboard_Key := 284;
+   Key_Pause : constant Keyboard_Key := 284;
    --  Key: F1
-   KEY_F1 : constant Keyboard_Key := 290;
+   Key_F1 : constant Keyboard_Key := 290;
    --  Key: F2
-   KEY_F2 : constant Keyboard_Key := 291;
+   Key_F2 : constant Keyboard_Key := 291;
    --  Key: F3
-   KEY_F3 : constant Keyboard_Key := 292;
+   Key_F3 : constant Keyboard_Key := 292;
    --  Key: F4
-   KEY_F4 : constant Keyboard_Key := 293;
+   Key_F4 : constant Keyboard_Key := 293;
    --  Key: F5
-   KEY_F5 : constant Keyboard_Key := 294;
+   Key_F5 : constant Keyboard_Key := 294;
    --  Key: F6
-   KEY_F6 : constant Keyboard_Key := 295;
+   Key_F6 : constant Keyboard_Key := 295;
    --  Key: F7
-   KEY_F7 : constant Keyboard_Key := 296;
+   Key_F7 : constant Keyboard_Key := 296;
    --  Key: F8
-   KEY_F8 : constant Keyboard_Key := 297;
+   Key_F8 : constant Keyboard_Key := 297;
    --  Key: F9
-   KEY_F9 : constant Keyboard_Key := 298;
+   Key_F9 : constant Keyboard_Key := 298;
    --  Key: F10
-   KEY_F10 : constant Keyboard_Key := 299;
+   Key_F10 : constant Keyboard_Key := 299;
    --  Key: F11
-   KEY_F11 : constant Keyboard_Key := 300;
+   Key_F11 : constant Keyboard_Key := 300;
    --  Key: F12
-   KEY_F12 : constant Keyboard_Key := 301;
+   Key_F12 : constant Keyboard_Key := 301;
    --  Key: Shift left
-   KEY_LEFT_SHIFT : constant Keyboard_Key := 340;
+   Key_Left_Shift : constant Keyboard_Key := 340;
    --  Key: Control left
-   KEY_LEFT_CONTROL : constant Keyboard_Key := 341;
+   Key_Left_Control : constant Keyboard_Key := 341;
    --  Key: Alt left
-   KEY_LEFT_ALT : constant Keyboard_Key := 342;
+   Key_Left_Alt : constant Keyboard_Key := 342;
    --  Key: Super left
-   KEY_LEFT_SUPER : constant Keyboard_Key := 343;
+   Key_Left_Super : constant Keyboard_Key := 343;
    --  Key: Shift right
-   KEY_RIGHT_SHIFT : constant Keyboard_Key := 344;
+   Key_Right_Shift : constant Keyboard_Key := 344;
    --  Key: Control right
-   KEY_RIGHT_CONTROL : constant Keyboard_Key := 345;
+   Key_Right_Control : constant Keyboard_Key := 345;
    --  Key: Alt right
-   KEY_RIGHT_ALT : constant Keyboard_Key := 346;
+   Key_Right_Alt : constant Keyboard_Key := 346;
    --  Key: Super right
-   KEY_RIGHT_SUPER : constant Keyboard_Key := 347;
+   Key_Right_Super : constant Keyboard_Key := 347;
    --  Key: KB menu
-   KEY_KB_MENU : constant Keyboard_Key := 348;
+   Key_Kb_Menu : constant Keyboard_Key := 348;
    --  Key: Keypad 0
-   KEY_KP_0 : constant Keyboard_Key := 320;
+   Key_Kp_0 : constant Keyboard_Key := 320;
    --  Key: Keypad 1
-   KEY_KP_1 : constant Keyboard_Key := 321;
+   Key_Kp_1 : constant Keyboard_Key := 321;
    --  Key: Keypad 2
-   KEY_KP_2 : constant Keyboard_Key := 322;
+   Key_Kp_2 : constant Keyboard_Key := 322;
    --  Key: Keypad 3
-   KEY_KP_3 : constant Keyboard_Key := 323;
+   Key_Kp_3 : constant Keyboard_Key := 323;
    --  Key: Keypad 4
-   KEY_KP_4 : constant Keyboard_Key := 324;
+   Key_Kp_4 : constant Keyboard_Key := 324;
    --  Key: Keypad 5
-   KEY_KP_5 : constant Keyboard_Key := 325;
+   Key_Kp_5 : constant Keyboard_Key := 325;
    --  Key: Keypad 6
-   KEY_KP_6 : constant Keyboard_Key := 326;
+   Key_Kp_6 : constant Keyboard_Key := 326;
    --  Key: Keypad 7
-   KEY_KP_7 : constant Keyboard_Key := 327;
+   Key_Kp_7 : constant Keyboard_Key := 327;
    --  Key: Keypad 8
-   KEY_KP_8 : constant Keyboard_Key := 328;
+   Key_Kp_8 : constant Keyboard_Key := 328;
    --  Key: Keypad 9
-   KEY_KP_9 : constant Keyboard_Key := 329;
+   Key_Kp_9 : constant Keyboard_Key := 329;
    --  Key: Keypad .
-   KEY_KP_DECIMAL : constant Keyboard_Key := 330;
+   Key_Kp_Decimal : constant Keyboard_Key := 330;
    --  Key: Keypad /
-   KEY_KP_DIVIDE : constant Keyboard_Key := 331;
+   Key_Kp_Divide : constant Keyboard_Key := 331;
    --  Key: Keypad *
-   KEY_KP_MULTIPLY : constant Keyboard_Key := 332;
+   Key_Kp_Multiply : constant Keyboard_Key := 332;
    --  Key: Keypad -
-   KEY_KP_SUBTRACT : constant Keyboard_Key := 333;
+   Key_Kp_Subtract : constant Keyboard_Key := 333;
    --  Key: Keypad +
-   KEY_KP_ADD : constant Keyboard_Key := 334;
+   Key_Kp_Add : constant Keyboard_Key := 334;
    --  Key: Keypad Enter
-   KEY_KP_ENTER : constant Keyboard_Key := 335;
+   Key_Kp_Enter : constant Keyboard_Key := 335;
    --  Key: Keypad =
-   KEY_KP_EQUAL : constant Keyboard_Key := 336;
+   Key_Kp_Equal : constant Keyboard_Key := 336;
    --  Key: Android back button
-   KEY_BACK : constant Keyboard_Key := 4;
+   Key_Back : constant Keyboard_Key := 4;
    --  Key: Android menu button
-   KEY_MENU : constant Keyboard_Key := 82;
+   Key_Menu : constant Keyboard_Key := 82;
    --  Key: Android volume up button
-   KEY_VOLUME_UP : constant Keyboard_Key := 24;
+   Key_Volume_Up : constant Keyboard_Key := 24;
    --  Key: Android volume down button
-   KEY_VOLUME_DOWN : constant Keyboard_Key := 25;
+   Key_Volume_Down : constant Keyboard_Key := 25;
 
    --  Mouse buttons
    type Mouse_Button is new Interfaces.C.unsigned;
 
    --  Mouse button left
-   MOUSE_BUTTON_LEFT : constant Mouse_Button := 0;
+   Mouse_Button_Left : constant Mouse_Button := 0;
    --  Mouse button right
-   MOUSE_BUTTON_RIGHT : constant Mouse_Button := 1;
+   Mouse_Button_Right : constant Mouse_Button := 1;
    --  Mouse button middle (pressed wheel)
-   MOUSE_BUTTON_MIDDLE : constant Mouse_Button := 2;
+   Mouse_Button_Middle : constant Mouse_Button := 2;
    --  Mouse button side (advanced mouse device)
-   MOUSE_BUTTON_SIDE : constant Mouse_Button := 3;
+   Mouse_Button_Side : constant Mouse_Button := 3;
    --  Mouse button extra (advanced mouse device)
-   MOUSE_BUTTON_EXTRA : constant Mouse_Button := 4;
+   Mouse_Button_Extra : constant Mouse_Button := 4;
    --  Mouse button fordward (advanced mouse device)
-   MOUSE_BUTTON_FORWARD : constant Mouse_Button := 5;
+   Mouse_Button_Forward : constant Mouse_Button := 5;
    --  Mouse button back (advanced mouse device)
-   MOUSE_BUTTON_BACK : constant Mouse_Button := 6;
+   Mouse_Button_Back : constant Mouse_Button := 6;
 
    --  Mouse cursor
-   subtype Mouse_Cursor is Integer;
+   type Mouse_Cursor is new Interfaces.C.unsigned;
 
    --  Default pointer shape
-   MOUSE_CURSOR_DEFAULT : constant Mouse_Cursor := 0;
+   Mouse_Cursor_Default : constant Mouse_Cursor := 0;
    --  Arrow shape
-   MOUSE_CURSOR_ARROW : constant Mouse_Cursor := 1;
+   Mouse_Cursor_Arrow : constant Mouse_Cursor := 1;
    --  Text writing cursor shape
-   MOUSE_CURSOR_IBEAM : constant Mouse_Cursor := 2;
+   Mouse_Cursor_Ibeam : constant Mouse_Cursor := 2;
    --  Cross shape
-   MOUSE_CURSOR_CROSSHAIR : constant Mouse_Cursor := 3;
+   Mouse_Cursor_Crosshair : constant Mouse_Cursor := 3;
    --  Pointing hand cursor
-   MOUSE_CURSOR_POINTING_HAND : constant Mouse_Cursor := 4;
+   Mouse_Cursor_Pointing_Hand : constant Mouse_Cursor := 4;
    --  Horizontal resize/move arrow shape
-   MOUSE_CURSOR_RESIZE_EW : constant Mouse_Cursor := 5;
+   Mouse_Cursor_Resize_EW : constant Mouse_Cursor := 5;
    --  Vertical resize/move arrow shape
-   MOUSE_CURSOR_RESIZE_NS : constant Mouse_Cursor := 6;
+   Mouse_Cursor_Resize_NS : constant Mouse_Cursor := 6;
    --  Top-left to bottom-right diagonal resize/move arrow shape
-   MOUSE_CURSOR_RESIZE_NWSE : constant Mouse_Cursor := 7;
+   Mouse_Cursor_Resize_NWSE : constant Mouse_Cursor := 7;
    --  The top-right to bottom-left diagonal resize/move arrow shape
-   MOUSE_CURSOR_RESIZE_NESW : constant Mouse_Cursor := 8;
+   Mouse_Cursor_Resize_NESW : constant Mouse_Cursor := 8;
    --  The omni-directional resize/move cursor shape
-   MOUSE_CURSOR_RESIZE_ALL : constant Mouse_Cursor := 9;
+   Mouse_Cursor_Resize_All : constant Mouse_Cursor := 9;
    --  The operation-not-allowed shape
-   MOUSE_CURSOR_NOT_ALLOWED : constant Mouse_Cursor := 10;
+   Mouse_Cursor_Not_Allowed : constant Mouse_Cursor := 10;
 
    --  Gamepad buttons
-   subtype Gamepad_Button is Integer;
+   type Gamepad_Button is new Interfaces.C.unsigned;
 
    --  Unknown button, just for error checking
-   GAMEPAD_BUTTON_UNKNOWN : constant Gamepad_Button := 0;
+   Gamepad_Button_Unknown : constant Gamepad_Button := 0;
    --  Gamepad left DPAD up button
-   GAMEPAD_BUTTON_LEFT_FACE_UP : constant Gamepad_Button := 1;
+   Gamepad_Button_Left_Face_Up : constant Gamepad_Button := 1;
    --  Gamepad left DPAD right button
-   GAMEPAD_BUTTON_LEFT_FACE_RIGHT : constant Gamepad_Button := 2;
+   Gamepad_Button_Left_Face_Right : constant Gamepad_Button := 2;
    --  Gamepad left DPAD down button
-   GAMEPAD_BUTTON_LEFT_FACE_DOWN : constant Gamepad_Button := 3;
+   Gamepad_Button_Left_Face_Down : constant Gamepad_Button := 3;
    --  Gamepad left DPAD left button
-   GAMEPAD_BUTTON_LEFT_FACE_LEFT : constant Gamepad_Button := 4;
+   Gamepad_Button_Left_Face_Left : constant Gamepad_Button := 4;
    --  Gamepad right button up (i.e. PS3: Triangle, Xbox: Y)
-   GAMEPAD_BUTTON_RIGHT_FACE_UP : constant Gamepad_Button := 5;
+   Gamepad_Button_Right_Face_Up : constant Gamepad_Button := 5;
    --  Gamepad right button right (i.e. PS3: Square, Xbox: X)
-   GAMEPAD_BUTTON_RIGHT_FACE_RIGHT : constant Gamepad_Button := 6;
+   Gamepad_Button_Right_Face_Right : constant Gamepad_Button := 6;
    --  Gamepad right button down (i.e. PS3: Cross, Xbox: A)
-   GAMEPAD_BUTTON_RIGHT_FACE_DOWN : constant Gamepad_Button := 7;
+   Gamepad_Button_Right_Face_Down : constant Gamepad_Button := 7;
    --  Gamepad right button left (i.e. PS3: Circle, Xbox: B)
-   GAMEPAD_BUTTON_RIGHT_FACE_LEFT : constant Gamepad_Button := 8;
+   Gamepad_Button_Right_Face_Left : constant Gamepad_Button := 8;
    --  Gamepad top/back trigger left (first), it could be a trailing button
-   GAMEPAD_BUTTON_LEFT_TRIGGER_1 : constant Gamepad_Button := 9;
+   Gamepad_Button_Left_Trigger_1 : constant Gamepad_Button := 9;
    --  Gamepad top/back trigger left (second), it could be a trailing button
-   GAMEPAD_BUTTON_LEFT_TRIGGER_2 : constant Gamepad_Button := 10;
+   Gamepad_Button_Left_Trigger_2 : constant Gamepad_Button := 10;
    --  Gamepad top/back trigger right (one), it could be a trailing button
-   GAMEPAD_BUTTON_RIGHT_TRIGGER_1 : constant Gamepad_Button := 11;
+   Gamepad_Button_Right_Trigger_1 : constant Gamepad_Button := 11;
    --  Gamepad top/back trigger right (second), it could be a trailing button
-   GAMEPAD_BUTTON_RIGHT_TRIGGER_2 : constant Gamepad_Button := 12;
+   Gamepad_Button_Right_Trigger_2 : constant Gamepad_Button := 12;
    --  Gamepad center buttons, left one (i.e. PS3: Select)
-   GAMEPAD_BUTTON_MIDDLE_LEFT : constant Gamepad_Button := 13;
+   Gamepad_Button_Middle_Left : constant Gamepad_Button := 13;
    --  Gamepad center buttons, middle one (i.e. PS3: PS, Xbox: XBOX)
-   GAMEPAD_BUTTON_MIDDLE : constant Gamepad_Button := 14;
+   Gamepad_Button_Middle : constant Gamepad_Button := 14;
    --  Gamepad center buttons, right one (i.e. PS3: Start)
-   GAMEPAD_BUTTON_MIDDLE_RIGHT : constant Gamepad_Button := 15;
+   Gamepad_Button_Middle_Right : constant Gamepad_Button := 15;
    --  Gamepad joystick pressed button left
-   GAMEPAD_BUTTON_LEFT_THUMB : constant Gamepad_Button := 16;
+   Gamepad_Button_Left_Thumb : constant Gamepad_Button := 16;
    --  Gamepad joystick pressed button right
-   GAMEPAD_BUTTON_RIGHT_THUMB : constant Gamepad_Button := 17;
+   Gamepad_Button_Right_Thumb : constant Gamepad_Button := 17;
 
    --  Gamepad axis
-   subtype Gamepad_Axis is Integer;
+   type Gamepad_Axis is new Interfaces.C.unsigned;
 
    --  Gamepad left stick X axis
-   GAMEPAD_AXIS_LEFT_X : constant Gamepad_Axis := 0;
+   Gamepad_Axis_Left_X : constant Gamepad_Axis := 0;
    --  Gamepad left stick Y axis
-   GAMEPAD_AXIS_LEFT_Y : constant Gamepad_Axis := 1;
+   Gamepad_Axis_Left_Y : constant Gamepad_Axis := 1;
    --  Gamepad right stick X axis
-   GAMEPAD_AXIS_RIGHT_X : constant Gamepad_Axis := 2;
+   Gamepad_Axis_Right_X : constant Gamepad_Axis := 2;
    --  Gamepad right stick Y axis
-   GAMEPAD_AXIS_RIGHT_Y : constant Gamepad_Axis := 3;
+   Gamepad_Axis_Right_Y : constant Gamepad_Axis := 3;
    --  Gamepad back trigger left, pressure level: [1..-1]
-   GAMEPAD_AXIS_LEFT_TRIGGER : constant Gamepad_Axis := 4;
+   Gamepad_Axis_Left_Trigger : constant Gamepad_Axis := 4;
    --  Gamepad back trigger right, pressure level: [1..-1]
-   GAMEPAD_AXIS_RIGHT_TRIGGER : constant Gamepad_Axis := 5;
+   Gamepad_Axis_Right_Trigger : constant Gamepad_Axis := 5;
 
    --  Material map index
-   subtype Material_Map_Index is Integer;
+   type Material_Map_Index is new Interfaces.C.unsigned;
 
    --  Albedo material (same as: MATERIAL_MAP_DIFFUSE)
-   MATERIAL_MAP_ALBEDO : constant Material_Map_Index := 0;
+   Material_Map_Albedo : constant Material_Map_Index := 0;
    --  Metalness material (same as: MATERIAL_MAP_SPECULAR)
-   MATERIAL_MAP_METALNESS : constant Material_Map_Index := 1;
+   Material_Map_Metalness : constant Material_Map_Index := 1;
    --  Normal material
-   MATERIAL_MAP_NORMAL : constant Material_Map_Index := 2;
+   Material_Map_Normal : constant Material_Map_Index := 2;
    --  Roughness material
-   MATERIAL_MAP_ROUGHNESS : constant Material_Map_Index := 3;
+   Material_Map_Roughness : constant Material_Map_Index := 3;
    --  Ambient occlusion material
-   MATERIAL_MAP_OCCLUSION : constant Material_Map_Index := 4;
+   Material_Map_Occlusion : constant Material_Map_Index := 4;
    --  Emission material
-   MATERIAL_MAP_EMISSION : constant Material_Map_Index := 5;
+   Material_Map_Emission : constant Material_Map_Index := 5;
    --  Heightmap material
-   MATERIAL_MAP_HEIGHT : constant Material_Map_Index := 6;
+   Material_Map_Height : constant Material_Map_Index := 6;
    --  Cubemap material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-   MATERIAL_MAP_CUBEMAP : constant Material_Map_Index := 7;
+   Material_Map_Cubemap : constant Material_Map_Index := 7;
    --  Irradiance material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-   MATERIAL_MAP_IRRADIANCE : constant Material_Map_Index := 8;
+   Material_Map_Irradiance : constant Material_Map_Index := 8;
    --  Prefilter material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-   MATERIAL_MAP_PREFILTER : constant Material_Map_Index := 9;
+   Material_Map_Prefilter : constant Material_Map_Index := 9;
    --  Brdf material
-   MATERIAL_MAP_BRDF : constant Material_Map_Index := 10;
+   Material_Map_Brdf : constant Material_Map_Index := 10;
+
+   Material_Map_Diffuse : constant Material_Map_Index := Material_Map_Albedo;
+
+   Material_Map_Specular : constant Material_Map_Index :=
+     Material_Map_Metalness;
 
    --  Shader location index
-   subtype Shader_Location_Index is Integer;
+   type Shader_Location_Index is new Interfaces.C.unsigned;
 
    --  Shader location: vertex attribute: position
-   SHADER_LOC_VERTEX_POSITION : constant Shader_Location_Index := 0;
+   Shader_Loc_Vertex_Position : constant Shader_Location_Index := 0;
    --  Shader location: vertex attribute: texcoord01
-   SHADER_LOC_VERTEX_TEXCOORD01 : constant Shader_Location_Index := 1;
+   Shader_Loc_Vertex_Texcoord01 : constant Shader_Location_Index := 1;
    --  Shader location: vertex attribute: texcoord02
-   SHADER_LOC_VERTEX_TEXCOORD02 : constant Shader_Location_Index := 2;
+   Shader_Loc_Vertex_Texcoord02 : constant Shader_Location_Index := 2;
    --  Shader location: vertex attribute: normal
-   SHADER_LOC_VERTEX_NORMAL : constant Shader_Location_Index := 3;
+   Shader_Loc_Vertex_Normal : constant Shader_Location_Index := 3;
    --  Shader location: vertex attribute: tangent
-   SHADER_LOC_VERTEX_TANGENT : constant Shader_Location_Index := 4;
+   Shader_Loc_Vertex_Tangent : constant Shader_Location_Index := 4;
    --  Shader location: vertex attribute: color
-   SHADER_LOC_VERTEX_COLOR : constant Shader_Location_Index := 5;
+   Shader_Loc_Vertex_Color : constant Shader_Location_Index := 5;
    --  Shader location: matrix uniform: model-view-projection
-   SHADER_LOC_MATRIX_MVP : constant Shader_Location_Index := 6;
+   Shader_Loc_Matrix_Mvp : constant Shader_Location_Index := 6;
    --  Shader location: matrix uniform: view (camera transform)
-   SHADER_LOC_MATRIX_VIEW : constant Shader_Location_Index := 7;
+   Shader_Loc_Matrix_View : constant Shader_Location_Index := 7;
    --  Shader location: matrix uniform: projection
-   SHADER_LOC_MATRIX_PROJECTION : constant Shader_Location_Index := 8;
+   Shader_Loc_Matrix_Projection : constant Shader_Location_Index := 8;
    --  Shader location: matrix uniform: model (transform)
-   SHADER_LOC_MATRIX_MODEL : constant Shader_Location_Index := 9;
+   Shader_Loc_Matrix_Model : constant Shader_Location_Index := 9;
    --  Shader location: matrix uniform: normal
-   SHADER_LOC_MATRIX_NORMAL : constant Shader_Location_Index := 10;
+   Shader_Loc_Matrix_Normal : constant Shader_Location_Index := 10;
    --  Shader location: vector uniform: view
-   SHADER_LOC_VECTOR_VIEW : constant Shader_Location_Index := 11;
+   Shader_Loc_Vector_View : constant Shader_Location_Index := 11;
    --  Shader location: vector uniform: diffuse color
-   SHADER_LOC_COLOR_DIFFUSE : constant Shader_Location_Index := 12;
+   Shader_Loc_Color_Diffuse : constant Shader_Location_Index := 12;
    --  Shader location: vector uniform: specular color
-   SHADER_LOC_COLOR_SPECULAR : constant Shader_Location_Index := 13;
+   Shader_Loc_Color_Specular : constant Shader_Location_Index := 13;
    --  Shader location: vector uniform: ambient color
-   SHADER_LOC_COLOR_AMBIENT : constant Shader_Location_Index := 14;
+   Shader_Loc_Color_Ambient : constant Shader_Location_Index := 14;
    --  Shader location: sampler2d texture: albedo (same as: SHADER_LOC_MAP_DIFFUSE)
-   SHADER_LOC_MAP_ALBEDO : constant Shader_Location_Index := 15;
+   Shader_Loc_Map_Albedo : constant Shader_Location_Index := 15;
    --  Shader location: sampler2d texture: metalness (same as: SHADER_LOC_MAP_SPECULAR)
-   SHADER_LOC_MAP_METALNESS : constant Shader_Location_Index := 16;
+   Shader_Loc_Map_Metalness : constant Shader_Location_Index := 16;
    --  Shader location: sampler2d texture: normal
-   SHADER_LOC_MAP_NORMAL : constant Shader_Location_Index := 17;
+   Shader_Loc_Map_Normal : constant Shader_Location_Index := 17;
    --  Shader location: sampler2d texture: roughness
-   SHADER_LOC_MAP_ROUGHNESS : constant Shader_Location_Index := 18;
+   Shader_Loc_Map_Roughness : constant Shader_Location_Index := 18;
    --  Shader location: sampler2d texture: occlusion
-   SHADER_LOC_MAP_OCCLUSION : constant Shader_Location_Index := 19;
+   Shader_Loc_Map_Occlusion : constant Shader_Location_Index := 19;
    --  Shader location: sampler2d texture: emission
-   SHADER_LOC_MAP_EMISSION : constant Shader_Location_Index := 20;
+   Shader_Loc_Map_Emission : constant Shader_Location_Index := 20;
    --  Shader location: sampler2d texture: height
-   SHADER_LOC_MAP_HEIGHT : constant Shader_Location_Index := 21;
+   Shader_Loc_Map_Height : constant Shader_Location_Index := 21;
    --  Shader location: samplerCube texture: cubemap
-   SHADER_LOC_MAP_CUBEMAP : constant Shader_Location_Index := 22;
+   Shader_Loc_Map_Cubemap : constant Shader_Location_Index := 22;
    --  Shader location: samplerCube texture: irradiance
-   SHADER_LOC_MAP_IRRADIANCE : constant Shader_Location_Index := 23;
+   Shader_Loc_Map_Irradiance : constant Shader_Location_Index := 23;
    --  Shader location: samplerCube texture: prefilter
-   SHADER_LOC_MAP_PREFILTER : constant Shader_Location_Index := 24;
+   Shader_Loc_Map_Prefilter : constant Shader_Location_Index := 24;
    --  Shader location: sampler2d texture: brdf
-   SHADER_LOC_MAP_BRDF : constant Shader_Location_Index := 25;
+   Shader_Loc_Map_Brdf : constant Shader_Location_Index := 25;
+
+   Shader_Loc_Map_Diffuse : constant Shader_Location_Index :=
+     Shader_Loc_Map_Albedo;
+
+   Shader_Loc_Map_Specular : constant Shader_Location_Index :=
+     Shader_Loc_Map_Metalness;
 
    --  Shader uniform data type
-   subtype Shader_Uniform_Data_Type is Integer;
+   type Shader_Uniform_Data_Type is new Interfaces.C.unsigned;
 
    --  Shader uniform type: float
-   SHADER_UNIFORM_FLOAT : constant Shader_Uniform_Data_Type := 0;
+   Shader_Uniform_Float : constant Shader_Uniform_Data_Type := 0;
    --  Shader uniform type: vec2 (2 float)
-   SHADER_UNIFORM_VEC2 : constant Shader_Uniform_Data_Type := 1;
+   Shader_Uniform_Vec2 : constant Shader_Uniform_Data_Type := 1;
    --  Shader uniform type: vec3 (3 float)
-   SHADER_UNIFORM_VEC3 : constant Shader_Uniform_Data_Type := 2;
+   Shader_Uniform_Vec3 : constant Shader_Uniform_Data_Type := 2;
    --  Shader uniform type: vec4 (4 float)
-   SHADER_UNIFORM_VEC4 : constant Shader_Uniform_Data_Type := 3;
+   Shader_Uniform_Vec4 : constant Shader_Uniform_Data_Type := 3;
    --  Shader uniform type: int
-   SHADER_UNIFORM_INT : constant Shader_Uniform_Data_Type := 4;
+   Shader_Uniform_Int : constant Shader_Uniform_Data_Type := 4;
    --  Shader uniform type: ivec2 (2 int)
-   SHADER_UNIFORM_IVEC2 : constant Shader_Uniform_Data_Type := 5;
+   Shader_Uniform_Ivec2 : constant Shader_Uniform_Data_Type := 5;
    --  Shader uniform type: ivec3 (3 int)
-   SHADER_UNIFORM_IVEC3 : constant Shader_Uniform_Data_Type := 6;
+   Shader_Uniform_Ivec3 : constant Shader_Uniform_Data_Type := 6;
    --  Shader uniform type: ivec4 (4 int)
-   SHADER_UNIFORM_IVEC4 : constant Shader_Uniform_Data_Type := 7;
+   Shader_Uniform_Ivec4 : constant Shader_Uniform_Data_Type := 7;
    --  Shader uniform type: sampler2d
-   SHADER_UNIFORM_SAMPLER2D : constant Shader_Uniform_Data_Type := 8;
+   Shader_Uniform_Sampler2D : constant Shader_Uniform_Data_Type := 8;
 
    --  Shader attribute data types
-   subtype Shader_Attribute_Data_Type is Integer;
+   type Shader_Attribute_Data_Type is new Interfaces.C.unsigned;
 
    --  Shader attribute type: float
-   SHADER_ATTRIB_FLOAT : constant Shader_Attribute_Data_Type := 0;
+   Shader_Attrib_Float : constant Shader_Attribute_Data_Type := 0;
    --  Shader attribute type: vec2 (2 float)
-   SHADER_ATTRIB_VEC2 : constant Shader_Attribute_Data_Type := 1;
+   Shader_Attrib_Vec2 : constant Shader_Attribute_Data_Type := 1;
    --  Shader attribute type: vec3 (3 float)
-   SHADER_ATTRIB_VEC3 : constant Shader_Attribute_Data_Type := 2;
+   Shader_Attrib_Vec3 : constant Shader_Attribute_Data_Type := 2;
    --  Shader attribute type: vec4 (4 float)
-   SHADER_ATTRIB_VEC4 : constant Shader_Attribute_Data_Type := 3;
+   Shader_Attrib_Vec4 : constant Shader_Attribute_Data_Type := 3;
 
    --  Pixel formats
-   subtype Pixel_Format is Integer;
+   type Pixel_Format is new Interfaces.C.unsigned;
 
    --  8 bit per pixel (no alpha)
-   PIXELFORMAT_UNCOMPRESSED_GRAYSCALE : constant Pixel_Format := 1;
+   Pixelformat_Uncompressed_Grayscale : constant Pixel_Format := 1;
    --  8*2 bpp (2 channels)
-   PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA : constant Pixel_Format := 2;
+   Pixelformat_Uncompressed_Gray_Alpha : constant Pixel_Format := 2;
    --  16 bpp
-   PIXELFORMAT_UNCOMPRESSED_R5G6B5 : constant Pixel_Format := 3;
+   Pixelformat_Uncompressed_R5G6B5 : constant Pixel_Format := 3;
    --  24 bpp
-   PIXELFORMAT_UNCOMPRESSED_R8G8B8 : constant Pixel_Format := 4;
+   Pixelformat_Uncompressed_R8G8B8 : constant Pixel_Format := 4;
    --  16 bpp (1 bit alpha)
-   PIXELFORMAT_UNCOMPRESSED_R5G5B5A1 : constant Pixel_Format := 5;
+   Pixelformat_Uncompressed_R5G5B5A1 : constant Pixel_Format := 5;
    --  16 bpp (4 bit alpha)
-   PIXELFORMAT_UNCOMPRESSED_R4G4B4A4 : constant Pixel_Format := 6;
+   Pixelformat_Uncompressed_R4G4B4A4 : constant Pixel_Format := 6;
    --  32 bpp
-   PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 : constant Pixel_Format := 7;
+   Pixelformat_Uncompressed_R8G8B8A8 : constant Pixel_Format := 7;
    --  32 bpp (1 channel - float)
-   PIXELFORMAT_UNCOMPRESSED_R32 : constant Pixel_Format := 8;
+   Pixelformat_Uncompressed_R32 : constant Pixel_Format := 8;
    --  32*3 bpp (3 channels - float)
-   PIXELFORMAT_UNCOMPRESSED_R32G32B32 : constant Pixel_Format := 9;
+   Pixelformat_Uncompressed_R32G32B32 : constant Pixel_Format := 9;
    --  32*4 bpp (4 channels - float)
-   PIXELFORMAT_UNCOMPRESSED_R32G32B32A32 : constant Pixel_Format := 10;
+   Pixelformat_Uncompressed_R32G32B32A32 : constant Pixel_Format := 10;
    --  4 bpp (no alpha)
-   PIXELFORMAT_COMPRESSED_DXT1_RGB : constant Pixel_Format := 11;
+   Pixelformat_Compressed_DXT1_RGB : constant Pixel_Format := 11;
    --  4 bpp (1 bit alpha)
-   PIXELFORMAT_COMPRESSED_DXT1_RGBA : constant Pixel_Format := 12;
+   Pixelformat_Compressed_DXT1_RGBA : constant Pixel_Format := 12;
    --  8 bpp
-   PIXELFORMAT_COMPRESSED_DXT3_RGBA : constant Pixel_Format := 13;
+   Pixelformat_Compressed_DXT3_RGBA : constant Pixel_Format := 13;
    --  8 bpp
-   PIXELFORMAT_COMPRESSED_DXT5_RGBA : constant Pixel_Format := 14;
+   Pixelformat_Compressed_DXT5_RGBA : constant Pixel_Format := 14;
    --  4 bpp
-   PIXELFORMAT_COMPRESSED_ETC1_RGB : constant Pixel_Format := 15;
+   Pixelformat_Compressed_ETC1_RGB : constant Pixel_Format := 15;
    --  4 bpp
-   PIXELFORMAT_COMPRESSED_ETC2_RGB : constant Pixel_Format := 16;
+   Pixelformat_Compressed_ETC2_RGB : constant Pixel_Format := 16;
    --  8 bpp
-   PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA : constant Pixel_Format := 17;
+   Pixelformat_Compressed_ETC2_EAC_RGBA : constant Pixel_Format := 17;
    --  4 bpp
-   PIXELFORMAT_COMPRESSED_PVRT_RGB : constant Pixel_Format := 18;
+   Pixelformat_Compressed_PVRT_RGB : constant Pixel_Format := 18;
    --  4 bpp
-   PIXELFORMAT_COMPRESSED_PVRT_RGBA : constant Pixel_Format := 19;
+   Pixelformat_Compressed_PVRT_RGBA : constant Pixel_Format := 19;
    --  8 bpp
-   PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA : constant Pixel_Format := 20;
+   Pixelformat_Compressed_ASTC_4X4_RGBA : constant Pixel_Format := 20;
    --  2 bpp
-   PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA : constant Pixel_Format := 21;
+   Pixelformat_Compressed_ASTC_8X8_RGBA : constant Pixel_Format := 21;
 
    --  Texture parameters: filter mode
-   subtype Texture_Filter is Integer;
+   type Texture_Filter is new Interfaces.C.unsigned;
 
    --  No filter, just pixel approximation
-   TEXTURE_FILTER_POINT : constant Texture_Filter := 0;
+   Texture_Filter_Point : constant Texture_Filter := 0;
    --  Linear filtering
-   TEXTURE_FILTER_BILINEAR : constant Texture_Filter := 1;
+   Texture_Filter_Bilinear : constant Texture_Filter := 1;
    --  Trilinear filtering (linear with mipmaps)
-   TEXTURE_FILTER_TRILINEAR : constant Texture_Filter := 2;
+   Texture_Filter_Trilinear : constant Texture_Filter := 2;
    --  Anisotropic filtering 4x
-   TEXTURE_FILTER_ANISOTROPIC_4X : constant Texture_Filter := 3;
+   Texture_Filter_Anisotropic_4x : constant Texture_Filter := 3;
    --  Anisotropic filtering 8x
-   TEXTURE_FILTER_ANISOTROPIC_8X : constant Texture_Filter := 4;
+   Texture_Filter_Anisotropic_8x : constant Texture_Filter := 4;
    --  Anisotropic filtering 16x
-   TEXTURE_FILTER_ANISOTROPIC_16X : constant Texture_Filter := 5;
+   Texture_Filter_Anisotropic_16x : constant Texture_Filter := 5;
 
    --  Texture parameters: wrap mode
-   subtype Texture_Wrap is Integer;
+   type Texture_Wrap is new Interfaces.C.unsigned;
 
    --  Repeats texture in tiled mode
-   TEXTURE_WRAP_REPEAT : constant Texture_Wrap := 0;
+   Texture_Wrap_Repeat : constant Texture_Wrap := 0;
    --  Clamps texture to edge pixel in tiled mode
-   TEXTURE_WRAP_CLAMP : constant Texture_Wrap := 1;
+   Texture_Wrap_Clamp : constant Texture_Wrap := 1;
    --  Mirrors and repeats the texture in tiled mode
-   TEXTURE_WRAP_MIRROR_REPEAT : constant Texture_Wrap := 2;
+   Texture_Wrap_Mirror_Repeat : constant Texture_Wrap := 2;
    --  Mirrors and clamps to border the texture in tiled mode
-   TEXTURE_WRAP_MIRROR_CLAMP : constant Texture_Wrap := 3;
+   Texture_Wrap_Mirror_Clamp : constant Texture_Wrap := 3;
 
    --  Cubemap layouts
-   subtype Cubemap_Layout is Integer;
+   type Cubemap_Layout is new Interfaces.C.unsigned;
 
    --  Automatically detect layout type
-   CUBEMAP_LAYOUT_AUTO_DETECT : constant Cubemap_Layout := 0;
+   Cubemap_Layout_Auto_Detect : constant Cubemap_Layout := 0;
    --  Layout is defined by a vertical line with faces
-   CUBEMAP_LAYOUT_LINE_VERTICAL : constant Cubemap_Layout := 1;
+   Cubemap_Layout_Line_Vertical : constant Cubemap_Layout := 1;
    --  Layout is defined by an horizontal line with faces
-   CUBEMAP_LAYOUT_LINE_HORIZONTAL : constant Cubemap_Layout := 2;
+   Cubemap_Layout_Line_Horizontal : constant Cubemap_Layout := 2;
    --  Layout is defined by a 3x4 cross with cubemap faces
-   CUBEMAP_LAYOUT_CROSS_THREE_BY_FOUR : constant Cubemap_Layout := 3;
+   Cubemap_Layout_Cross_Three_By_Four : constant Cubemap_Layout := 3;
    --  Layout is defined by a 4x3 cross with cubemap faces
-   CUBEMAP_LAYOUT_CROSS_FOUR_BY_THREE : constant Cubemap_Layout := 4;
+   Cubemap_Layout_Cross_Four_By_Three : constant Cubemap_Layout := 4;
    --  Layout is defined by a panorama image (equirectangular map)
-   CUBEMAP_LAYOUT_PANORAMA : constant Cubemap_Layout := 5;
+   Cubemap_Layout_Panorama : constant Cubemap_Layout := 5;
 
    --  Font type, defines generation method
-   subtype Font_Type is Integer;
+   type Font_Type is new Interfaces.C.unsigned;
 
    --  Default font generation, anti-aliased
-   FONT_DEFAULT : constant Font_Type := 0;
+   Font_Default : constant Font_Type := 0;
    --  Bitmap font generation, no anti-aliasing
-   FONT_BITMAP : constant Font_Type := 1;
+   Font_Bitmap : constant Font_Type := 1;
    --  SDF font generation, requires external shader
-   FONT_SDF : constant Font_Type := 2;
+   Font_SDF : constant Font_Type := 2;
 
    --  Color blending modes (pre-defined)
-   subtype Blend_Mode is Integer;
+   type Blend_Mode is new Interfaces.C.unsigned;
 
    --  Blend textures considering alpha (default)
-   BLEND_ALPHA : constant Blend_Mode := 0;
+   Blend_Alpha : constant Blend_Mode := 0;
    --  Blend textures adding colors
-   BLEND_ADDITIVE : constant Blend_Mode := 1;
+   Blend_Additive : constant Blend_Mode := 1;
    --  Blend textures multiplying colors
-   BLEND_MULTIPLIED : constant Blend_Mode := 2;
+   Blend_Multiplied : constant Blend_Mode := 2;
    --  Blend textures adding colors (alternative)
-   BLEND_ADD_COLORS : constant Blend_Mode := 3;
+   Blend_Add_Colors : constant Blend_Mode := 3;
    --  Blend textures subtracting colors (alternative)
-   BLEND_SUBTRACT_COLORS : constant Blend_Mode := 4;
+   Blend_Subtract_Colors : constant Blend_Mode := 4;
    --  Blend premultiplied textures considering alpha
-   BLEND_ALPHA_PREMUL : constant Blend_Mode := 5;
+   Blend_Alpha_Premul : constant Blend_Mode := 5;
    --  Blend textures using custom src/dst factors (use rlSetBlendMode())
-   BLEND_CUSTOM : constant Blend_Mode := 6;
+   Blend_Custom : constant Blend_Mode := 6;
 
    --  Gesture
-   subtype Gesture is Integer;
+   type Gesture is new Interfaces.C.unsigned;
 
    --  No gesture
-   GESTURE_NONE : constant Gesture := 0;
+   Gesture_None : constant Gesture := 0;
    --  Tap gesture
-   GESTURE_TAP : constant Gesture := 1;
+   Gesture_Tap : constant Gesture := 1;
    --  Double tap gesture
-   GESTURE_DOUBLETAP : constant Gesture := 2;
+   Gesture_Doubletap : constant Gesture := 2;
    --  Hold gesture
-   GESTURE_HOLD : constant Gesture := 4;
+   Gesture_Hold : constant Gesture := 4;
    --  Drag gesture
-   GESTURE_DRAG : constant Gesture := 8;
+   Gesture_Drag : constant Gesture := 8;
    --  Swipe right gesture
-   GESTURE_SWIPE_RIGHT : constant Gesture := 16;
+   Gesture_Swipe_Right : constant Gesture := 16;
    --  Swipe left gesture
-   GESTURE_SWIPE_LEFT : constant Gesture := 32;
+   Gesture_Swipe_Left : constant Gesture := 32;
    --  Swipe up gesture
-   GESTURE_SWIPE_UP : constant Gesture := 64;
+   Gesture_Swipe_Up : constant Gesture := 64;
    --  Swipe down gesture
-   GESTURE_SWIPE_DOWN : constant Gesture := 128;
+   Gesture_Swipe_Down : constant Gesture := 128;
    --  Pinch in gesture
-   GESTURE_PINCH_IN : constant Gesture := 256;
+   Gesture_Pinch_In : constant Gesture := 256;
    --  Pinch out gesture
-   GESTURE_PINCH_OUT : constant Gesture := 512;
+   Gesture_Pinch_Out : constant Gesture := 512;
 
    --  Camera system modes
-   subtype Camera_Mode is Integer;
+   type Camera_Mode is new Interfaces.C.unsigned;
 
    --  Custom camera
-   CAMERA_CUSTOM : constant Camera_Mode := 0;
+   Camera_Custom : constant Camera_Mode := 0;
    --  Free camera
-   CAMERA_FREE : constant Camera_Mode := 1;
+   Camera_Free : constant Camera_Mode := 1;
    --  Orbital camera
-   CAMERA_ORBITAL : constant Camera_Mode := 2;
+   Camera_Orbital : constant Camera_Mode := 2;
    --  First person camera
-   CAMERA_FIRST_PERSON : constant Camera_Mode := 3;
+   Camera_First_Person : constant Camera_Mode := 3;
    --  Third person camera
-   CAMERA_THIRD_PERSON : constant Camera_Mode := 4;
+   Camera_Third_Person : constant Camera_Mode := 4;
 
    --  Camera projection
-   subtype Camera_Projection is Integer;
+   type Camera_Projection is new Interfaces.C.unsigned;
 
    --  Perspective projection
-   CAMERA_PERSPECTIVE : constant Camera_Projection := 0;
+   Camera_Perspective : constant Camera_Projection := 0;
    --  Orthographic projection
-   CAMERA_ORTHOGRAPHIC : constant Camera_Projection := 1;
+   Camera_Orthographic : constant Camera_Projection := 1;
 
    --  N-patch layout
-   subtype N_Patch_Layout is Integer;
+   type N_Patch_Layout is new Interfaces.C.unsigned;
 
    --  Npatch layout: 3x3 tiles
-   NPATCH_NINE_PATCH : constant N_Patch_Layout := 0;
+   Npatch_Nine_Patch : constant N_Patch_Layout := 0;
    --  Npatch layout: 1x3 tiles
-   NPATCH_THREE_PATCH_VERTICAL : constant N_Patch_Layout := 1;
+   Npatch_Three_Patch_Vertical : constant N_Patch_Layout := 1;
    --  Npatch layout: 3x1 tiles
-   NPATCH_THREE_PATCH_HORIZONTAL : constant N_Patch_Layout := 2;
+   Npatch_Three_Patch_Horizontal : constant N_Patch_Layout := 2;
 
    type Trace_Log_Callback is access procedure
      (Log_Level : RayLib.Trace_Log_Level; Text : String);
