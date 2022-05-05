@@ -3145,7 +3145,7 @@ package RayLib is
 
    procedure Draw_Mesh_Instanced
      (Mesh       : RayLib.Mesh'Class; Material : RayLib.Material'Class;
-      Transforms : Transform_Array; Instances : Integer);
+      Transforms : Transform_Array; Instances : Natural);
    --  Draw multiple mesh instances with material and different transforms
 
    function Export_Mesh
@@ -3162,11 +3162,11 @@ package RayLib is
    procedure Gen_Mesh_Binormals (Mesh : in out RayLib.Mesh);
    --  Compute mesh binormals
 
-   function Gen_Mesh_Poly (Sides : Integer; Radius : Float) return RayLib.Mesh;
+   function Gen_Mesh_Poly (Sides : Natural; Radius : Float) return RayLib.Mesh;
    --  Generate polygonal mesh
 
    function Gen_Mesh_Plane
-     (Width : Float; Length : Float; Res_X : Integer; Res_Z : Integer)
+     (Width : Float; Length : Float; Res_X : Integer; Res_Z : Natural)
       return RayLib.Mesh;
    --  Generate plane mesh (with subdivisions)
 
@@ -3175,28 +3175,28 @@ package RayLib is
    --  Generate cuboid mesh
 
    function Gen_Mesh_Sphere
-     (Radius : Float; Rings : Integer; Slices : Integer) return RayLib.Mesh;
+     (Radius : Float; Rings : Integer; Slices : Natural) return RayLib.Mesh;
    --  Generate sphere mesh (standard sphere)
 
    function Gen_Mesh_Hemi_Sphere
-     (Radius : Float; Rings : Integer; Slices : Integer) return RayLib.Mesh;
+     (Radius : Float; Rings : Integer; Slices : Natural) return RayLib.Mesh;
    --  Generate half-sphere mesh (no bottom cap)
 
    function Gen_Mesh_Cylinder
-     (Radius : Float; Height : Float; Slices : Integer) return RayLib.Mesh;
+     (Radius : Float; Height : Float; Slices : Natural) return RayLib.Mesh;
    --  Generate cylinder mesh
 
    function Gen_Mesh_Cone
-     (Radius : Float; Height : Float; Slices : Integer) return RayLib.Mesh;
+     (Radius : Float; Height : Float; Slices : Natural) return RayLib.Mesh;
    --  Generate cone/pyramid mesh
 
    function Gen_Mesh_Torus
-     (Radius : Float; Size : Float; Rad_Seg : Integer; Sides : Integer)
+     (Radius : Float; Size : Float; Rad_Seg : Natural; Sides : Natural)
       return RayLib.Mesh;
    --  Generate torus mesh
 
    function Gen_Mesh_Knot
-     (Radius : Float; Size : Float; Rad_Seg : Integer; Sides : Integer)
+     (Radius : Float; Size : Float; Rad_Seg : Natural; Sides : Natural)
       return RayLib.Mesh;
    --  Generate trefoil knot mesh
 
@@ -3217,7 +3217,7 @@ package RayLib is
    --  Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 
    procedure Set_Material_Texture
-     (Material : in out RayLib.Material'Class; Map_Type : Integer;
+     (Material : in out RayLib.Material'Class; Map_Type : Material_Map_Index;
       Texture  :        RayLib.Texture2D'Class);
    --  Set texture for a material map type
    --  (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
@@ -3363,13 +3363,13 @@ package RayLib is
    --  Copy a wave to a new wave
 
    procedure Wave_Crop
-     (Wave         : in out RayLib.Wave; Init_Sample : Integer;
-      Final_Sample :        Integer);
+     (Wave         : in out RayLib.Wave; Init_Sample : Natural;
+      Final_Sample :        Natural);
    --  Crop a wave to defined samples range
 
    procedure Wave_Format
-     (Wave : in out RayLib.Wave; Sample_Rate : Integer; Sample_Size : Integer;
-      Channels :        Integer);
+     (Wave : in out RayLib.Wave; Sample_Rate : Natural; Sample_Size : Natural;
+      Channels :        Natural);
    --  Convert wave data to desired format
 
    function Load_Wave_Samples (Wave : RayLib.Wave) return RayLib.Float_Array;
@@ -3403,8 +3403,9 @@ package RayLib is
    procedure Seek_Music_Stream (Music : RayLib.Music; Position : Float);
    --  Seek music to a position (in seconds)
 
-   procedure Set_Music_Volume (Music : RayLib.Music; Volume : Float);
-   --  Set volume for music (1.0 is max level)
+   procedure Set_Music_Volume (Music : RayLib.Music; Volume : Float) with
+      Pre => Volume <= 1.0;
+      --  Set volume for music (1.0 is max level)
 
    procedure Set_Music_Pitch (Music : RayLib.Music; Pitch : Float);
    --  Set pitch for a music (1.0 is base level)
@@ -3425,7 +3426,7 @@ package RayLib is
 
    procedure Update_Audio_Stream
      (Stream      : RayLib.Audio_Stream; Data : Stream_Element_Array;
-      Frame_Count : Integer);
+      Frame_Count : Natural);
    --  Update audio stream buffers with data
 
    function Is_Audio_Stream_Processed
@@ -3459,7 +3460,7 @@ package RayLib is
    procedure Set_Audio_Stream_Pan (Stream : RayLib.Audio_Stream; Pan : Float);
    --  Set pan for audio stream (0.5 is centered)
 
-   procedure Set_Audio_Stream_Buffer_Size_Default (Size : Integer);
+   procedure Set_Audio_Stream_Buffer_Size_Default (Size : Natural);
    --  Default size for new audio streams
 private
    type Image_Payload is record
