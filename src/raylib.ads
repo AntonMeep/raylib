@@ -608,8 +608,8 @@ package RayLib is
    --  Enumerations definition
    ------------------------------
 
-   --  System/Window config flags
    type Config_Flag is new Interfaces.C.unsigned;
+   --  System/Window config flags
 
    Flag_Vsync_Hint : constant Config_Flag := 16#0000_0040#;
    --  Set to try enabling V-Sync on GPU
@@ -652,8 +652,8 @@ package RayLib is
    Flag_Interlaced_Hint : constant Config_Flag := 16#0001_0000#;
    --  Set to try enabling interlaced video format (for V3D)
 
-   --  Trace log level
    type Trace_Log_Level is new Interfaces.C.unsigned;
+   --  Trace log level
 
    Log_All : constant Trace_Log_Level := 0;
    --  Display all logs
@@ -679,8 +679,8 @@ package RayLib is
    Log_None : constant Trace_Log_Level := 7;
    --  Disable logging
 
-   --  Keyboard keys (US keyboard layout)
    type Keyboard_Key is new Interfaces.C.unsigned;
+   --  Keyboard keys (US keyboard layout)
 
    Key_Null : constant Keyboard_Key := 0;
    --  Key: NULL, used for no key pressed
@@ -1012,8 +1012,8 @@ package RayLib is
    Key_Volume_Down : constant Keyboard_Key := 25;
    --  Key: Android volume down button
 
-   --  Mouse buttons
    type Mouse_Button is new Interfaces.C.unsigned;
+   --  Mouse buttons
 
    Mouse_Button_Left : constant Mouse_Button := 0;
    --  Mouse button left
@@ -1036,8 +1036,8 @@ package RayLib is
    Mouse_Button_Back : constant Mouse_Button := 6;
    --  Mouse button back (advanced mouse device)
 
-   --  Mouse cursor
    type Mouse_Cursor is new Interfaces.C.unsigned;
+   --  Mouse cursor
 
    Mouse_Cursor_Default : constant Mouse_Cursor := 0;
    --  Default pointer shape
@@ -1072,8 +1072,8 @@ package RayLib is
    Mouse_Cursor_Not_Allowed : constant Mouse_Cursor := 10;
    --  The operation-not-allowed shape
 
-   --  Gamepad buttons
    type Gamepad_Button is new Interfaces.C.unsigned;
+   --  Gamepad buttons
 
    Gamepad_Button_Unknown : constant Gamepad_Button := 0;
    --  Unknown button, just for error checking
@@ -1129,8 +1129,8 @@ package RayLib is
    Gamepad_Button_Right_Thumb : constant Gamepad_Button := 17;
    --  Gamepad joystick pressed button right
 
-   --  Gamepad axis
    type Gamepad_Axis is new Interfaces.C.unsigned;
+   --  Gamepad axis
 
    Gamepad_Axis_Left_X : constant Gamepad_Axis := 0;
    --  Gamepad left stick X axis
@@ -1150,8 +1150,8 @@ package RayLib is
    Gamepad_Axis_Right_Trigger : constant Gamepad_Axis := 5;
    --  Gamepad back trigger right, pressure level: [1..-1]
 
-   --  Material map index
    type Material_Map_Index is new Interfaces.C.unsigned;
+   --  Material map index
 
    Material_Map_Albedo : constant Material_Map_Index := 0;
    --  Albedo material (same as: MATERIAL_MAP_DIFFUSE)
@@ -1191,8 +1191,8 @@ package RayLib is
    Material_Map_Specular : constant Material_Map_Index :=
      Material_Map_Metalness;
 
-   --  Shader location index
    type Shader_Location_Index is new Interfaces.C.unsigned;
+   --  Shader location index
 
    Shader_Loc_Vertex_Position : constant Shader_Location_Index := 0;
    --  Shader location: vertex attribute: position
@@ -1278,8 +1278,8 @@ package RayLib is
    Shader_Loc_Map_Specular : constant Shader_Location_Index :=
      Shader_Loc_Map_Metalness;
 
-   --  Shader uniform data type
    type Shader_Uniform_Data_Type is new Interfaces.C.unsigned;
+   --  Shader uniform data type
 
    Shader_Uniform_Float : constant Shader_Uniform_Data_Type := 0;
    --  Shader uniform type: float
@@ -1308,8 +1308,8 @@ package RayLib is
    Shader_Uniform_Sampler2D : constant Shader_Uniform_Data_Type := 8;
    --  Shader uniform type: sampler2d
 
-   --  Shader attribute data types
    type Shader_Attribute_Data_Type is new Interfaces.C.unsigned;
+   --  Shader attribute data types
 
    Shader_Attrib_Float : constant Shader_Attribute_Data_Type := 0;
    --  Shader attribute type: float
@@ -1323,8 +1323,8 @@ package RayLib is
    Shader_Attrib_Vec4 : constant Shader_Attribute_Data_Type := 3;
    --  Shader attribute type: vec4 (4 float)
 
-   --  Pixel formats
    type Pixel_Format is new Interfaces.C.unsigned;
+   --  Pixel formats
 
    Pixelformat_Uncompressed_Grayscale : constant Pixel_Format := 1;
    --  8 bit per pixel (no alpha)
@@ -1389,8 +1389,8 @@ package RayLib is
    Pixelformat_Compressed_ASTC_8X8_RGBA : constant Pixel_Format := 21;
    --  2 bpp
 
-   --  Texture parameters: filter mode
    type Texture_Filter is new Interfaces.C.unsigned;
+   --  Texture parameters: filter mode
 
    Texture_Filter_Point : constant Texture_Filter := 0;
    --  No filter, just pixel approximation
@@ -1410,8 +1410,8 @@ package RayLib is
    Texture_Filter_Anisotropic_16x : constant Texture_Filter := 5;
    --  Anisotropic filtering 16x
 
-   --  Texture parameters: wrap mode
    type Texture_Wrap is new Interfaces.C.unsigned;
+   --  Texture parameters: wrap mode
 
    Texture_Wrap_Repeat : constant Texture_Wrap := 0;
    --  Repeats texture in tiled mode
@@ -1425,8 +1425,8 @@ package RayLib is
    Texture_Wrap_Mirror_Clamp : constant Texture_Wrap := 3;
    --  Mirrors and clamps to border the texture in tiled mode
 
-   --  Cubemap layouts
    type Cubemap_Layout is new Interfaces.C.unsigned;
+   --  Cubemap layouts
 
    Cubemap_Layout_Auto_Detect : constant Cubemap_Layout := 0;
    --  Automatically detect layout type
@@ -1446,8 +1446,8 @@ package RayLib is
    Cubemap_Layout_Panorama : constant Cubemap_Layout := 5;
    --  Layout is defined by a panorama image (equirectangular map)
 
-   --  Font type, defines generation method
    type Font_Type is new Interfaces.C.unsigned;
+   --  Font type, defines generation method
 
    Font_Default : constant Font_Type := 0;
    --  Default font generation, anti-aliased
@@ -1458,8 +1458,8 @@ package RayLib is
    Font_SDF : constant Font_Type := 2;
    --  SDF font generation, requires external shader
 
-   --  Color blending modes (pre-defined)
    type Blend_Mode is new Interfaces.C.unsigned;
+   --  Color blending modes (pre-defined)
 
    Blend_Alpha : constant Blend_Mode := 0;
    --  Blend textures considering alpha (default)
@@ -1482,8 +1482,8 @@ package RayLib is
    Blend_Custom : constant Blend_Mode := 6;
    --  Blend textures using custom src/dst factors (use rlSetBlendMode())
 
-   --  Gesture
    type Gesture is new Interfaces.C.unsigned;
+   --  Gesture
 
    Gesture_None : constant Gesture := 0;
    --  No gesture
@@ -1518,8 +1518,8 @@ package RayLib is
    Gesture_Pinch_Out : constant Gesture := 512;
    --  Pinch out gesture
 
-   --  Camera system modes
    type Camera_Mode is new Interfaces.C.unsigned;
+   --  Camera system modes
 
    Camera_Custom : constant Camera_Mode := 0;
    --  Custom camera
@@ -1536,8 +1536,8 @@ package RayLib is
    Camera_Third_Person : constant Camera_Mode := 4;
    --  Third person camera
 
-   --  Camera projection
    type Camera_Projection is new Interfaces.C.unsigned;
+   --  Camera projection
 
    Camera_Perspective : constant Camera_Projection := 0;
    --  Perspective projection
@@ -1545,8 +1545,8 @@ package RayLib is
    Camera_Orthographic : constant Camera_Projection := 1;
    --  Orthographic projection
 
-   --  N-patch layout
    type N_Patch_Layout is new Interfaces.C.unsigned;
+   --  N-patch layout
 
    Npatch_Nine_Patch : constant N_Patch_Layout := 0;
    --  Npatch layout: 3x3 tiles
