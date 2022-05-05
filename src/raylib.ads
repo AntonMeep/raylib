@@ -42,6 +42,10 @@ package RayLib is
    --  Single 8-bit color component
    for Color_Component'Size use 8;
 
+   type Monitor_Id is new Natural;
+
+   type Gamepad_Id is new Natural;
+
    ------------------------------
    --  Enumerations definition
    ------------------------------
@@ -1569,7 +1573,7 @@ package RayLib is
    --  Windows and graphics device functions
    ------------------------------
 
-   procedure Init_Window (Width : Integer; Height : Integer; Title : String);
+   procedure Init_Window (Width : Natural; Height : Natural; Title : String);
    --  Initialize window and OpenGL context
 
    function Window_Should_Close return Boolean;
@@ -1635,64 +1639,65 @@ package RayLib is
       External_Name => "RestoreWindow";
       --  Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
 
-   procedure Set_Window_Icon (Image : RayLib.Image);
+   procedure Set_Window_Icon (Image : RayLib.Image'Class);
    --  Set icon for window (only PLATFORM_DESKTOP)
 
    procedure Set_Window_Title (Title : String);
    --  Set title for window (only PLATFORM_DESKTOP)
 
-   procedure Set_Window_Position (X : Integer; Y : Integer);
+   procedure Set_Window_Position (X : Natural; Y : Natural);
    --  Set window position on screen (only PLATFORM_DESKTOP)
 
-   procedure Set_Window_Monitor (Monitor : Integer);
+   procedure Set_Window_Monitor (Monitor : Monitor_Id);
    --  Set monitor for the current window (fullscreen mode)
 
-   procedure Set_Window_Min_Size (Width : Integer; Height : Integer);
+   procedure Set_Window_Min_Size (Width : Natural; Height : Natural);
    --  Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
 
-   procedure Set_Window_Size (Width : Integer; Height : Integer);
+   procedure Set_Window_Size (Width : Natural; Height : Natural);
    --  Set window dimensions
 
-   procedure Set_Window_Opacity (Opacity : Float);
-   --  Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
+   procedure Set_Window_Opacity (Opacity : Float) with
+      Pre => Opacity >= 0.0 and Opacity <= 1.0;
+      --  Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
 
    function Get_Window_Handle return System.Address;
    --  Get native window handle
 
-   function Get_Screen_Width return Integer;
+   function Get_Screen_Width return Natural;
    --  Get current screen width
 
-   function Get_Screen_Height return Integer;
+   function Get_Screen_Height return Natural;
    --  Get current screen height
 
-   function Get_Render_Width return Integer;
+   function Get_Render_Width return Natural;
    --  Get current render width (it considers HiDPI)
 
-   function Get_Render_Height return Integer;
+   function Get_Render_Height return Natural;
    --  Get current render height (it considers HiDPI)
 
-   function Get_Monitor_Count return Integer;
+   function Get_Monitor_Count return Natural;
    --  Get number of connected monitors
 
-   function Get_Current_Monitor return Integer;
+   function Get_Current_Monitor return Monitor_Id;
    --  Get current connected monitor
 
-   function Get_Monitor_Position (Monitor : Integer) return RayLib.Vector2;
+   function Get_Monitor_Position (Monitor : Monitor_Id) return RayLib.Vector2;
    --  Get specified monitor position
 
-   function Get_Monitor_Width (Monitor : Integer) return Integer;
+   function Get_Monitor_Width (Monitor : Monitor_Id) return Natural;
    --  Get specified monitor width (max available by monitor)
 
-   function Get_Monitor_Height (Monitor : Integer) return Integer;
+   function Get_Monitor_Height (Monitor : Monitor_Id) return Natural;
    --  Get specified monitor height (max available by monitor)
 
-   function Get_Monitor_Physical_Width (Monitor : Integer) return Integer;
+   function Get_Monitor_Physical_Width (Monitor : Monitor_Id) return Natural;
    --  Get specified monitor physical width in millimetres
 
-   function Get_Monitor_Physical_Height (Monitor : Integer) return Integer;
+   function Get_Monitor_Physical_Height (Monitor : Monitor_Id) return Natural;
    --  Get specified monitor physical height in millimetres
 
-   function Get_Monitor_Refresh_Rate (Monitor : Integer) return Integer;
+   function Get_Monitor_Refresh_Rate (Monitor : Monitor_Id) return Natural;
    --  Get specified monitor refresh rate
 
    function Get_Window_Position return RayLib.Vector2;
@@ -1701,7 +1706,7 @@ package RayLib is
    function Get_Window_Scale_DPI return RayLib.Vector2;
    --  Get window scale DPI factor
 
-   function Get_Monitor_Name (Monitor : Integer) return String;
+   function Get_Monitor_Name (Monitor : Monitor_Id) return String;
    --  Get the human-readable, UTF-8 encoded name of the primary monitor
 
    procedure Set_Clipboard_Text (Text : String);
@@ -1806,7 +1811,7 @@ package RayLib is
       External_Name => "EndShaderMode";
       --  End custom shader drawing (use default shader)
 
-   procedure Begin_Blend_Mode (Mode : Integer);
+   procedure Begin_Blend_Mode (Mode : Blend_Mode);
    --  Begin blending mode (alpha, additive, multiplied, subtract, custom)
 
    procedure End_Blend_Mode with
@@ -1815,8 +1820,7 @@ package RayLib is
       External_Name => "EndBlendMode";
       --  End blending mode (reset to default: alpha blending)
 
-   procedure Begin_Scissor_Mode
-     (X : Integer; Y : Integer; Width : Integer; Height : Integer);
+   procedure Begin_Scissor_Mode (X, Y, Width, Height : Natural);
    --  Begin scissor mode (define screen area for following drawing)
 
    procedure End_Scissor_Mode with
@@ -1890,8 +1894,8 @@ package RayLib is
    --  Get the screen space position for a 3d world space position
 
    function Get_World_To_Screen
-     (Position : RayLib.Vector3; Camera : RayLib.Camera; Width : Integer;
-      Height   : Integer) return RayLib.Vector2;
+     (Position : RayLib.Vector3; Camera : RayLib.Camera; Width : Natural;
+      Height   : Natural) return RayLib.Vector2;
    --  Get size position for a 3d world space position
 
    function Get_World_To_Screen2D
@@ -1904,10 +1908,10 @@ package RayLib is
       return RayLib.Vector2;
    --  Get the world space position for a 2d camera screen space position
 
-   procedure Set_Target_FPS (Fps : Integer);
+   procedure Set_Target_FPS (Fps : Natural);
    --  Set target FPS (maximum)
 
-   function Get_FPS return Integer;
+   function Get_FPS return Natural;
    --  Get current FPS
 
    function Get_Frame_Time return Float;
@@ -1976,7 +1980,7 @@ package RayLib is
      (File_Name : String; Ext : String) return Boolean;
    --  Check file extension (including point: .png, .wav)
 
-   function Get_File_Length (File_Name : String) return Integer;
+   function Get_File_Length (File_Name : String) return Natural;
    --  Get file length in bytes (NOTE: GetFileSize() conflicts with windows.h)
 
    function Get_File_Extension (File_Name : String) return String;
@@ -2063,36 +2067,36 @@ package RayLib is
    function Get_Char_Pressed return Character;
    --  Get char pressed (unicode), call it multiple times for chars queued, returns ASCII.NUL when the queue is empty
 
-   function Is_Gamepad_Available (Gamepad : Integer) return Boolean;
+   function Is_Gamepad_Available (Gamepad : Gamepad_Id) return Boolean;
    --  Check if a gamepad is available
 
-   function Get_Gamepad_Name (Gamepad : Integer) return String;
+   function Get_Gamepad_Name (Gamepad : Gamepad_Id) return String;
    --  Get gamepad internal name id
 
    function Is_Gamepad_Button_Pressed
-     (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
+     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean;
    --  Check if a gamepad button has been pressed once
 
    function Is_Gamepad_Button_Down
-     (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
+     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean;
    --  Check if a gamepad button is being pressed
 
    function Is_Gamepad_Button_Released
-     (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
+     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean;
    --  Check if a gamepad button has been released once
 
    function Is_Gamepad_Button_Up
-     (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
+     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean;
    --  Check if a gamepad button is NOT being pressed
 
    function Get_Gamepad_Button_Pressed return Gamepad_Button;
    --  Get the last gamepad button pressed
 
-   function Get_Gamepad_Axis_Count (Gamepad : Integer) return Integer;
+   function Get_Gamepad_Axis_Count (Gamepad : Gamepad_Id) return Integer;
    --  Get gamepad axis count for a gamepad
 
    function Get_Gamepad_Axis_Movement
-     (Gamepad : Integer; Axis : Gamepad_Axis) return Float;
+     (Gamepad : Gamepad_Id; Axis : Gamepad_Axis) return Float;
    --  Get axis movement value for a gamepad axis
 
    function Set_Gamepad_Mappings (Mappings : String) return Integer;
@@ -2110,10 +2114,10 @@ package RayLib is
    function Is_Mouse_Button_Up (Button : Mouse_Button) return Boolean;
    --  Check if a mouse button is NOT being pressed
 
-   function Get_Mouse_X return Integer;
+   function Get_Mouse_X return Natural;
    --  Get mouse position X
 
-   function Get_Mouse_Y return Integer;
+   function Get_Mouse_Y return Natural;
    --  Get mouse position Y
 
    function Get_Mouse_Position return RayLib.Vector2;
@@ -2122,7 +2126,7 @@ package RayLib is
    function Get_Mouse_Delta return RayLib.Vector2;
    --  Get mouse delta between frames
 
-   procedure Set_Mouse_Position (X : Integer; Y : Integer);
+   procedure Set_Mouse_Position (X : Natural; Y : Natural);
    --  Set mouse position XY
 
    procedure Set_Mouse_Offset (Offset_X : Integer; Offset_Y : Integer);
@@ -2137,10 +2141,10 @@ package RayLib is
    procedure Set_Mouse_Cursor (Cursor : Mouse_Cursor);
    --  Set mouse cursor
 
-   function Get_Touch_X return Integer;
+   function Get_Touch_X return Natural;
    --  Get touch position X for touch point 0 (relative to screen size)
 
-   function Get_Touch_Y return Integer;
+   function Get_Touch_Y return Natural;
    --  Get touch position Y for touch point 0 (relative to screen size)
 
    function Get_Touch_Position (Index : Integer) return RayLib.Vector2;
@@ -2202,15 +2206,15 @@ package RayLib is
    --  Set texture and rectangle to be used on shapes drawing
 
    procedure Draw_Pixel
-     (Pos_X : Integer; Pos_Y : Integer; Color : RayLib.Color);
+     (Pos_X : Natural; Pos_Y : Natural; Color : RayLib.Color);
    --  Draw a pixel
 
    procedure Draw_Pixel (Position : RayLib.Vector2; Color : RayLib.Color);
    --  Draw a pixel (Vector version)
 
    procedure Draw_Line
-     (Start_Pos_X : Integer; Start_Pos_Y : Integer; End_Pos_X : Integer;
-      End_Pos_Y   : Integer; Color : RayLib.Color);
+     (Start_Pos_X : Natural; Start_Pos_Y : Natural; End_Pos_X : Natural;
+      End_Pos_Y   : Natural; Color : RayLib.Color);
    --  Draw a line
 
    procedure Draw_Line
@@ -2244,22 +2248,22 @@ package RayLib is
    --  Draw lines sequence
 
    procedure Draw_Circle
-     (Center_X : Integer; Center_Y : Integer; Radius : Float;
+     (Center_X : Natural; Center_Y : Natural; Radius : Float;
       Color    : RayLib.Color);
    --  Draw a color-filled circle
 
    procedure Draw_Circle_Sector
      (Center    : RayLib.Vector2; Radius : Float; Start_Angle : Float;
-      End_Angle : Float; Segments : Integer; Color : RayLib.Color);
+      End_Angle : Float; Segments : Natural; Color : RayLib.Color);
    --  Draw a piece of a circle
 
    procedure Draw_Circle_Sector_Lines
      (Center    : RayLib.Vector2; Radius : Float; Start_Angle : Float;
-      End_Angle : Float; Segments : Integer; Color : RayLib.Color);
+      End_Angle : Float; Segments : Natural; Color : RayLib.Color);
    --  Draw circle sector outline
 
    procedure Draw_Circle_Gradient
-     (Center_X : Integer; Center_Y : Integer; Radius : Float;
+     (Center_X : Natural; Center_Y : Natural; Radius : Float;
       Color1   : RayLib.Color; Color2 : RayLib.Color);
    --  Draw a gradient-filled circle
 
@@ -2268,23 +2272,23 @@ package RayLib is
    --  Draw a color-filled circle (Vector version)
 
    procedure Draw_Circle_Lines
-     (Center_X : Integer; Center_Y : Integer; Radius : Float;
+     (Center_X : Natural; Center_Y : Natural; Radius : Float;
       Color    : RayLib.Color);
    --  Draw circle outline
 
    procedure Draw_Ellipse
-     (Center_X : Integer; Center_Y : Integer; Radius_H : Float;
+     (Center_X : Natural; Center_Y : Natural; Radius_H : Float;
       Radius_V : Float; Color : RayLib.Color);
    --  Draw ellipse
 
    procedure Draw_Ellipse_Lines
-     (Center_X : Integer; Center_Y : Integer; Radius_H : Float;
+     (Center_X : Natural; Center_Y : Natural; Radius_H : Float;
       Radius_V : Float; Color : RayLib.Color);
    --  Draw ellipse outline
 
    procedure Draw_Ring
      (Center      : RayLib.Vector2; Inner_Radius : Float; Outer_Radius : Float;
-      Start_Angle : Float; End_Angle : Float; Segments : Integer;
+      Start_Angle : Float; End_Angle : Float; Segments : Natural;
       Color       : RayLib.Color);
    --  Draw ring
 
@@ -2295,7 +2299,7 @@ package RayLib is
    --  Draw ring outline
 
    procedure Draw_Rectangle
-     (Pos_X : Integer; Pos_Y : Integer; Width : Integer; Height : Integer;
+     (Pos_X : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
       Color : RayLib.Color);
    --  Draw a color-filled rectangle
 
@@ -2312,12 +2316,12 @@ package RayLib is
    --  Draw a color-filled rectangle with pro parameters
 
    procedure Draw_Rectangle_Gradient_Vertical
-     (Pos_X  : Integer; Pos_Y : Integer; Width : Integer; Height : Integer;
+     (Pos_X  : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
       Color1 : RayLib.Color; Color2 : RayLib.Color);
    --  Draw a vertical-gradient-filled rectangle
 
    procedure Draw_Rectangle_Gradient_Horizontal
-     (Pos_X  : Integer; Pos_Y : Integer; Width : Integer; Height : Integer;
+     (Pos_X  : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
       Color1 : RayLib.Color; Color2 : RayLib.Color);
    --  Draw a horizontal-gradient-filled rectangle
 
@@ -2327,7 +2331,7 @@ package RayLib is
    --  Draw a gradient-filled rectangle with custom vertex colors
 
    procedure Draw_Rectangle_Lines
-     (Pos_X : Integer; Pos_Y : Integer; Width : Integer; Height : Integer;
+     (Pos_X : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
       Color : RayLib.Color);
    --  Draw rectangle outline
 
@@ -2336,12 +2340,12 @@ package RayLib is
    --  Draw rectangle outline with extended parameters
 
    procedure Draw_Rectangle_Rounded
-     (Rec   : RayLib.Rectangle; Roundness : Float; Segments : Integer;
+     (Rec   : RayLib.Rectangle; Roundness : Float; Segments : Natural;
       Color : RayLib.Color);
    --  Draw rectangle with rounded edges
 
    procedure Draw_Rectangle_Rounded_Lines
-     (Rec        : RayLib.Rectangle; Roundness : Float; Segments : Integer;
+     (Rec        : RayLib.Rectangle; Roundness : Float; Segments : Natural;
       Line_Thick : Float; Color : RayLib.Color);
    --  Draw rectangle with rounded edges outline
 
@@ -2364,17 +2368,17 @@ package RayLib is
    --  Draw a triangle strip defined by points
 
    procedure Draw_Poly
-     (Center   : RayLib.Vector2; Sides : Integer; Radius : Float;
+     (Center   : RayLib.Vector2; Sides : Natural; Radius : Float;
       Rotation : Float; Color : RayLib.Color);
    --  Draw a regular polygon (Vector version)
 
    procedure Draw_Poly_Lines
-     (Center   : RayLib.Vector2; Sides : Integer; Radius : Float;
+     (Center   : RayLib.Vector2; Sides : Natural; Radius : Float;
       Rotation : Float; Color : RayLib.Color);
    --  Draw a polygon outline of n sides
 
    procedure Draw_Poly_Lines
-     (Center   : RayLib.Vector2; Sides : Integer; Radius : Float;
+     (Center   : RayLib.Vector2; Sides : Natural; Radius : Float;
       Rotation : Float; Line_Thick : Float; Color : RayLib.Color);
    --  Draw a polygon outline of n sides with extended parameters
 
@@ -2414,7 +2418,7 @@ package RayLib is
 
    function Check_Collision_Point_Line
      (Point     : RayLib.Vector2; P1 : RayLib.Vector2; P2 : RayLib.Vector2;
-      Threshold : Integer) return Boolean;
+      Threshold : Natural) return Boolean;
    --  Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
 
    function Get_Collision_Rec
@@ -2426,19 +2430,18 @@ package RayLib is
    --  Load image from file into CPU memory (RAM)
 
    function Load_Image_Raw
-     (File_Name : String; Width : Integer; Height : Integer; Format : Integer;
-      Header_Size : Integer) return RayLib.Image;
+     (File_Name : String; Width : Natural; Height : Natural;
+      Format    : Pixel_Format; Header_Size : Natural) return RayLib.Image;
    --  Load image from RAW file data
 
    function Load_Image_Anim
-     (File_Name : String; Frames : out Integer) return RayLib.Image;
+     (File_Name : String; Frames : out Natural) return RayLib.Image;
    --  Load image sequence from file (frames appended to image.data)
 
    function Load_Image_From_Memory
      (File_Type : String; File_Data : Stream_Element_Array)
-   --  Load image from memory buffer, fileType refers to extension: i.e. '.png'
-
       return RayLib.Image;
+   --  Load image from memory buffer, fileType refers to extension: i.e. '.png'
 
    function Load_Image_From_Texture
      (Texture : RayLib.Texture2D'Class) return RayLib.Image'Class;
@@ -2456,37 +2459,37 @@ package RayLib is
    --  Export image as code file defining an array of bytes, returns true on success
 
    function Gen_Image_Color
-     (Width : Integer; Height : Integer; Color : RayLib.Color)
+     (Width : Natural; Height : Natural; Color : RayLib.Color)
       return RayLib.Image;
    --  Generate image: plain color
 
    function Gen_Image_Gradient_Vertical
-     (Width  : Integer; Height : Integer; Top : RayLib.Color;
+     (Width  : Natural; Height : Natural; Top : RayLib.Color;
       Bottom : RayLib.Color) return RayLib.Image;
    --  Generate image: vertical gradient
 
    function Gen_Image_Gradient_Horizontal
-     (Width : Integer; Height : Integer; Left : RayLib.Color;
+     (Width : Natural; Height : Natural; Left : RayLib.Color;
       Right : RayLib.Color) return RayLib.Image;
    --  Generate image: horizontal gradient
 
    function Gen_Image_Gradient_Radial
-     (Width : Integer; Height : Integer; Density : Float; Inner : RayLib.Color;
+     (Width : Natural; Height : Natural; Density : Float; Inner : RayLib.Color;
       Outer : RayLib.Color) return RayLib.Image;
    --  Generate image: radial gradient
 
    function Gen_Image_Checked
-     (Width    : Integer; Height : Integer; Checks_X : Integer;
-      Checks_Y : Integer; Col1 : RayLib.Color; Col2 : RayLib.Color)
+     (Width    : Natural; Height : Natural; Checks_X : Natural;
+      Checks_Y : Natural; Col1 : RayLib.Color; Col2 : RayLib.Color)
       return RayLib.Image;
    --  Generate image: checked
 
    function Gen_Image_White_Noise
-     (Width : Integer; Height : Integer; Factor : Float) return RayLib.Image;
+     (Width : Natural; Height : Natural; Factor : Float) return RayLib.Image;
    --  Generate image: white noise
 
    function Gen_Image_Cellular
-     (Width : Integer; Height : Integer; Tile_Size : Integer)
+     (Width : Natural; Height : Natural; Tile_Size : Natural)
       return RayLib.Image;
    --  Generate image: cellular algorithm, bigger tileSize means bigger cells
 
@@ -2498,7 +2501,7 @@ package RayLib is
    --  Create an image from another image piece
 
    function Image_Text
-     (Text : String; Font_Size : Integer; Color : RayLib.Color)
+     (Text : String; Font_Size : Natural; Color : RayLib.Color)
       return RayLib.Image;
    --  Create an image from text (default font)
 
@@ -2507,7 +2510,8 @@ package RayLib is
       Spacing : Float; Tint : RayLib.Color) return RayLib.Image'Class;
    --  Create an image from text (custom sprite font)
 
-   procedure Image_Format (Image : in out RayLib.Image; New_Format : Integer);
+   procedure Image_Format
+     (Image : in out RayLib.Image; New_Format : Pixel_Format);
    --  Convert image data to desired format
 
    procedure Image_To_POT (Image : in out RayLib.Image; Fill : RayLib.Color);
@@ -2531,24 +2535,24 @@ package RayLib is
    --  Premultiply alpha channel
 
    procedure Image_Resize
-     (Image : in out RayLib.Image; New_Width : Integer; New_Height : Integer);
+     (Image : in out RayLib.Image; New_Width : Natural; New_Height : Natural);
    --  Resize image (Bicubic scaling algorithm)
 
    procedure Image_Resize_NN
-     (Image : in out RayLib.Image; New_Width : Integer; New_Height : Integer);
+     (Image : in out RayLib.Image; New_Width : Natural; New_Height : Natural);
    --  Resize image (Nearest-Neighbor scaling algorithm)
 
    procedure Image_Resize_Canvas
-     (Image : in out RayLib.Image; New_Width : Integer; New_Height : Integer;
-      Offset_X :        Integer; Offset_Y : Integer; Fill : RayLib.Color);
+     (Image : in out RayLib.Image; New_Width : Natural; New_Height : Natural;
+      Offset_X :        Natural; Offset_Y : Natural; Fill : RayLib.Color);
    --  Resize canvas and fill with color
 
    procedure Image_Mipmaps (Image : in out RayLib.Image);
    --  Compute all mipmap levels for a provided image
 
    procedure Image_Dither
-     (Image : in out RayLib.Image; R_Bpp : Integer; G_Bpp : Integer;
-      B_Bpp :        Integer; A_Bpp : Integer);
+     (Image : in out RayLib.Image; R_Bpp : Natural; G_Bpp : Natural;
+      B_Bpp :        Natural; A_Bpp : Natural);
    --  Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
 
    procedure Image_Flip_Vertical (Image : in out RayLib.Image);
@@ -2590,7 +2594,7 @@ package RayLib is
    --  Load color data from image as a Color array (RGBA - 32bit)
 
    function Load_Image_Palette
-     (Image : RayLib.Image; Max_Palette_Size : Integer)
+     (Image : RayLib.Image; Max_Palette_Size : Natural)
       return RayLib.Color_Array;
    --  Load colors palette from image as a Color array (RGBA - 32bit)
 
@@ -2599,7 +2603,7 @@ package RayLib is
    --  Get image alpha border rectangle
 
    function Get_Image_Color
-     (Image : RayLib.Image; X : Integer; Y : Integer) return RayLib.Color;
+     (Image : RayLib.Image; X : Natural; Y : Natural) return RayLib.Color;
    --  Get image pixel color at (x, y) position
 
    procedure Image_Clear_Background
@@ -2607,7 +2611,7 @@ package RayLib is
    --  Clear image background with given color
 
    procedure Image_Draw_Pixel
-     (Dst   : in out RayLib.Image; Pos_X : Integer; Pos_Y : Integer;
+     (Dst   : in out RayLib.Image; Pos_X : Natural; Pos_Y : Natural;
       Color :        RayLib.Color);
    --  Draw pixel within an image
 
@@ -2617,8 +2621,8 @@ package RayLib is
    --  Draw pixel within an image (Vector version)
 
    procedure Image_Draw_Line
-     (Dst : in out RayLib.Image; Start_Pos_X : Integer; Start_Pos_Y : Integer;
-      End_Pos_X :        Integer; End_Pos_Y : Integer; Color : RayLib.Color);
+     (Dst : in out RayLib.Image; Start_Pos_X : Natural; Start_Pos_Y : Natural;
+      End_Pos_X :        Natural; End_Pos_Y : Natural; Color : RayLib.Color);
    --  Draw line within an image
 
    procedure Image_Draw_Line
@@ -2627,8 +2631,8 @@ package RayLib is
    --  Draw line within an image (Vector version)
 
    procedure Image_Draw_Circle
-     (Dst    : in out RayLib.Image; Center_X : Integer; Center_Y : Integer;
-      Radius :        Integer; Color : RayLib.Color);
+     (Dst    : in out RayLib.Image; Center_X : Natural; Center_Y : Natural;
+      Radius :        Natural; Color : RayLib.Color);
    --  Draw circle within an image
 
    procedure Image_Draw_Circle
@@ -2637,8 +2641,8 @@ package RayLib is
    --  Draw circle within an image (Vector version)
 
    procedure Image_Draw_Rectangle
-     (Dst   : in out RayLib.Image; Pos_X : Integer; Pos_Y : Integer;
-      Width :        Integer; Height : Integer; Color : RayLib.Color);
+     (Dst   : in out RayLib.Image; Pos_X : Natural; Pos_Y : Natural;
+      Width :        Natural; Height : Natural; Color : RayLib.Color);
    --  Draw rectangle within an image
 
    procedure Image_Draw_Rectangle
@@ -2651,7 +2655,7 @@ package RayLib is
    --  Draw rectangle within an image
 
    procedure Image_Draw_Rectangle_Lines
-     (Dst   : in out RayLib.Image; Rec : RayLib.Rectangle; Thick : Integer;
+     (Dst   : in out RayLib.Image; Rec : RayLib.Rectangle; Thick : Natural;
       Color :        RayLib.Color);
    --  Draw rectangle lines within an image
 
@@ -2662,8 +2666,8 @@ package RayLib is
    --  Draw a source image within a destination image (tint applied to source)
 
    procedure Image_Draw_Text
-     (Dst   : in out RayLib.Image; Text : String; Pos_X : Integer;
-      Pos_Y :        Integer; Font_Size : Integer; Color : RayLib.Color);
+     (Dst   : in out RayLib.Image; Text : String; Pos_X : Natural;
+      Pos_Y :        Natural; Font_Size : Natural; Color : RayLib.Color);
    --  Draw text (using default font) within an image (destination)
 
    procedure Image_Draw_Text
@@ -2680,12 +2684,12 @@ package RayLib is
    --  Load texture from image data
 
    function Load_Texture_Cubemap
-     (Image : RayLib.Image'Class; Layout : Integer)
+     (Image : RayLib.Image'Class; Layout : Cubemap_Layout)
       return RayLib.Texture_Cubemap'Class;
    --  Load cubemap from image, multiple image cubemap layouts supported
 
    function Load_Render_Texture
-     (Width : Integer; Height : Integer) return RayLib.Render_Texture2D;
+     (Width : Natural; Height : Natural) return RayLib.Render_Texture2D;
    --  Load texture for rendering (framebuffer)
 
    procedure Update_Texture
@@ -2709,7 +2713,7 @@ package RayLib is
    --  Set texture wrapping mode
 
    procedure Draw_Texture
-     (Texture : RayLib.Texture2D; Pos_X : Integer; Pos_Y : Integer;
+     (Texture : RayLib.Texture2D; Pos_X : Natural; Pos_Y : Natural;
       Tint    : RayLib.Color);
    --  Draw a Texture2D
 
@@ -2790,15 +2794,15 @@ package RayLib is
    --  Get Color structure from hexadecimal value
 
    function Get_Pixel_Color
-     (Src_Ptr : System.Address; Format : Integer) return RayLib.Color;
+     (Src_Ptr : System.Address; Format : Pixel_Format) return RayLib.Color;
    --  Get Color from a source pixel pointer of certain format
 
    procedure Set_Pixel_Color
-     (Dst_Ptr : System.Address; Color : RayLib.Color; Format : Integer);
+     (Dst_Ptr : System.Address; Color : RayLib.Color; Format : Pixel_Format);
    --  Set color formatted into destination pixel pointer
 
    function Get_Pixel_Data_Size
-     (Width : Integer; Height : Integer; Format : Integer) return Integer;
+     (Width : Natural; Height : Natural; Format : Pixel_Format) return Natural;
    --  Get pixel data size in bytes for certain format
 
    function Get_Font_Default return RayLib.Font;
@@ -2828,11 +2832,11 @@ package RayLib is
      (Font : RayLib.Font; File_Name : String) return Boolean;
    --  Export font as code file, returns true on success
 
-   procedure Draw_FPS (Pos_X : Integer; Pos_Y : Integer);
+   procedure Draw_FPS (Pos_X : Natural; Pos_Y : Natural);
    --  Draw current FPS
 
    procedure Draw_Text
-     (Text  : String; Pos_X : Integer; Pos_Y : Integer; Font_Size : Integer;
+     (Text  : String; Pos_X : Natural; Pos_Y : Natural; Font_Size : Natural;
       Color : RayLib.Color);
    --  Draw text (using default font)
 
