@@ -1573,390 +1573,417 @@ package RayLib is
    --  Windows and graphics device functions
    ------------------------------
 
-   --  Initialize window and OpenGL context
    procedure Init_Window (Width : Integer; Height : Integer; Title : String);
+   --  Initialize window and OpenGL context
 
-   --  Check if Key_Escape pressed or Close icon pressed
    function Window_Should_Close return Boolean;
+   --  Check if Key_Escape pressed or Close icon pressed
 
-   --  Close window and unload OpenGL context
-   procedure Close_Window;
+   procedure Close_Window with
+      Import,
+      Convention    => C,
+      External_Name => "CloseWindow";
+      --  Close window and unload OpenGL context
 
-   --  Check if window has been initialized successfully
    function Is_Window_Ready return Boolean;
+   --  Check if window has been initialized successfully
 
-   --  Check if window is currently fullscreen
    function Is_Window_Fullscreen return Boolean;
+   --  Check if window is currently fullscreen
 
-   --  Check if window is currently hidden (only PLATFORM_DESKTOP)
    function Is_Window_Hidden return Boolean;
+   --  Check if window is currently hidden (only PLATFORM_DESKTOP)
 
-   --  Check if window is currently minimized (only PLATFORM_DESKTOP)
    function Is_Window_Minimized return Boolean;
+   --  Check if window is currently minimized (only PLATFORM_DESKTOP)
 
-   --  Check if window is currently maximized (only PLATFORM_DESKTOP)
    function Is_Window_Maximized return Boolean;
+   --  Check if window is currently maximized (only PLATFORM_DESKTOP)
 
-   --  Check if window is currently focused (only PLATFORM_DESKTOP)
    function Is_Window_Focused return Boolean;
+   --  Check if window is currently focused (only PLATFORM_DESKTOP)
 
-   --  Check if window has been resized last frame
    function Is_Window_Resized return Boolean;
+   --  Check if window has been resized last frame
 
-   --  Check if one specific window flag is enabled
    function Is_Window_State (Flag : Config_Flag) return Boolean;
+   --  Check if one specific window flag is enabled
 
-   --  Set window configuration state using flags (only PLATFORM_DESKTOP)
    procedure Set_Window_State (Flags : Config_Flag);
+   --  Set window configuration state using flags (only PLATFORM_DESKTOP)
 
-   --  Clear window configuration state flags
    procedure Clear_Window_State (Flags : Config_Flag);
+   --  Clear window configuration state flags
 
-   --  Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
-   procedure Toggle_Fullscreen;
+   procedure Toggle_Fullscreen with
+      Import,
+      Convention    => C,
+      External_Name => "ToggleFullscreen";
+      --  Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
 
-   --  Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
-   procedure Maximize_Window;
+   procedure Maximize_Window with
+      Import,
+      Convention    => C,
+      External_Name => "MaximizeWindow";
+      --  Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
 
-   --  Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
-   procedure Minimize_Window;
+   procedure Minimize_Window with
+      Import,
+      Convention    => C,
+      External_Name => "MinimizeWindow";
+      --  Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
 
-   --  Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
-   procedure Restore_Window;
+   procedure Restore_Window with
+      Import,
+      Convention    => C,
+      External_Name => "RestoreWindow";
+      --  Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
 
-   --  Set icon for window (only PLATFORM_DESKTOP)
    procedure Set_Window_Icon (Image : RayLib.Image);
+   --  Set icon for window (only PLATFORM_DESKTOP)
 
-   --  Set title for window (only PLATFORM_DESKTOP)
    procedure Set_Window_Title (Title : String);
+   --  Set title for window (only PLATFORM_DESKTOP)
 
-   --  Set window position on screen (only PLATFORM_DESKTOP)
    procedure Set_Window_Position (X : Integer; Y : Integer);
+   --  Set window position on screen (only PLATFORM_DESKTOP)
 
-   --  Set monitor for the current window (fullscreen mode)
    procedure Set_Window_Monitor (Monitor : Integer);
+   --  Set monitor for the current window (fullscreen mode)
 
-   --  Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
    procedure Set_Window_Min_Size (Width : Integer; Height : Integer);
+   --  Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
 
-   --  Set window dimensions
    procedure Set_Window_Size (Width : Integer; Height : Integer);
+   --  Set window dimensions
 
-   --  Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
    procedure Set_Window_Opacity (Opacity : Float);
+   --  Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
 
-   --  Get native window handle
    function Get_Window_Handle return System.Address;
+   --  Get native window handle
 
-   --  Get current screen width
    function Get_Screen_Width return Integer;
+   --  Get current screen width
 
-   --  Get current screen height
    function Get_Screen_Height return Integer;
+   --  Get current screen height
 
-   --  Get current render width (it considers HiDPI)
    function Get_Render_Width return Integer;
+   --  Get current render width (it considers HiDPI)
 
-   --  Get current render height (it considers HiDPI)
    function Get_Render_Height return Integer;
+   --  Get current render height (it considers HiDPI)
 
-   --  Get number of connected monitors
    function Get_Monitor_Count return Integer;
+   --  Get number of connected monitors
 
-   --  Get current connected monitor
    function Get_Current_Monitor return Integer;
+   --  Get current connected monitor
 
-   --  Get specified monitor position
    function Get_Monitor_Position (Monitor : Integer) return RayLib.Vector2;
+   --  Get specified monitor position
 
-   --  Get specified monitor width (max available by monitor)
    function Get_Monitor_Width (Monitor : Integer) return Integer;
+   --  Get specified monitor width (max available by monitor)
 
-   --  Get specified monitor height (max available by monitor)
    function Get_Monitor_Height (Monitor : Integer) return Integer;
+   --  Get specified monitor height (max available by monitor)
 
-   --  Get specified monitor physical width in millimetres
    function Get_Monitor_Physical_Width (Monitor : Integer) return Integer;
+   --  Get specified monitor physical width in millimetres
 
-   --  Get specified monitor physical height in millimetres
    function Get_Monitor_Physical_Height (Monitor : Integer) return Integer;
+   --  Get specified monitor physical height in millimetres
 
-   --  Get specified monitor refresh rate
    function Get_Monitor_Refresh_Rate (Monitor : Integer) return Integer;
+   --  Get specified monitor refresh rate
 
-   --  Get window position XY on monitor
    function Get_Window_Position return RayLib.Vector2;
+   --  Get window position XY on monitor
 
-   --  Get window scale DPI factor
    function Get_Window_Scale_DPI return RayLib.Vector2;
+   --  Get window scale DPI factor
 
-   --  Get the human-readable, UTF-8 encoded name of the primary monitor
    function Get_Monitor_Name (Monitor : Integer) return String;
+   --  Get the human-readable, UTF-8 encoded name of the primary monitor
 
-   --  Set clipboard text content
    procedure Set_Clipboard_Text (Text : String);
+   --  Set clipboard text content
 
-   --  Get clipboard text content
    function Get_Clipboard_Text return String;
+   --  Get clipboard text content
 
-   --  Swap back buffer with front buffer (screen drawing)
-   procedure Swap_Screen_Buffer;
+   procedure Swap_Screen_Buffer with
+      Import,
+      Convention    => C,
+      External_Name => "SwapScreenBuffer";
+      --  Swap back buffer with front buffer (screen drawing)
 
-   --  Register all input events
-   procedure Poll_Input_Events;
+   procedure Poll_Input_Events with
+      Import,
+      Convention    => C,
+      External_Name => "PollInputEvents";
+      --  Register all input events
 
-   --  Wait for some milliseconds (halt program execution)
    procedure Wait_Time (Ms : Float);
+   --  Wait for some milliseconds (halt program execution)
 
-   --  Shows cursor
-   procedure Show_Cursor;
+   procedure Show_Cursor with
+      Import,
+      Convention    => C,
+      External_Name => "ShowCursor";
+      --  Shows cursor
 
-   --  Hides cursor
-   procedure Hide_Cursor;
+   procedure Hide_Cursor with
+      Import,
+      Convention    => C,
+      External_Name => "HideCursor";
+      --  Hides cursor
 
-   --  Check if cursor is not visible
    function Is_Cursor_Hidden return Boolean;
+   --  Check if cursor is not visible
 
-   --  Enables cursor (unlock cursor)
-   procedure Enable_Cursor;
+   procedure Enable_Cursor with
+      Import,
+      Convention    => C,
+      External_Name => "EnableCursor";
+      --  Enables cursor (unlock cursor)
 
-   --  Disables cursor (lock cursor)
-   procedure Disable_Cursor;
+   procedure Disable_Cursor with
+      Import,
+      Convention    => C,
+      External_Name => "DisableCursor";
+      --  Disables cursor (lock cursor)
 
-   --  Check if cursor is on the screen
    function Is_Cursor_On_Screen return Boolean;
+   --  Check if cursor is on the screen
 
-   --  Set background color (framebuffer clear color)
    procedure Clear_Background (Color : RayLib.Color);
+   --  Set background color (framebuffer clear color)
 
-   --  Setup canvas (framebuffer) to start drawing
    procedure Begin_Drawing;
+   --  Setup canvas (framebuffer) to start drawing
 
-   --  End canvas drawing and swap buffers (double buffering)
    procedure End_Drawing;
+   --  End canvas drawing and swap buffers (double buffering)
 
-   --  Begin 2D mode with custom camera (2D)
    procedure Begin_Mode2D (Camera : RayLib.Camera2D);
+   --  Begin 2D mode with custom camera (2D)
 
-   --  Ends 2D mode with custom camera
    procedure End_Mode2D;
+   --  Ends 2D mode with custom camera
 
-   --  Begin 3D mode with custom camera (3D)
    procedure Begin_Mode3D (Camera : RayLib.Camera3D);
+   --  Begin 3D mode with custom camera (3D)
 
-   --  Ends 3D mode and returns to default 2D orthographic mode
    procedure End_Mode3D;
+   --  Ends 3D mode and returns to default 2D orthographic mode
 
-   --  Begin drawing to render texture
    procedure Begin_Texture_Mode (Target : RayLib.Render_Texture2D);
+   --  Begin drawing to render texture
 
-   --  Ends drawing to render texture
    procedure End_Texture_Mode;
+   --  Ends drawing to render texture
 
-   --  Begin custom shader drawing
    procedure Begin_Shader_Mode (Shader : RayLib.Shader);
+   --  Begin custom shader drawing
 
-   --  End custom shader drawing (use default shader)
    procedure End_Shader_Mode;
+   --  End custom shader drawing (use default shader)
 
-   --  Begin blending mode (alpha, additive, multiplied, subtract, custom)
    procedure Begin_Blend_Mode (Mode : Integer);
+   --  Begin blending mode (alpha, additive, multiplied, subtract, custom)
 
-   --  End blending mode (reset to default: alpha blending)
    procedure End_Blend_Mode;
+   --  End blending mode (reset to default: alpha blending)
 
-   --  Begin scissor mode (define screen area for following drawing)
    procedure Begin_Scissor_Mode
      (X : Integer; Y : Integer; Width : Integer; Height : Integer);
+   --  Begin scissor mode (define screen area for following drawing)
 
-   --  End scissor mode
    procedure End_Scissor_Mode;
+   --  End scissor mode
 
-   --  Begin stereo rendering (requires VR simulator)
    procedure Begin_VR_Stereo_Mode (Config : RayLib.VR_Stereo_Config);
+   --  Begin stereo rendering (requires VR simulator)
 
-   --  End stereo rendering (requires VR simulator)
    procedure End_VR_Stereo_Mode;
+   --  End stereo rendering (requires VR simulator)
 
-   --  Load VR stereo config for VR simulator device parameters
    function Load_VR_Stereo_Config
      (Device : RayLib.VR_Device_Info) return RayLib.VR_Stereo_Config;
+   --  Load VR stereo config for VR simulator device parameters
 
-   --  Unload VR stereo config
-   procedure Unload_VR_Stereo_Config (Config : RayLib.VR_Stereo_Config);
-
-   --  Load shader from files and bind default locations
    function Load_Shader
      (Vs_File_Name : String; Fs_File_Name : String) return RayLib.Shader;
+   --  Load shader from files and bind default locations
 
-   --  Load shader from code strings and bind default locations
    function Load_Shader_From_Memory
      (Vs_Code : String; Fs_Code : String) return RayLib.Shader;
+   --  Load shader from code strings and bind default locations
 
-   --  Get shader uniform location
    function Get_Shader_Location
      (Shader : RayLib.Shader; Uniform_Name : String) return Integer;
+   --  Get shader uniform location
 
-   --  Get shader attribute location
    function Get_Shader_Location_Attrib
      (Shader : RayLib.Shader; Attrib_Name : String) return Integer;
+   --  Get shader attribute location
 
-   --  Set shader uniform value
    procedure Set_Shader_Value
      (Shader : RayLib.Shader; Loc_Index : Integer; Value : System.Address;
       Uniform_Type : Integer);
+   --  Set shader uniform value
 
-   --  Set shader uniform value vector
-   procedure Set_Shader_Value_V
+   procedure Set_Shader_Value
      (Shader : RayLib.Shader; Loc_Index : Integer; Value : System.Address;
       Uniform_Type : Integer; Count : Integer);
+   --  Set shader uniform value vector
 
-   --  Set shader uniform value (matrix 4x4)
-   procedure Set_Shader_Value_Matrix
+   procedure Set_Shader_Value
      (Shader : RayLib.Shader; Loc_Index : Integer; Mat : RayLib.Matrix);
+   --  Set shader uniform value (matrix 4x4)
 
-   --  Set shader uniform value for texture (sampler2d)
    procedure Set_Shader_Value_Texture
      (Shader : RayLib.Shader; Loc_Index : Integer; Texture : RayLib.Texture2D);
+   --  Set shader uniform value for texture (sampler2d)
 
-   --  Unload shader from GPU memory (VRAM)
-   procedure Unload_Shader (Shader : RayLib.Shader);
-
-   --  Get a ray trace from mouse position
    function Get_Mouse_Ray
      (Mouse_Position : RayLib.Vector2; Camera : RayLib.Camera)
       return RayLib.Ray;
+   --  Get a ray trace from mouse position
 
-   --  Get camera transform matrix (view matrix)
    function Get_Camera_Matrix (Camera : RayLib.Camera) return RayLib.Matrix;
+   --  Get camera transform matrix (view matrix)
 
-   --  Get camera 2d transform matrix
    function Get_Camera_Matrix2D
      (Camera : RayLib.Camera2D) return RayLib.Matrix;
+   --  Get camera 2d transform matrix
 
-   --  Get the screen space position for a 3d world space position
    function Get_World_To_Screen
      (Position : RayLib.Vector3; Camera : RayLib.Camera) return RayLib.Vector2;
+   --  Get the screen space position for a 3d world space position
 
-   --  Get size position for a 3d world space position
    function Get_World_To_Screen
      (Position : RayLib.Vector3; Camera : RayLib.Camera; Width : Integer;
       Height   : Integer) return RayLib.Vector2;
+   --  Get size position for a 3d world space position
 
-   --  Get the screen space position for a 2d camera world space position
    function Get_World_To_Screen2D
      (Position : RayLib.Vector2; Camera : RayLib.Camera2D)
       return RayLib.Vector2;
+   --  Get the screen space position for a 2d camera world space position
 
-   --  Get the world space position for a 2d camera screen space position
    function Get_Screen_To_World2D
      (Position : RayLib.Vector2; Camera : RayLib.Camera2D)
       return RayLib.Vector2;
+   --  Get the world space position for a 2d camera screen space position
 
-   --  Set target FPS (maximum)
    procedure Set_Target_FPS (Fps : Integer);
+   --  Set target FPS (maximum)
 
-   --  Get current FPS
    function Get_FPS return Integer;
+   --  Get current FPS
 
-   --  Get time in seconds for last frame drawn (delta time)
    function Get_Frame_Time return Float;
+   --  Get time in seconds for last frame drawn (delta time)
 
-   --  Get elapsed time in seconds since InitWindow()
    function Get_Time return Long_Float;
+   --  Get elapsed time in seconds since InitWindow()
 
-   --  Get a random value between min and max (both included)
    function Get_Random_Value (Min : Integer; Max : Integer) return Integer;
+   --  Get a random value between min and max (both included)
 
-   --  Set the seed for the random number generator
    procedure Set_Random_Seed (Seed : Natural);
+   --  Set the seed for the random number generator
 
-   --  Takes a screenshot of current screen (filename extension defines format)
    procedure Take_Screenshot (File_Name : String);
+   --  Takes a screenshot of current screen (filename extension defines format)
 
-   --  Setup init configuration flags (view FLAGS)
    procedure Set_Config_Flags (Flags : Config_Flag);
+   --  Setup init configuration flags (view FLAGS)
 
-   --  Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
    procedure Trace_Log (Log_Level : Trace_Log_Level; Text : String);
+   --  Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
 
-   --  Set the current threshold (minimum) log level
    procedure Set_Trace_Log_Level (Log_Level : Trace_Log_Level);
+   --  Set the current threshold (minimum) log level
 
-   --  Set custom trace log
    procedure Set_Trace_Log_Callback (Callback : RayLib.Trace_Log_Callback);
+   --  Set custom trace log
 
-   --  Set custom file binary data loader
    procedure Set_Load_File_Data_Callback
      (Callback : RayLib.Load_File_Data_Callback);
+   --  Set custom file binary data loader
 
-   --  Set custom file binary data saver
    procedure Set_Save_File_Data_Callback
      (Callback : RayLib.Save_File_Data_Callback);
+   --  Set custom file binary data saver
 
-   --  Set custom file text data loader
    procedure Set_Load_File_Text_Callback
      (Callback : RayLib.Load_File_Text_Callback);
+   --  Set custom file text data loader
 
-   --  Set custom file text data saver
    procedure Set_Save_File_Text_Callback
      (Callback : RayLib.Save_File_Text_Callback);
+   --  Set custom file text data saver
 
-   --  Load file data as byte array (read)
    function Load_File_Data (File_Name : String) return Stream_Element_Array;
+   --  Load file data as byte array (read)
 
-   --  Save data to file from byte array (write), returns true on success
    function Save_File_Data
      (File_Name : String; Data : Stream_Element_Array) return Boolean;
+   --  Save data to file from byte array (write), returns true on success
 
-   --  Load text data from file (read), returns string
    function Load_File_Text (File_Name : String) return String;
+   --  Load text data from file (read), returns string
 
-   --  Save text data to file (write), returns true on success
    function Save_File_Text (File_Name : String; Text : String) return Boolean;
+   --  Save text data to file (write), returns true on success
 
-   --  Check if file exists
    function File_Exists (File_Name : String) return Boolean;
+   --  Check if file exists
 
-   --  Check if a directory path exists
    function Directory_Exists (Dir_Path : String) return Boolean;
+   --  Check if a directory path exists
 
-   --  Check file extension (including point: .png, .wav)
    function Is_File_Extension
      (File_Name : String; Ext : String) return Boolean;
+   --  Check file extension (including point: .png, .wav)
 
-   --  Get file length in bytes (NOTE: GetFileSize() conflicts with windows.h)
    function Get_File_Length (File_Name : String) return Integer;
+   --  Get file length in bytes (NOTE: GetFileSize() conflicts with windows.h)
 
-   --  Get pointer to extension for a filename string (includes dot: '.png')
    function Get_File_Extension (File_Name : String) return String;
+   --  Get pointer to extension for a filename string (includes dot: '.png')
 
-   --  Get pointer to filename for a path string
    function Get_File_Name (File_Path : String) return String;
+   --  Get pointer to filename for a path string
 
-   --  Get filename string without extension (uses static string)
    function Get_File_Name_Without_Ext (File_Path : String) return String;
+   --  Get filename string without extension (uses static string)
 
-   --  Get full path for a given fileName with path (uses static string)
    function Get_Directory_Path (File_Path : String) return String;
+   --  Get full path for a given fileName with path (uses static string)
 
-   --  Get previous directory path for a given path (uses static string)
    function Get_Prev_Directory_Path (Dir_Path : String) return String;
+   --  Get previous directory path for a given path (uses static string)
 
-   --  Get current working directory (uses static string)
    function Get_Working_Directory return String;
+   --  Get current working directory (uses static string)
 
-   --  Get the directory if the running application (uses static string)
    function Get_Application_Directory return String;
+   --  Get the directory if the running application (uses static string)
 
    --  Get filenames in a directory path (memory must be freed)
    -- function Get_Directory_Files (Dir_Path : String; Count : RayLib.Int *) return RayLib.Char **;
 
-   --  Change working directory, return true on success
    function Change_Directory (Dir : String) return Boolean;
+   --  Change working directory, return true on success
 
-   --  Check if a file has been dropped into window
    function Is_File_Dropped return Boolean;
+   --  Check if a file has been dropped into window
 
    --  Get dropped files names (memory must be freed)
    -- function Get_Dropped_Files (Count : RayLib.Int *) return RayLib.Char **;
@@ -1964,803 +1991,804 @@ package RayLib is
    --  Clear dropped files paths buffer (free memory)
    -- procedure Clear_Dropped_Files;
 
-   --  Get file modification time (last write time)
    function Get_File_Mod_Time (File_Name : String) return Time;
+   --  Get file modification time (last write time)
 
-   --  Compress data (DEFLATE algorithm)
    function Compress_Data
      (Data : Stream_Element_Array) return Stream_Element_Array;
+   --  Compress data (DEFLATE algorithm)
 
-   --  Decompress data (DEFLATE algorithm)
    function Decompress_Data
      (Comp_Data : Stream_Element_Array) return Stream_Element_Array;
+   --  Decompress data (DEFLATE algorithm)
 
-   --  Encode data to Base64 string
    function Encode_Data_Base64 (Data : Stream_Element_Array) return String;
+   --  Encode data to Base64 string
 
-   --  Decode Base64 string data
    function Decode_Data_Base64 (Data : String) return Stream_Element_Array;
+   --  Decode Base64 string data
 
-   --  Save integer value to storage file (to defined position), returns true on success
    function Save_Storage_Value
      (Position : Natural; Value : Integer) return Boolean;
+   --  Save integer value to storage file (to defined position), returns true on success
 
-   --  Load integer value from storage file (from defined position)
    function Load_Storage_Value (Position : Natural) return Integer;
+   --  Load integer value from storage file (from defined position)
 
-   --  Open URL with default system browser (if available)
    procedure Open_URL (Url : String);
+   --  Open URL with default system browser (if available)
 
-   --  Check if a key has been pressed once
    function Is_Key_Pressed (Key : Keyboard_Key) return Boolean;
+   --  Check if a key has been pressed once
 
-   --  Check if a key is being pressed
    function Is_Key_Down (Key : Keyboard_Key) return Boolean;
+   --  Check if a key is being pressed
 
-   --  Check if a key has been released once
    function Is_Key_Released (Key : Keyboard_Key) return Boolean;
+   --  Check if a key has been released once
 
-   --  Check if a key is NOT being pressed
    function Is_Key_Up (Key : Keyboard_Key) return Boolean;
+   --  Check if a key is NOT being pressed
 
-   --  Set a custom key to exit program (default is ESC)
    procedure Set_Exit_Key (Key : Keyboard_Key);
+   --  Set a custom key to exit program (default is ESC)
 
-   --  Get key pressed (keycode), call it multiple times for keys queued, returns Key_Null when the queue is empty
    function Get_Key_Pressed return Keyboard_Key;
+   --  Get key pressed (keycode), call it multiple times for keys queued, returns Key_Null when the queue is empty
 
-   --  Get char pressed (unicode), call it multiple times for chars queued, returns ASCII.NUL when the queue is empty
    function Get_Char_Pressed return Character;
+   --  Get char pressed (unicode), call it multiple times for chars queued, returns ASCII.NUL when the queue is empty
 
-   --  Check if a gamepad is available
    function Is_Gamepad_Available (Gamepad : Integer) return Boolean;
+   --  Check if a gamepad is available
 
-   --  Get gamepad internal name id
    function Get_Gamepad_Name (Gamepad : Integer) return String;
+   --  Get gamepad internal name id
 
-   --  Check if a gamepad button has been pressed once
    function Is_Gamepad_Button_Pressed
      (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
+   --  Check if a gamepad button has been pressed once
 
-   --  Check if a gamepad button is being pressed
    function Is_Gamepad_Button_Down
      (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
+   --  Check if a gamepad button is being pressed
 
-   --  Check if a gamepad button has been released once
    function Is_Gamepad_Button_Released
      (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
+   --  Check if a gamepad button has been released once
 
-   --  Check if a gamepad button is NOT being pressed
    function Is_Gamepad_Button_Up
      (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
+   --  Check if a gamepad button is NOT being pressed
 
-   --  Get the last gamepad button pressed
    function Get_Gamepad_Button_Pressed return Gamepad_Button;
+   --  Get the last gamepad button pressed
 
-   --  Get gamepad axis count for a gamepad
    function Get_Gamepad_Axis_Count (Gamepad : Integer) return Integer;
+   --  Get gamepad axis count for a gamepad
 
-   --  Get axis movement value for a gamepad axis
    function Get_Gamepad_Axis_Movement
      (Gamepad : Integer; Axis : Gamepad_Axis) return Float;
+   --  Get axis movement value for a gamepad axis
 
-   --  Set internal gamepad mappings (SDL_GameControllerDB)
    function Set_Gamepad_Mappings (Mappings : String) return Integer;
+   --  Set internal gamepad mappings (SDL_GameControllerDB)
 
-   --  Check if a mouse button has been pressed once
    function Is_Mouse_Button_Pressed (Button : Mouse_Button) return Boolean;
+   --  Check if a mouse button has been pressed once
 
-   --  Check if a mouse button is being pressed
    function Is_Mouse_Button_Down (Button : Mouse_Button) return Boolean;
+   --  Check if a mouse button is being pressed
 
-   --  Check if a mouse button has been released once
    function Is_Mouse_Button_Released (Button : Mouse_Button) return Boolean;
+   --  Check if a mouse button has been released once
 
-   --  Check if a mouse button is NOT being pressed
    function Is_Mouse_Button_Up (Button : Mouse_Button) return Boolean;
+   --  Check if a mouse button is NOT being pressed
 
-   --  Get mouse position X
    function Get_Mouse_X return Integer;
+   --  Get mouse position X
 
-   --  Get mouse position Y
    function Get_Mouse_Y return Integer;
+   --  Get mouse position Y
 
-   --  Get mouse position XY
    function Get_Mouse_Position return RayLib.Vector2;
+   --  Get mouse position XY
 
-   --  Get mouse delta between frames
    function Get_Mouse_Delta return RayLib.Vector2;
+   --  Get mouse delta between frames
 
-   --  Set mouse position XY
    procedure Set_Mouse_Position (X : Integer; Y : Integer);
+   --  Set mouse position XY
 
-   --  Set mouse offset
    procedure Set_Mouse_Offset (Offset_X : Integer; Offset_Y : Integer);
+   --  Set mouse offset
 
-   --  Set mouse scaling
    procedure Set_Mouse_Scale (Scale_X : Float; Scale_Y : Float);
+   --  Set mouse scaling
 
-   --  Get mouse wheel movement Y
    function Get_Mouse_Wheel_Move return Float;
+   --  Get mouse wheel movement Y
 
-   --  Set mouse cursor
    procedure Set_Mouse_Cursor (Cursor : Mouse_Cursor);
+   --  Set mouse cursor
 
-   --  Get touch position X for touch point 0 (relative to screen size)
    function Get_Touch_X return Integer;
+   --  Get touch position X for touch point 0 (relative to screen size)
 
-   --  Get touch position Y for touch point 0 (relative to screen size)
    function Get_Touch_Y return Integer;
+   --  Get touch position Y for touch point 0 (relative to screen size)
 
-   --  Get touch position XY for a touch point index (relative to screen size)
    function Get_Touch_Position (Index : Integer) return RayLib.Vector2;
+   --  Get touch position XY for a touch point index (relative to screen size)
 
-   --  Get touch point identifier for given index
    function Get_Touch_Point_Id (Index : Integer) return Integer;
+   --  Get touch point identifier for given index
 
-   --  Get number of touch points
    function Get_Touch_Point_Count return Integer;
+   --  Get number of touch points
 
-   --  Enable a set of gestures using flags
    procedure Set_Gestures_Enabled (Flags : Natural);
+   --  Enable a set of gestures using flags
 
-   --  Check if a gesture have been detected
    function Is_Gesture_Detected (Gesture : RayLib.Gesture) return Boolean;
+   --  Check if a gesture have been detected
 
-   --  Get latest detected gesture
    function Get_Gesture_Detected return RayLib.Gesture;
+   --  Get latest detected gesture
 
-   --  Get gesture hold time in milliseconds
    function Get_Gesture_Hold_Duration return Float;
+   --  Get gesture hold time in milliseconds
 
-   --  Get gesture drag vector
    function Get_Gesture_Drag_Vector return RayLib.Vector2;
+   --  Get gesture drag vector
 
-   --  Get gesture drag angle
    function Get_Gesture_Drag_Angle return Float;
+   --  Get gesture drag angle
 
-   --  Get gesture pinch delta
    function Get_Gesture_Pinch_Vector return RayLib.Vector2;
+   --  Get gesture pinch delta
 
-   --  Get gesture pinch angle
    function Get_Gesture_Pinch_Angle return Float;
+   --  Get gesture pinch angle
 
-   --  Set camera mode (multiple camera modes available)
    procedure Set_Camera_Mode (Camera : RayLib.Camera; Mode : Camera_Mode);
+   --  Set camera mode (multiple camera modes available)
 
-   --  Update camera position for selected mode
    procedure Update_Camera (Camera : in out RayLib.Camera);
+   --  Update camera position for selected mode
 
-   --  Set camera pan key to combine with mouse movement (free camera)
    procedure Set_Camera_Pan_Control (Key_Pan : Keyboard_Key);
+   --  Set camera pan key to combine with mouse movement (free camera)
 
-   --  Set camera alt key to combine with mouse movement (free camera)
    procedure Set_Camera_Alt_Control (Key_Alt : Keyboard_Key);
+   --  Set camera alt key to combine with mouse movement (free camera)
 
-   --  Set camera smooth zoom key to combine with mouse (free camera)
    procedure Set_Camera_Smooth_Zoom_Control (Key_Smooth_Zoom : Keyboard_Key);
+   --  Set camera smooth zoom key to combine with mouse (free camera)
 
-   --  Set camera move controls (1st person and 3rd person cameras)
    procedure Set_Camera_Move_Controls
      (Key_Front : Keyboard_Key; Key_Back : Keyboard_Key;
       Key_Right : Keyboard_Key; Key_Left : Keyboard_Key; Key_Up : Keyboard_Key;
       Key_Down  : Keyboard_Key);
+   --  Set camera move controls (1st person and 3rd person cameras)
 
-   --  Set texture and rectangle to be used on shapes drawing
    procedure Set_Shapes_Texture
      (Texture : RayLib.Texture2D; Source : RayLib.Rectangle);
+   --  Set texture and rectangle to be used on shapes drawing
 
-   --  Draw a pixel
    procedure Draw_Pixel
      (Pos_X : Integer; Pos_Y : Integer; Color : RayLib.Color);
+   --  Draw a pixel
 
-   --  Draw a pixel (Vector version)
    procedure Draw_Pixel (Position : RayLib.Vector2; Color : RayLib.Color);
+   --  Draw a pixel (Vector version)
 
-   --  Draw a line
    procedure Draw_Line
      (Start_Pos_X : Integer; Start_Pos_Y : Integer; End_Pos_X : Integer;
       End_Pos_Y   : Integer; Color : RayLib.Color);
+   --  Draw a line
 
-   --  Draw a line (Vector version)
    procedure Draw_Line
      (Start_Pos : RayLib.Vector2; End_Pos : RayLib.Vector2;
       Color     : RayLib.Color);
+   --  Draw a line (Vector version)
 
-   --  Draw a line defining thickness
    procedure Draw_Line
      (Start_Pos : RayLib.Vector2; End_Pos : RayLib.Vector2; Thick : Float;
       Color     : RayLib.Color);
+   --  Draw a line defining thickness
 
-   --  Draw a line using cubic-bezier curves in-out
    procedure Draw_Line_Bezier
      (Start_Pos : RayLib.Vector2; End_Pos : RayLib.Vector2; Thick : Float;
       Color     : RayLib.Color);
+   --  Draw a line using cubic-bezier curves in-out
 
-   --  Draw line using quadratic bezier curves with a control point
    procedure Draw_Line_Bezier_Quad
      (Start_Pos   : RayLib.Vector2; End_Pos : RayLib.Vector2;
       Control_Pos : RayLib.Vector2; Thick : Float; Color : RayLib.Color);
+   --  Draw line using quadratic bezier curves with a control point
 
-   --  Draw line using cubic bezier curves with 2 control points
    procedure Draw_Line_Bezier_Cubic
      (Start_Pos         : RayLib.Vector2; End_Pos : RayLib.Vector2;
       Start_Control_Pos : RayLib.Vector2; End_Control_Pos : RayLib.Vector2;
       Thick             : Float; Color : RayLib.Color);
+   --  Draw line using cubic bezier curves with 2 control points
 
-   --  Draw lines sequence
    procedure Draw_Line_Strip
      (Points : RayLib.Vector2_Array; Color : RayLib.Color);
+   --  Draw lines sequence
 
-   --  Draw a color-filled circle
    procedure Draw_Circle
      (Center_X : Integer; Center_Y : Integer; Radius : Float;
       Color    : RayLib.Color);
+   --  Draw a color-filled circle
 
-   --  Draw a piece of a circle
    procedure Draw_Circle_Sector
      (Center    : RayLib.Vector2; Radius : Float; Start_Angle : Float;
       End_Angle : Float; Segments : Integer; Color : RayLib.Color);
+   --  Draw a piece of a circle
 
-   --  Draw circle sector outline
    procedure Draw_Circle_Sector_Lines
      (Center    : RayLib.Vector2; Radius : Float; Start_Angle : Float;
       End_Angle : Float; Segments : Integer; Color : RayLib.Color);
+   --  Draw circle sector outline
 
-   --  Draw a gradient-filled circle
    procedure Draw_Circle_Gradient
      (Center_X : Integer; Center_Y : Integer; Radius : Float;
       Color1   : RayLib.Color; Color2 : RayLib.Color);
+   --  Draw a gradient-filled circle
 
-   --  Draw a color-filled circle (Vector version)
    procedure Draw_Circle
      (Center : RayLib.Vector2; Radius : Float; Color : RayLib.Color);
+   --  Draw a color-filled circle (Vector version)
 
-   --  Draw circle outline
    procedure Draw_Circle_Lines
      (Center_X : Integer; Center_Y : Integer; Radius : Float;
       Color    : RayLib.Color);
+   --  Draw circle outline
 
-   --  Draw ellipse
    procedure Draw_Ellipse
      (Center_X : Integer; Center_Y : Integer; Radius_H : Float;
       Radius_V : Float; Color : RayLib.Color);
+   --  Draw ellipse
 
-   --  Draw ellipse outline
    procedure Draw_Ellipse_Lines
      (Center_X : Integer; Center_Y : Integer; Radius_H : Float;
       Radius_V : Float; Color : RayLib.Color);
+   --  Draw ellipse outline
 
-   --  Draw ring
    procedure Draw_Ring
      (Center      : RayLib.Vector2; Inner_Radius : Float; Outer_Radius : Float;
       Start_Angle : Float; End_Angle : Float; Segments : Integer;
       Color       : RayLib.Color);
+   --  Draw ring
 
-   --  Draw ring outline
    procedure Draw_Ring_Lines
      (Center      : RayLib.Vector2; Inner_Radius : Float; Outer_Radius : Float;
       Start_Angle : Float; End_Angle : Float; Segments : Integer;
       Color       : RayLib.Color);
+   --  Draw ring outline
 
-   --  Draw a color-filled rectangle
    procedure Draw_Rectangle
      (Pos_X : Integer; Pos_Y : Integer; Width : Integer; Height : Integer;
       Color : RayLib.Color);
+   --  Draw a color-filled rectangle
 
-   --  Draw a color-filled rectangle (Vector version)
    procedure Draw_Rectangle
      (Position : RayLib.Vector2; Size : RayLib.Vector2; Color : RayLib.Color);
+   --  Draw a color-filled rectangle (Vector version)
 
-   --  Draw a color-filled rectangle
    procedure Draw_Rectangle (Rec : RayLib.Rectangle; Color : RayLib.Color);
+   --  Draw a color-filled rectangle
 
-   --  Draw a color-filled rectangle with pro parameters
    procedure Draw_Rectangle
      (Rec   : RayLib.Rectangle; Origin : RayLib.Vector2; Rotation : Float;
       Color : RayLib.Color);
+   --  Draw a color-filled rectangle with pro parameters
 
-   --  Draw a vertical-gradient-filled rectangle
    procedure Draw_Rectangle_Gradient_Vertical
      (Pos_X  : Integer; Pos_Y : Integer; Width : Integer; Height : Integer;
       Color1 : RayLib.Color; Color2 : RayLib.Color);
+   --  Draw a vertical-gradient-filled rectangle
 
-   --  Draw a horizontal-gradient-filled rectangle
    procedure Draw_Rectangle_Gradient_Horizontal
      (Pos_X  : Integer; Pos_Y : Integer; Width : Integer; Height : Integer;
       Color1 : RayLib.Color; Color2 : RayLib.Color);
+   --  Draw a horizontal-gradient-filled rectangle
 
-   --  Draw a gradient-filled rectangle with custom vertex colors
    procedure Draw_Rectangle_Gradient
      (Rec  : RayLib.Rectangle; Col1 : RayLib.Color; Col2 : RayLib.Color;
       Col3 : RayLib.Color; Col4 : RayLib.Color);
+   --  Draw a gradient-filled rectangle with custom vertex colors
 
-   --  Draw rectangle outline
    procedure Draw_Rectangle_Lines
      (Pos_X : Integer; Pos_Y : Integer; Width : Integer; Height : Integer;
       Color : RayLib.Color);
+   --  Draw rectangle outline
 
-   --  Draw rectangle outline with extended parameters
    procedure Draw_Rectangle_Lines
      (Rec : RayLib.Rectangle; Line_Thick : Float; Color : RayLib.Color);
+   --  Draw rectangle outline with extended parameters
 
-   --  Draw rectangle with rounded edges
    procedure Draw_Rectangle_Rounded
      (Rec   : RayLib.Rectangle; Roundness : Float; Segments : Integer;
       Color : RayLib.Color);
+   --  Draw rectangle with rounded edges
 
-   --  Draw rectangle with rounded edges outline
    procedure Draw_Rectangle_Rounded_Lines
      (Rec        : RayLib.Rectangle; Roundness : Float; Segments : Integer;
       Line_Thick : Float; Color : RayLib.Color);
+   --  Draw rectangle with rounded edges outline
 
-   --  Draw a color-filled triangle (vertex in counter-clockwise order!)
    procedure Draw_Triangle
      (V1    : RayLib.Vector2; V2 : RayLib.Vector2; V3 : RayLib.Vector2;
       Color : RayLib.Color);
+   --  Draw a color-filled triangle (vertex in counter-clockwise order!)
 
-   --  Draw triangle outline (vertex in counter-clockwise order!)
    procedure Draw_Triangle_Lines
      (V1    : RayLib.Vector2; V2 : RayLib.Vector2; V3 : RayLib.Vector2;
       Color : RayLib.Color);
+   --  Draw triangle outline (vertex in counter-clockwise order!)
 
-   --  Draw a triangle fan defined by points (first vertex is the center)
    procedure Draw_Triangle_Fan
      (Points : RayLib.Vector2_Array; Color : RayLib.Color);
+   --  Draw a triangle fan defined by points (first vertex is the center)
 
-   --  Draw a triangle strip defined by points
    procedure Draw_Triangle_Strip
      (Points : RayLib.Vector2_Array; Color : RayLib.Color);
+   --  Draw a triangle strip defined by points
 
-   --  Draw a regular polygon (Vector version)
    procedure Draw_Poly
      (Center   : RayLib.Vector2; Sides : Integer; Radius : Float;
       Rotation : Float; Color : RayLib.Color);
+   --  Draw a regular polygon (Vector version)
 
-   --  Draw a polygon outline of n sides
    procedure Draw_Poly_Lines
      (Center   : RayLib.Vector2; Sides : Integer; Radius : Float;
       Rotation : Float; Color : RayLib.Color);
+   --  Draw a polygon outline of n sides
 
-   --  Draw a polygon outline of n sides with extended parameters
    procedure Draw_Poly_Lines
      (Center   : RayLib.Vector2; Sides : Integer; Radius : Float;
       Rotation : Float; Line_Thick : Float; Color : RayLib.Color);
+   --  Draw a polygon outline of n sides with extended parameters
 
-   --  Check collision between two rectangles
    function Check_Collision_Recs
      (Rec1 : RayLib.Rectangle; Rec2 : RayLib.Rectangle) return Boolean;
+   --  Check collision between two rectangles
 
-   --  Check collision between two circles
    function Check_Collision_Circles
      (Center1 : RayLib.Vector2; Radius1 : Float; Center2 : RayLib.Vector2;
       Radius2 : Float) return Boolean;
+   --  Check collision between two circles
 
-   --  Check collision between circle and rectangle
    function Check_Collision_Circle_Rec
      (Center : RayLib.Vector2; Radius : Float; Rec : RayLib.Rectangle)
       return Boolean;
+   --  Check collision between circle and rectangle
 
-   --  Check if point is inside rectangle
    function Check_Collision_Point_Rec
      (Point : RayLib.Vector2; Rec : RayLib.Rectangle) return Boolean;
+   --  Check if point is inside rectangle
 
-   --  Check if point is inside circle
    function Check_Collision_Point_Circle
      (Point : RayLib.Vector2; Center : RayLib.Vector2; Radius : Float)
       return Boolean;
+   --  Check if point is inside circle
 
-   --  Check if point is inside a triangle
    function Check_Collision_Point_Triangle
      (Point : RayLib.Vector2; P1 : RayLib.Vector2; P2 : RayLib.Vector2;
       P3    : RayLib.Vector2) return Boolean;
+   --  Check if point is inside a triangle
 
-   --  Check the collision between two lines defined by two points each, returns collision point by reference
    function Check_Collision_Lines
      (Start_Pos1      :     RayLib.Vector2; End_Pos1 : RayLib.Vector2;
       Start_Pos2      :     RayLib.Vector2; End_Pos2 : RayLib.Vector2;
       Collision_Point : out RayLib.Vector2) return Boolean;
+   --  Check the collision between two lines defined by two points each, returns collision point by reference
 
-   --  Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
    function Check_Collision_Point_Line
      (Point     : RayLib.Vector2; P1 : RayLib.Vector2; P2 : RayLib.Vector2;
       Threshold : Integer) return Boolean;
+   --  Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
 
-   --  Get collision rectangle for two rectangles collision
    function Get_Collision_Rec
      (Rec1 : RayLib.Rectangle; Rec2 : RayLib.Rectangle)
       return RayLib.Rectangle;
+   --  Get collision rectangle for two rectangles collision
 
-   --  Load image from file into CPU memory (RAM)
    function Load_Image (File_Name : String) return RayLib.Image;
+   --  Load image from file into CPU memory (RAM)
 
-   --  Load image from RAW file data
    function Load_Image_Raw
      (File_Name : String; Width : Integer; Height : Integer; Format : Integer;
       Header_Size : Integer) return RayLib.Image;
+   --  Load image from RAW file data
 
-   --  Load image sequence from file (frames appended to image.data)
    function Load_Image_Anim
      (File_Name : String; Frames : out Integer) return RayLib.Image;
+   --  Load image sequence from file (frames appended to image.data)
 
-   --  Load image from memory buffer, fileType refers to extension: i.e. '.png'
    function Load_Image_From_Memory
      (File_Type : String; File_Data : Stream_Element_Array)
+   --  Load image from memory buffer, fileType refers to extension: i.e. '.png'
+
       return RayLib.Image;
 
-   --  Load image from GPU texture data
    function Load_Image_From_Texture
      (Texture : RayLib.Texture2D) return RayLib.Image;
+   --  Load image from GPU texture data
 
-   --  Load image from screen buffer and (screenshot)
    function Load_Image_From_Screen return RayLib.Image;
+   --  Load image from screen buffer and (screenshot)
 
-   --  Export image data to file, returns true on success
    function Export_Image
      (Image : RayLib.Image; File_Name : String) return Boolean;
+   --  Export image data to file, returns true on success
 
-   --  Export image as code file defining an array of bytes, returns true on success
    function Export_Image_As_Code
      (Image : RayLib.Image; File_Name : String) return Boolean;
+   --  Export image as code file defining an array of bytes, returns true on success
 
-   --  Generate image: plain color
    function Gen_Image_Color
      (Width : Integer; Height : Integer; Color : RayLib.Color)
       return RayLib.Image;
+   --  Generate image: plain color
 
-   --  Generate image: vertical gradient
    function Gen_Image_Gradient_Vertical
      (Width  : Integer; Height : Integer; Top : RayLib.Color;
       Bottom : RayLib.Color) return RayLib.Image;
+   --  Generate image: vertical gradient
 
-   --  Generate image: horizontal gradient
    function Gen_Image_Gradient_Horizontal
      (Width : Integer; Height : Integer; Left : RayLib.Color;
       Right : RayLib.Color) return RayLib.Image;
+   --  Generate image: horizontal gradient
 
-   --  Generate image: radial gradient
    function Gen_Image_Gradient_Radial
      (Width : Integer; Height : Integer; Density : Float; Inner : RayLib.Color;
       Outer : RayLib.Color) return RayLib.Image;
+   --  Generate image: radial gradient
 
-   --  Generate image: checked
    function Gen_Image_Checked
      (Width    : Integer; Height : Integer; Checks_X : Integer;
       Checks_Y : Integer; Col1 : RayLib.Color; Col2 : RayLib.Color)
       return RayLib.Image;
+   --  Generate image: checked
 
-   --  Generate image: white noise
    function Gen_Image_White_Noise
      (Width : Integer; Height : Integer; Factor : Float) return RayLib.Image;
+   --  Generate image: white noise
 
-   --  Generate image: cellular algorithm, bigger tileSize means bigger cells
    function Gen_Image_Cellular
      (Width : Integer; Height : Integer; Tile_Size : Integer)
       return RayLib.Image;
+   --  Generate image: cellular algorithm, bigger tileSize means bigger cells
 
-   --  Create an image duplicate (useful for transformations)
    function Image_Copy (Image : RayLib.Image) return RayLib.Image;
+   --  Create an image duplicate (useful for transformations)
 
-   --  Create an image from another image piece
    function Image_From_Image
      (Image : RayLib.Image; Rec : RayLib.Rectangle) return RayLib.Image;
+   --  Create an image from another image piece
 
-   --  Create an image from text (default font)
    function Image_Text
      (Text : String; Font_Size : Integer; Color : RayLib.Color)
       return RayLib.Image;
+   --  Create an image from text (default font)
 
-   --  Create an image from text (custom sprite font)
    function Image_Text
      (Font : RayLib.Font; Text : String; Font_Size : Float; Spacing : Float;
       Tint : RayLib.Color) return RayLib.Image;
+   --  Create an image from text (custom sprite font)
 
-   --  Convert image data to desired format
    procedure Image_Format (Image : in out RayLib.Image; New_Format : Integer);
+   --  Convert image data to desired format
 
-   --  Convert image to POT (power-of-two)
    procedure Image_To_POT (Image : in out RayLib.Image; Fill : RayLib.Color);
+   --  Convert image to POT (power-of-two)
 
-   --  Crop an image to a defined rectangle
    procedure Image_Crop (Image : in out RayLib.Image; Crop : RayLib.Rectangle);
+   --  Crop an image to a defined rectangle
 
-   --  Crop image depending on alpha value
    procedure Image_Alpha_Crop (Image : in out RayLib.Image; Threshold : Float);
+   --  Crop image depending on alpha value
 
-   --  Clear alpha channel to desired color
    procedure Image_Alpha_Clear
      (Image : in out RayLib.Image; Color : RayLib.Color; Threshold : Float);
+   --  Clear alpha channel to desired color
 
-   --  Apply alpha mask to image
    procedure Image_Alpha_Mask
      (Image : in out RayLib.Image; Alpha_Mask : RayLib.Image);
+   --  Apply alpha mask to image
 
-   --  Premultiply alpha channel
    procedure Image_Alpha_Premultiply (Image : in out RayLib.Image);
+   --  Premultiply alpha channel
 
-   --  Resize image (Bicubic scaling algorithm)
    procedure Image_Resize
      (Image : in out RayLib.Image; New_Width : Integer; New_Height : Integer);
+   --  Resize image (Bicubic scaling algorithm)
 
-   --  Resize image (Nearest-Neighbor scaling algorithm)
    procedure Image_Resize_NN
      (Image : in out RayLib.Image; New_Width : Integer; New_Height : Integer);
+   --  Resize image (Nearest-Neighbor scaling algorithm)
 
-   --  Resize canvas and fill with color
    procedure Image_Resize_Canvas
      (Image : in out RayLib.Image; New_Width : Integer; New_Height : Integer;
       Offset_X :        Integer; Offset_Y : Integer; Fill : RayLib.Color);
+   --  Resize canvas and fill with color
 
-   --  Compute all mipmap levels for a provided image
    procedure Image_Mipmaps (Image : in out RayLib.Image);
+   --  Compute all mipmap levels for a provided image
 
-   --  Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
    procedure Image_Dither
      (Image : in out RayLib.Image; R_Bpp : Integer; G_Bpp : Integer;
       B_Bpp :        Integer; A_Bpp : Integer);
+   --  Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
 
-   --  Flip image vertically
    procedure Image_Flip_Vertical (Image : in out RayLib.Image);
+   --  Flip image vertically
 
-   --  Flip image horizontally
    procedure Image_Flip_Horizontal (Image : in out RayLib.Image);
+   --  Flip image horizontally
 
-   --  Rotate image clockwise 90deg
    procedure Image_Rotate_CW (Image : in out RayLib.Image);
+   --  Rotate image clockwise 90deg
 
-   --  Rotate image counter-clockwise 90deg
    procedure Image_Rotate_CCW (Image : in out RayLib.Image);
+   --  Rotate image counter-clockwise 90deg
 
-   --  Modify image color: tint
    procedure Image_Color_Tint
      (Image : in out RayLib.Image; Color : RayLib.Color);
+   --  Modify image color: tint
 
-   --  Modify image color: invert
    procedure Image_Color_Invert (Image : in out RayLib.Image);
+   --  Modify image color: invert
 
-   --  Modify image color: grayscale
    procedure Image_Color_Grayscale (Image : in out RayLib.Image);
+   --  Modify image color: grayscale
 
-   --  Modify image color: contrast (-100 to 100)
    procedure Image_Color_Contrast
      (Image : in out RayLib.Image; Contrast : Float);
+   --  Modify image color: contrast (-100 to 100)
 
-   --  Modify image color: brightness (-255 to 255)
    procedure Image_Color_Brightness
      (Image : in out RayLib.Image; Brightness : Integer);
+   --  Modify image color: brightness (-255 to 255)
 
-   --  Modify image color: replace color
    procedure Image_Color_Replace
      (Image   : in out RayLib.Image; Color : RayLib.Color;
       Replace :        RayLib.Color);
+   --  Modify image color: replace color
 
-   --  Load color data from image as a Color array (RGBA - 32bit)
    function Load_Image_Colors (Image : RayLib.Image) return RayLib.Color_Array;
+   --  Load color data from image as a Color array (RGBA - 32bit)
 
-   --  Load colors palette from image as a Color array (RGBA - 32bit)
    function Load_Image_Palette
      (Image : RayLib.Image; Max_Palette_Size : Integer)
       return RayLib.Color_Array;
+   --  Load colors palette from image as a Color array (RGBA - 32bit)
 
-   --  Get image alpha border rectangle
    function Get_Image_Alpha_Border
      (Image : RayLib.Image; Threshold : Float) return RayLib.Rectangle;
+   --  Get image alpha border rectangle
 
-   --  Get image pixel color at (x, y) position
    function Get_Image_Color
      (Image : RayLib.Image; X : Integer; Y : Integer) return RayLib.Color;
+   --  Get image pixel color at (x, y) position
 
-   --  Clear image background with given color
    procedure Image_Clear_Background
      (Dst : in out RayLib.Image; Color : RayLib.Color);
+   --  Clear image background with given color
 
-   --  Draw pixel within an image
    procedure Image_Draw_Pixel
      (Dst   : in out RayLib.Image; Pos_X : Integer; Pos_Y : Integer;
       Color :        RayLib.Color);
+   --  Draw pixel within an image
 
-   --  Draw pixel within an image (Vector version)
    procedure Image_Draw_Pixel
      (Dst   : in out RayLib.Image; Position : RayLib.Vector2;
       Color :        RayLib.Color);
+   --  Draw pixel within an image (Vector version)
 
-   --  Draw line within an image
    procedure Image_Draw_Line
      (Dst : in out RayLib.Image; Start_Pos_X : Integer; Start_Pos_Y : Integer;
       End_Pos_X :        Integer; End_Pos_Y : Integer; Color : RayLib.Color);
+   --  Draw line within an image
 
-   --  Draw line within an image (Vector version)
    procedure Image_Draw_Line
      (Dst    : in out RayLib.Image; Start : RayLib.Vector2;
       Finish :        RayLib.Vector2; Color : RayLib.Color);
+   --  Draw line within an image (Vector version)
 
-   --  Draw circle within an image
    procedure Image_Draw_Circle
      (Dst    : in out RayLib.Image; Center_X : Integer; Center_Y : Integer;
       Radius :        Integer; Color : RayLib.Color);
+   --  Draw circle within an image
 
-   --  Draw circle within an image (Vector version)
    procedure Image_Draw_Circle
      (Dst   : in out RayLib.Image; Center : RayLib.Vector2; Radius : Integer;
       Color :        RayLib.Color);
+   --  Draw circle within an image (Vector version)
 
-   --  Draw rectangle within an image
    procedure Image_Draw_Rectangle
      (Dst   : in out RayLib.Image; Pos_X : Integer; Pos_Y : Integer;
       Width :        Integer; Height : Integer; Color : RayLib.Color);
+   --  Draw rectangle within an image
 
-   --  Draw rectangle within an image (Vector version)
    procedure Image_Draw_Rectangle
      (Dst  : in out RayLib.Image; Position : RayLib.Vector2;
       Size :        RayLib.Vector2; Color : RayLib.Color);
+   --  Draw rectangle within an image (Vector version)
 
-   --  Draw rectangle within an image
    procedure Image_Draw_Rectangle
      (Dst : in out RayLib.Image; Rec : RayLib.Rectangle; Color : RayLib.Color);
+   --  Draw rectangle within an image
 
-   --  Draw rectangle lines within an image
    procedure Image_Draw_Rectangle_Lines
      (Dst   : in out RayLib.Image; Rec : RayLib.Rectangle; Thick : Integer;
       Color :        RayLib.Color);
+   --  Draw rectangle lines within an image
 
-   --  Draw a source image within a destination image (tint applied to source)
    procedure Image_Draw
      (Dst     : in out RayLib.Image; Src : RayLib.Image;
       Src_Rec :        RayLib.Rectangle; Dst_Rec : RayLib.Rectangle;
       Tint    :        RayLib.Color);
+   --  Draw a source image within a destination image (tint applied to source)
 
-   --  Draw text (using default font) within an image (destination)
    procedure Image_Draw_Text
      (Dst   : in out RayLib.Image; Text : String; Pos_X : Integer;
       Pos_Y :        Integer; Font_Size : Integer; Color : RayLib.Color);
+   --  Draw text (using default font) within an image (destination)
 
-   --  Draw text (custom sprite font) within an image (destination)
    procedure Image_Draw_Text
      (Dst      : in out RayLib.Image; Font : RayLib.Font; Text : String;
       Position :        RayLib.Vector2; Font_Size : Float; Spacing : Float;
       Tint     :        RayLib.Color);
+   --  Draw text (custom sprite font) within an image (destination)
 
-   --  Load texture from file into GPU memory (VRAM)
    function Load_Texture (File_Name : String) return RayLib.Texture2D;
+   --  Load texture from file into GPU memory (VRAM)
 
-   --  Load texture from image data
    function Load_Texture_From_Image
      (Image : RayLib.Image) return RayLib.Texture2D;
+   --  Load texture from image data
 
-   --  Load cubemap from image, multiple image cubemap layouts supported
    function Load_Texture_Cubemap
      (Image : RayLib.Image; Layout : Integer) return RayLib.Texture_Cubemap;
+   --  Load cubemap from image, multiple image cubemap layouts supported
 
-   --  Load texture for rendering (framebuffer)
    function Load_Render_Texture
      (Width : Integer; Height : Integer) return RayLib.Render_Texture2D;
+   --  Load texture for rendering (framebuffer)
 
-   --  Update GPU texture with new data
    procedure Update_Texture
      (Texture : RayLib.Texture2D; Pixels : Stream_Element_Array);
+   --  Update GPU texture with new data
 
-   --  Update GPU texture rectangle with new data
    procedure Update_Texture
      (Texture : RayLib.Texture2D; Rec : RayLib.Rectangle;
       Pixels  : Stream_Element_Array);
+   --  Update GPU texture rectangle with new data
 
-   --  Generate GPU mipmaps for a texture
    procedure Gen_Texture_Mipmaps (Texture : in out RayLib.Texture2D);
+   --  Generate GPU mipmaps for a texture
 
-   --  Set texture scaling filter mode
    procedure Set_Texture_Filter
      (Texture : RayLib.Texture2D; Filter : Texture_Filter);
+   --  Set texture scaling filter mode
 
-   --  Set texture wrapping mode
    procedure Set_Texture_Wrap
      (Texture : RayLib.Texture2D; Wrap : Texture_Wrap);
+   --  Set texture wrapping mode
 
-   --  Draw a Texture2D
    procedure Draw_Texture
      (Texture : RayLib.Texture2D; Pos_X : Integer; Pos_Y : Integer;
       Tint    : RayLib.Color);
+   --  Draw a Texture2D
 
-   --  Draw a Texture2D with position defined as Vector2
    procedure Draw_Texture
      (Texture : RayLib.Texture2D; Position : RayLib.Vector2;
       Tint    : RayLib.Color);
+   --  Draw a Texture2D with position defined as Vector2
 
-   --  Draw a Texture2D with extended parameters
    procedure Draw_Texture
      (Texture : RayLib.Texture2D; Position : RayLib.Vector2; Rotation : Float;
       Scale   : Float; Tint : RayLib.Color);
+   --  Draw a Texture2D with extended parameters
 
-   --  Draw a part of a texture defined by a rectangle
    procedure Draw_Texture
      (Texture  : RayLib.Texture2D; Source : RayLib.Rectangle;
       Position : RayLib.Vector2; Tint : RayLib.Color);
+   --  Draw a part of a texture defined by a rectangle
 
-   --  Draw texture quad with tiling and offset parameters
    procedure Draw_Texture_Quad
      (Texture : RayLib.Texture2D; Tiling : RayLib.Vector2;
       Offset  : RayLib.Vector2; Quad : RayLib.Rectangle; Tint : RayLib.Color);
+   --  Draw texture quad with tiling and offset parameters
 
-   --  Draw part of a texture (defined by a rectangle) with rotation and scale tiled into dest.
    procedure Draw_Texture_Tiled
      (Texture : RayLib.Texture2D; Source : RayLib.Rectangle;
       Dest    : RayLib.Rectangle; Origin : RayLib.Vector2; Rotation : Float;
       Scale   : Float; Tint : RayLib.Color);
+   --  Draw part of a texture (defined by a rectangle) with rotation and scale tiled into dest.
 
-   --  Draw a part of a texture defined by a rectangle with 'pro' parameters
    procedure Draw_Texture_Pro
      (Texture : RayLib.Texture2D; Source : RayLib.Rectangle;
       Dest    : RayLib.Rectangle; Origin : RayLib.Vector2; Rotation : Float;
       Tint    : RayLib.Color);
+   --  Draw a part of a texture defined by a rectangle with 'pro' parameters
 
-   --  Draws a texture (or part of it) that stretches or shrinks nicely
    procedure Draw_Texture_N_Patch
      (Texture : RayLib.Texture2D; N_Patch_Info : RayLib.N_Patch_Info;
       Dest    : RayLib.Rectangle; Origin : RayLib.Vector2; Rotation : Float;
       Tint    : RayLib.Color);
+   --  Draws a texture (or part of it) that stretches or shrinks nicely
 
-   --  Draw a textured polygon
    procedure Draw_Texture_Poly
      (Texture : RayLib.Texture2D; Center : RayLib.Vector2;
       Points  : RayLib.Vector2_Array; Texcoords : RayLib.Vector2_Array;
       Tint    : RayLib.Color);
+   --  Draw a textured polygon
 
-   --  Get color with alpha applied, alpha goes from 0.0f to 1.0f
    function Fade (Color : RayLib.Color; Alpha : Float) return RayLib.Color;
+   --  Get color with alpha applied, alpha goes from 0.0f to 1.0f
 
-   --  Get hexadecimal value for a Color
    function Color_To_Int (Color : RayLib.Color) return Integer;
+   --  Get hexadecimal value for a Color
 
-   --  Get Color normalized as float [0..1]
    function Color_Normalize (Color : RayLib.Color) return RayLib.Vector4;
+   --  Get Color normalized as float [0..1]
 
-   --  Get Color from normalized values [0..1]
    function Color_From_Normalized
      (Normalized : RayLib.Vector4) return RayLib.Color;
+   --  Get Color from normalized values [0..1]
 
-   --  Get HSV values for a Color, hue [0..360], saturation/value [0..1]
    function Color_To_HSV (Color : RayLib.Color) return RayLib.Vector3;
+   --  Get HSV values for a Color, hue [0..360], saturation/value [0..1]
 
-   --  Get a Color from HSV values, hue [0..360], saturation/value [0..1]
    function Color_From_HSV
      (Hue : Float; Saturation : Float; Value : Float) return RayLib.Color;
+   --  Get a Color from HSV values, hue [0..360], saturation/value [0..1]
 
-   --  Get color with alpha applied, alpha goes from 0.0f to 1.0f
    function Color_Alpha
      (Color : RayLib.Color; Alpha : Float) return RayLib.Color;
+   --  Get color with alpha applied, alpha goes from 0.0f to 1.0f
 
-   --  Get src alpha-blended into dst color with tint
    function Color_Alpha_Blend
      (Dst : RayLib.Color; Src : RayLib.Color; Tint : RayLib.Color)
       return RayLib.Color;
+   --  Get src alpha-blended into dst color with tint
 
-   --  Get Color structure from hexadecimal value
    function Get_Color (Hex_Value : Natural) return RayLib.Color;
+   --  Get Color structure from hexadecimal value
 
-   --  Get Color from a source pixel pointer of certain format
    function Get_Pixel_Color
      (Src_Ptr : System.Address; Format : Integer) return RayLib.Color;
+   --  Get Color from a source pixel pointer of certain format
 
-   --  Set color formatted into destination pixel pointer
    procedure Set_Pixel_Color
      (Dst_Ptr : System.Address; Color : RayLib.Color; Format : Integer);
+   --  Set color formatted into destination pixel pointer
 
-   --  Get pixel data size in bytes for certain format
    function Get_Pixel_Data_Size
      (Width : Integer; Height : Integer; Format : Integer) return Integer;
+   --  Get pixel data size in bytes for certain format
 
-   --  Get the default Font
    function Get_Font_Default return RayLib.Font;
+   --  Get the default Font
 
-   --  Load font from file into GPU memory (VRAM)
    function Load_Font (File_Name : String) return RayLib.Font;
+   --  Load font from file into GPU memory (VRAM)
 
    --  Load font from file with extended parameters, use NULL for fontChars and 0 for glyphCount to load the default character set
    -- function Load_Font_Ex (File_Name : String; Font_Size : Integer; Font_Chars : RayLib.Int *; Glyph_Count : Integer) return RayLib.Font;
 
-   --  Load font from Image (XNA style)
    function Load_Font_From_Image
      (Image : RayLib.Image; Key : RayLib.Color; First_Char : Integer)
       return RayLib.Font;
+   --  Load font from Image (XNA style)
 
    --  Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
    -- function Load_Font_From_Memory (File_Type : String; File_Data : RayLib.Const unsigned char *; Data_Size : Integer; Font_Size : Integer; Font_Chars : RayLib.Int *; Glyph_Count : Integer) return RayLib.Font;
@@ -2771,590 +2799,590 @@ package RayLib is
    --  Generate image font atlas using chars info
    -- function Gen_Image_Font_Atlas (Chars : RayLib.Const _Glyph_Info *; Recs : RayLib.Rectangle **; Glyph_Count : Integer; Font_Size : Integer; Padding : Integer; Pack_Method : Integer) return RayLib.Image;
 
-   --  Export font as code file, returns true on success
    function Export_Font_As_Code
      (Font : RayLib.Font; File_Name : String) return Boolean;
+   --  Export font as code file, returns true on success
 
-   --  Draw current FPS
    procedure Draw_FPS (Pos_X : Integer; Pos_Y : Integer);
+   --  Draw current FPS
 
-   --  Draw text (using default font)
    procedure Draw_Text
      (Text  : String; Pos_X : Integer; Pos_Y : Integer; Font_Size : Integer;
       Color : RayLib.Color);
+   --  Draw text (using default font)
 
-   --  Draw text using font and additional parameters
    procedure Draw_Text
      (Font      : RayLib.Font; Text : String; Position : RayLib.Vector2;
       Font_Size : Float; Spacing : Float; Tint : RayLib.Color);
+   --  Draw text using font and additional parameters
 
-   --  Draw text using Font and pro parameters (rotation)
    procedure Draw_Text
      (Font    : RayLib.Font; Text : String; Position : RayLib.Vector2;
       Origin  : RayLib.Vector2; Rotation : Float; Font_Size : Float;
       Spacing : Float; Tint : RayLib.Color);
+   --  Draw text using Font and pro parameters (rotation)
 
-   --  Draw one character (codepoint)
    procedure Draw_Text_Codepoint
      (Font      : RayLib.Font; Codepoint : Integer; Position : RayLib.Vector2;
       Font_Size : Float; Tint : RayLib.Color);
+   --  Draw one character (codepoint)
 
-   --  Draw multiple character (codepoint)
    procedure Draw_Text_Codepoints
      (Font     : RayLib.Font; Codepoints : Integer_Array;
       Position : RayLib.Vector2; Font_Size : Float; Spacing : Float;
       Tint     : RayLib.Color);
+   --  Draw multiple character (codepoint)
 
-   --  Measure string width for default font
    function Measure_Text (Text : String; Font_Size : Integer) return Integer;
+   --  Measure string width for default font
 
-   --  Measure string size for Font
    function Measure_Text
      (Font : RayLib.Font; Text : String; Font_Size : Float; Spacing : Float)
       return RayLib.Vector2;
+   --  Measure string size for Font
 
-   --  Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
    function Get_Glyph_Index
      (Font : RayLib.Font; Codepoint : Integer) return Integer;
+   --  Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
 
-   --  Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
    function Get_Glyph_Info
      (Font : RayLib.Font; Codepoint : Integer) return RayLib.Glyph_Info;
+   --  Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
 
-   --  Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
    function Get_Glyph_Atlas
      (Font : RayLib.Font; Codepoint : Integer) return RayLib.Rectangle;
+   --  Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
 
-   --  Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
    function Load_Codepoints
      (Text : String; Count : out Integer) return Integer_Array;
+   --  Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
 
-   --  Get total number of codepoints in a UTF-8 encoded string
    function Get_Codepoint_Count (Text : String) return Integer;
+   --  Get total number of codepoints in a UTF-8 encoded string
 
-   --  Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
    function Get_Codepoint
      (Text : String; Bytes_Processed : out Integer) return Integer;
+   --  Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 
-   --  Encode one codepoint into UTF-8 byte array (array length returned as parameter)
    function Codepoint_To_UTF8 (Codepoint : Integer) return String;
+   --  Encode one codepoint into UTF-8 byte array (array length returned as parameter)
 
-   --  Encode text as codepoints array into UTF-8 text string (WARNING: memory must be freed!)
    function Text_Codepoints_To_UTF8 (Codepoints : Integer_Array) return String;
+   --  Encode text as codepoints array into UTF-8 text string (WARNING: memory must be freed!)
 
-   --  Copy one string to another, returns bytes copied
    procedure Text_Copy (Dst : out String; Src : String);
+   --  Copy one string to another, returns bytes copied
 
-   --  Check if two text string are equal
    function Text_Is_Equal (Text1 : String; Text2 : String) return Boolean;
+   --  Check if two text string are equal
 
-   --  Get text length, checks for '\0' ending
    function Text_Length (Text : String) return Natural;
+   --  Get text length, checks for '\0' ending
 
-   --  Text formatting with variables (sprintf() style)
    -- function Text_Format (Text : String; Args : RayLib....) return String;
+   --  Text formatting with variables (sprintf() style)
 
-   --  Get a piece of a text string
    function Text_Subtext
      (Text : String; Position : Integer; Length : Integer) return String;
+   --  Get a piece of a text string
 
-   --  Replace text string (WARNING: memory must be freed!)
    function Text_Replace
      (Text : in out String; Replace : String; By : String) return String;
+   --  Replace text string (WARNING: memory must be freed!)
 
-   --  Insert text in a position (WARNING: memory must be freed!)
    function Text_Insert
      (Text : String; Insert : String; Position : Integer) return String;
+   --  Insert text in a position (WARNING: memory must be freed!)
 
-   --  Join text strings with delimiter
    -- function Text_Join (Text_List : RayLib.Const char **; Count : Integer; Delimiter : String) return String;
+   --  Join text strings with delimiter
 
-   --  Split text into multiple strings
    -- function Text_Split (Text : String; Delimiter : RayLib.Char; Count : RayLib.Int *) return RayLib.Const char **;
+   --  Split text into multiple strings
 
-   --  Append text at specific position and move cursor!
    -- procedure Text_Append (Text : RayLib.Char *; Append : String; Position : RayLib.Int *);
+   --  Append text at specific position and move cursor!
 
-   --  Find first text occurrence within a string
    function Text_Find_Index (Text : String; Find : String) return Integer;
+   --  Find first text occurrence within a string
 
-   --  Get upper case version of provided string
    function Text_To_Upper (Text : String) return String;
+   --  Get upper case version of provided string
 
-   --  Get lower case version of provided string
    function Text_To_Lower (Text : String) return String;
+   --  Get lower case version of provided string
 
-   --  Get Pascal case notation version of provided string
    function Text_To_Pascal (Text : String) return String;
+   --  Get Pascal case notation version of provided string
 
-   --  Get integer value from text (negative values not supported)
    function Text_To_Integer (Text : String) return Integer;
+   --  Get integer value from text (negative values not supported)
 
-   --  Draw a line in 3D world space
    procedure Draw_Line3D
      (Start_Pos : RayLib.Vector3; End_Pos : RayLib.Vector3;
       Color     : RayLib.Color);
+   --  Draw a line in 3D world space
 
-   --  Draw a point in 3D space, actually a small line
    procedure Draw_Point3D (Position : RayLib.Vector3; Color : RayLib.Color);
+   --  Draw a point in 3D space, actually a small line
 
-   --  Draw a circle in 3D world space
    procedure Draw_Circle3D
      (Center : RayLib.Vector3; Radius : Float; Rotation_Axis : RayLib.Vector3;
       Rotation_Angle : Float; Color : RayLib.Color);
+   --  Draw a circle in 3D world space
 
-   --  Draw a color-filled triangle (vertex in counter-clockwise order!)
    procedure Draw_Triangle3D
      (V1    : RayLib.Vector3; V2 : RayLib.Vector3; V3 : RayLib.Vector3;
       Color : RayLib.Color);
+   --  Draw a color-filled triangle (vertex in counter-clockwise order!)
 
-   --  Draw a triangle strip defined by points
    procedure Draw_Triangle_Strip3D
      (Points : Vector3_Array; Color : RayLib.Color);
+   --  Draw a triangle strip defined by points
 
+   procedure Draw_Cube
+     (Position : RayLib.Vector3; Width : Float; Height : Float; Length : Float;
+      Color    : RayLib.Color);
    --  Draw cube
-   procedure Draw_Cube
-     (Position : RayLib.Vector3; Width : Float; Height : Float; Length : Float;
-      Color    : RayLib.Color);
 
+   procedure Draw_Cube
+     (Position : RayLib.Vector3; Size : RayLib.Vector3; Color : RayLib.Color);
    --  Draw cube (Vector version)
-   procedure Draw_Cube
-     (Position : RayLib.Vector3; Size : RayLib.Vector3; Color : RayLib.Color);
 
-   --  Draw cube wires
    procedure Draw_Cube_Wires
      (Position : RayLib.Vector3; Width : Float; Height : Float; Length : Float;
       Color    : RayLib.Color);
+   --  Draw cube wires
 
-   --  Draw cube wires (Vector version)
    procedure Draw_Cube_Wires
      (Position : RayLib.Vector3; Size : RayLib.Vector3; Color : RayLib.Color);
+   --  Draw cube wires (Vector version)
 
-   --  Draw cube textured
    procedure Draw_Cube_Texture
      (Texture : RayLib.Texture2D; Position : RayLib.Vector3; Width : Float;
       Height  : Float; Length : Float; Color : RayLib.Color);
+   --  Draw cube textured
 
-   --  Draw cube with a region of a texture
    procedure Draw_Cube_Texture
      (Texture  : RayLib.Texture2D; Source : RayLib.Rectangle;
       Position : RayLib.Vector3; Width : Float; Height : Float; Length : Float;
       Color    : RayLib.Color);
+   --  Draw cube with a region of a texture
 
-   --  Draw sphere
    procedure Draw_Sphere
      (Center_Pos : RayLib.Vector3; Radius : Float; Color : RayLib.Color);
+   --  Draw sphere
 
-   --  Draw sphere with extended parameters
    procedure Draw_Sphere
      (Center_Pos : RayLib.Vector3; Radius : Float; Rings : Integer;
       Slices     : Integer; Color : RayLib.Color);
+   --  Draw sphere with extended parameters
 
-   --  Draw sphere wires
    procedure Draw_Sphere_Wires
      (Center_Pos : RayLib.Vector3; Radius : Float; Rings : Integer;
       Slices     : Integer; Color : RayLib.Color);
+   --  Draw sphere wires
 
+   procedure Draw_Cylinder
+     (Position : RayLib.Vector3; Radius_Top : Float; Radius_Bottom : Float;
+      Height   : Float; Slices : Integer; Color : RayLib.Color);
    --  Draw a cylinder/cone
-   procedure Draw_Cylinder
-     (Position : RayLib.Vector3; Radius_Top : Float; Radius_Bottom : Float;
-      Height   : Float; Slices : Integer; Color : RayLib.Color);
 
+   procedure Draw_Cylinder
+     (Start_Pos    : RayLib.Vector3; End_Pos : RayLib.Vector3;
+      Start_Radius : Float; End_Radius : Float; Sides : Integer;
+      Color        : RayLib.Color);
    --  Draw a cylinder with base at startPos and top at endPos
-   procedure Draw_Cylinder
-     (Start_Pos    : RayLib.Vector3; End_Pos : RayLib.Vector3;
-      Start_Radius : Float; End_Radius : Float; Sides : Integer;
-      Color        : RayLib.Color);
 
-   --  Draw a cylinder/cone wires
    procedure Draw_Cylinder_Wires
      (Position : RayLib.Vector3; Radius_Top : Float; Radius_Bottom : Float;
       Height   : Float; Slices : Integer; Color : RayLib.Color);
+   --  Draw a cylinder/cone wires
 
-   --  Draw a cylinder wires with base at startPos and top at endPos
    procedure Draw_Cylinder_Wires
      (Start_Pos    : RayLib.Vector3; End_Pos : RayLib.Vector3;
       Start_Radius : Float; End_Radius : Float; Sides : Integer;
       Color        : RayLib.Color);
+   --  Draw a cylinder wires with base at startPos and top at endPos
 
-   --  Draw a plane XZ
    procedure Draw_Plane
      (Center_Pos : RayLib.Vector3; Size : RayLib.Vector2;
       Color      : RayLib.Color);
+   --  Draw a plane XZ
 
-   --  Draw a ray line
    procedure Draw_Ray (Ray : RayLib.Ray; Color : RayLib.Color);
+   --  Draw a ray line
 
-   --  Draw a grid (centered at (0, 0, 0))
    procedure Draw_Grid (Slices : Integer; Spacing : Float);
+   --  Draw a grid (centered at (0, 0, 0))
 
-   --  Load model from files (meshes and materials)
    function Load_Model (File_Name : String) return RayLib.Model;
+   --  Load model from files (meshes and materials)
 
-   --  Load model from generated mesh (default material)
    function Load_Model_From_Mesh (Mesh : RayLib.Mesh) return RayLib.Model;
+   --  Load model from generated mesh (default material)
 
-   --  Compute model bounding box limits (considers all meshes)
    function Get_Model_Bounding_Box
      (Model : RayLib.Model) return RayLib.Bounding_Box;
+   --  Compute model bounding box limits (considers all meshes)
 
+   procedure Draw_Model
+     (Model : RayLib.Model; Position : RayLib.Vector3; Scale : Float;
+      Tint  : RayLib.Color);
    --  Draw a model (with texture if set)
-   procedure Draw_Model
-     (Model : RayLib.Model; Position : RayLib.Vector3; Scale : Float;
-      Tint  : RayLib.Color);
 
+   procedure Draw_Model
+     (Model         : RayLib.Model; Position : RayLib.Vector3;
+      Rotation_Axis : RayLib.Vector3; Rotation_Angle : Float;
+      Scale         : RayLib.Vector3; Tint : RayLib.Color);
    --  Draw a model with extended parameters
-   procedure Draw_Model
-     (Model         : RayLib.Model; Position : RayLib.Vector3;
-      Rotation_Axis : RayLib.Vector3; Rotation_Angle : Float;
-      Scale         : RayLib.Vector3; Tint : RayLib.Color);
 
-   --  Draw a model wires (with texture if set)
    procedure Draw_Model_Wires
      (Model : RayLib.Model; Position : RayLib.Vector3; Scale : Float;
       Tint  : RayLib.Color);
+   --  Draw a model wires (with texture if set)
 
-   --  Draw a model wires (with texture if set) with extended parameters
    procedure Draw_Model_Wires
      (Model         : RayLib.Model; Position : RayLib.Vector3;
       Rotation_Axis : RayLib.Vector3; Rotation_Angle : Float;
       Scale         : RayLib.Vector3; Tint : RayLib.Color);
+   --  Draw a model wires (with texture if set) with extended parameters
 
-   --  Draw bounding box (wires)
    procedure Draw_Bounding_Box
      (Box : RayLib.Bounding_Box; Color : RayLib.Color);
+   --  Draw bounding box (wires)
 
-   --  Draw a billboard texture
    procedure Draw_Billboard
      (Camera   : RayLib.Camera; Texture : RayLib.Texture2D;
       Position : RayLib.Vector3; Size : Float; Tint : RayLib.Color);
+   --  Draw a billboard texture
 
-   --  Draw a billboard texture defined by source
    procedure Draw_Billboard
      (Camera : RayLib.Camera; Texture : RayLib.Texture2D;
       Source : RayLib.Rectangle; Position : RayLib.Vector3;
       Size   : RayLib.Vector2; Tint : RayLib.Color);
+   --  Draw a billboard texture defined by source
 
-   --  Draw a billboard texture defined by source and rotation
    procedure Draw_Billboard
      (Camera   : RayLib.Camera; Texture : RayLib.Texture2D;
       Source   : RayLib.Rectangle; Position : RayLib.Vector3;
       Up : RayLib.Vector3; Size : RayLib.Vector2; Origin : RayLib.Vector2;
       Rotation : Float; Tint : RayLib.Color);
+   --  Draw a billboard texture defined by source and rotation
 
-   --  Upload mesh vertex data in GPU and provide VAO/VBO ids
    procedure Upload_Mesh (Mesh : in out RayLib.Mesh; Dynamic : Boolean);
+   --  Upload mesh vertex data in GPU and provide VAO/VBO ids
 
-   --  Update mesh vertex data in GPU for a specific buffer index
    procedure Update_Mesh_Buffer
      (Mesh : RayLib.Mesh; Index : Integer; Data : Stream_Element_Array);
+   --  Update mesh vertex data in GPU for a specific buffer index
 
-   --  Draw a 3d mesh with material and transform
    procedure Draw_Mesh
      (Mesh      : RayLib.Mesh; Material : RayLib.Material;
       Transform : RayLib.Matrix);
+   --  Draw a 3d mesh with material and transform
 
-   --  Draw multiple mesh instances with material and different transforms
    procedure Draw_Mesh_Instanced
      (Mesh       : RayLib.Mesh; Material : RayLib.Material;
       Transforms : Transform_Array; Instances : Integer);
+   --  Draw multiple mesh instances with material and different transforms
 
-   --  Export mesh data to file, returns true on success
    function Export_Mesh
      (Mesh : RayLib.Mesh; File_Name : String) return Boolean;
+   --  Export mesh data to file, returns true on success
 
-   --  Compute mesh bounding box limits
    function Get_Mesh_Bounding_Box
      (Mesh : RayLib.Mesh) return RayLib.Bounding_Box;
+   --  Compute mesh bounding box limits
 
-   --  Compute mesh tangents
    procedure Gen_Mesh_Tangents (Mesh : in out RayLib.Mesh);
+   --  Compute mesh tangents
 
-   --  Compute mesh binormals
    procedure Gen_Mesh_Binormals (Mesh : in out RayLib.Mesh);
+   --  Compute mesh binormals
 
-   --  Generate polygonal mesh
    function Gen_Mesh_Poly (Sides : Integer; Radius : Float) return RayLib.Mesh;
+   --  Generate polygonal mesh
 
-   --  Generate plane mesh (with subdivisions)
    function Gen_Mesh_Plane
      (Width : Float; Length : Float; Res_X : Integer; Res_Z : Integer)
       return RayLib.Mesh;
+   --  Generate plane mesh (with subdivisions)
 
-   --  Generate cuboid mesh
    function Gen_Mesh_Cube
      (Width : Float; Height : Float; Length : Float) return RayLib.Mesh;
+   --  Generate cuboid mesh
 
-   --  Generate sphere mesh (standard sphere)
    function Gen_Mesh_Sphere
      (Radius : Float; Rings : Integer; Slices : Integer) return RayLib.Mesh;
+   --  Generate sphere mesh (standard sphere)
 
-   --  Generate half-sphere mesh (no bottom cap)
    function Gen_Mesh_Hemi_Sphere
      (Radius : Float; Rings : Integer; Slices : Integer) return RayLib.Mesh;
+   --  Generate half-sphere mesh (no bottom cap)
 
-   --  Generate cylinder mesh
    function Gen_Mesh_Cylinder
      (Radius : Float; Height : Float; Slices : Integer) return RayLib.Mesh;
+   --  Generate cylinder mesh
 
-   --  Generate cone/pyramid mesh
    function Gen_Mesh_Cone
      (Radius : Float; Height : Float; Slices : Integer) return RayLib.Mesh;
+   --  Generate cone/pyramid mesh
 
-   --  Generate torus mesh
    function Gen_Mesh_Torus
      (Radius : Float; Size : Float; Rad_Seg : Integer; Sides : Integer)
       return RayLib.Mesh;
+   --  Generate torus mesh
 
-   --  Generate trefoil knot mesh
    function Gen_Mesh_Knot
      (Radius : Float; Size : Float; Rad_Seg : Integer; Sides : Integer)
       return RayLib.Mesh;
+   --  Generate trefoil knot mesh
 
-   --  Generate heightmap mesh from image data
    function Gen_Mesh_Heightmap
      (Heightmap : RayLib.Image; Size : RayLib.Vector3) return RayLib.Mesh;
+   --  Generate heightmap mesh from image data
 
-   --  Generate cubes-based map mesh from image data
    function Gen_Mesh_Cubicmap
      (Cubicmap : RayLib.Image; Cube_Size : RayLib.Vector3) return RayLib.Mesh;
+   --  Generate cubes-based map mesh from image data
 
-   --  Load materials from model file
    function Load_Materials (File_Name : String) return RayLib.Material_Array;
+   --  Load materials from model file
 
-   --  Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
    function Load_Material_Default return RayLib.Material;
+   --  Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 
-   --  Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
    procedure Set_Material_Texture
      (Material : in out RayLib.Material; Map_Type : Integer;
       Texture  :        RayLib.Texture2D);
+   --  Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
 
-   --  Set material for a mesh
    procedure Set_Model_Mesh_Material
      (Model : in out RayLib.Model; Mesh_Id : Integer; Material_Id : Integer);
+   --  Set material for a mesh
 
-   --  Load model animations from file
    function Load_Model_Animations
      (File_Name : String) return RayLib.Model_Animation_Array;
+   --  Load model animations from file
 
-   --  Update model animation pose
    procedure Update_Model_Animation
      (Model : RayLib.Model; Anim : RayLib.Model_Animation; Frame : Integer);
+   --  Update model animation pose
 
-   --  Check model animation skeleton match
    function Is_Model_Animation_Valid
      (Model : RayLib.Model; Anim : RayLib.Model_Animation) return Boolean;
+   --  Check model animation skeleton match
 
-   --  Check collision between two spheres
    function Check_Collision_Spheres
      (Center1 : RayLib.Vector3; Radius1 : Float; Center2 : RayLib.Vector3;
       Radius2 : Float) return Boolean;
+   --  Check collision between two spheres
 
-   --  Check collision between two bounding boxes
    function Check_Collision_Boxes
      (Box1 : RayLib.Bounding_Box; Box2 : RayLib.Bounding_Box) return Boolean;
+   --  Check collision between two bounding boxes
 
-   --  Check collision between box and sphere
    function Check_Collision_Box_Sphere
      (Box : RayLib.Bounding_Box; Center : RayLib.Vector3; Radius : Float)
       return Boolean;
+   --  Check collision between box and sphere
 
-   --  Get collision info between ray and sphere
    function Get_Ray_Collision_Sphere
      (Ray : RayLib.Ray; Center : RayLib.Vector3; Radius : Float)
       return RayLib.Ray_Collision;
+   --  Get collision info between ray and sphere
 
-   --  Get collision info between ray and box
    function Get_Ray_Collision_Box
      (Ray : RayLib.Ray; Box : RayLib.Bounding_Box) return RayLib.Ray_Collision;
+   --  Get collision info between ray and box
 
-   --  Get collision info between ray and mesh
    function Get_Ray_Collision_Mesh
      (Ray : RayLib.Ray; Mesh : RayLib.Mesh; Transform : RayLib.Matrix)
       return RayLib.Ray_Collision;
+   --  Get collision info between ray and mesh
 
-   --  Get collision info between ray and triangle
    function Get_Ray_Collision_Triangle
      (Ray : RayLib.Ray; P1 : RayLib.Vector3; P2 : RayLib.Vector3;
       P3  : RayLib.Vector3) return RayLib.Ray_Collision;
+   --  Get collision info between ray and triangle
 
-   --  Get collision info between ray and quad
    function Get_Ray_Collision_Quad
      (Ray : RayLib.Ray; P1 : RayLib.Vector3; P2 : RayLib.Vector3;
       P3  : RayLib.Vector3; P4 : RayLib.Vector3) return RayLib.Ray_Collision;
+   --  Get collision info between ray and quad
 
-   --  Initialize audio device and context
    procedure Init_Audio_Device;
+   --  Initialize audio device and context
 
-   --  Close the audio device and context
    procedure Close_Audio_Device;
+   --  Close the audio device and context
 
-   --  Check if audio device has been initialized successfully
    function Is_Audio_Device_Ready return Boolean;
+   --  Check if audio device has been initialized successfully
 
-   --  Set master volume (listener)
    procedure Set_Master_Volume (Volume : Float);
+   --  Set master volume (listener)
 
-   --  Load wave data from file
    function Load_Wave (File_Name : String) return RayLib.Wave;
+   --  Load wave data from file
 
-   --  Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
    function Load_Wave_From_Memory
      (File_Type : String; File_Data : Stream_Element_Array) return RayLib.Wave;
+   --  Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
 
-   --  Load sound from file
    function Load_Sound (File_Name : String) return RayLib.Sound;
+   --  Load sound from file
 
-   --  Load sound from wave data
    function Load_Sound_From_Wave (Wave : RayLib.Wave) return RayLib.Sound;
+   --  Load sound from wave data
 
-   --  Update sound buffer with new data
    procedure Update_Sound
      (Sound        : RayLib.Sound; Data : Stream_Element_Array;
       Sample_Count : Integer);
+   --  Update sound buffer with new data
 
-   --  Export wave data to file, returns true on success
    function Export_Wave
      (Wave : RayLib.Wave; File_Name : String) return Boolean;
+   --  Export wave data to file, returns true on success
 
-   --  Export wave sample data to code (.h), returns true on success
    function Export_Wave_As_Code
      (Wave : RayLib.Wave; File_Name : String) return Boolean;
+   --  Export wave sample data to code (.h), returns true on success
 
-   --  Play a sound
    procedure Play_Sound (Sound : RayLib.Sound);
+   --  Play a sound
 
-   --  Stop playing a sound
    procedure Stop_Sound (Sound : RayLib.Sound);
+   --  Stop playing a sound
 
-   --  Pause a sound
    procedure Pause_Sound (Sound : RayLib.Sound);
+   --  Pause a sound
 
-   --  Resume a paused sound
    procedure Resume_Sound (Sound : RayLib.Sound);
+   --  Resume a paused sound
 
-   --  Play a sound (using multichannel buffer pool)
    procedure Play_Sound_Multi (Sound : RayLib.Sound);
+   --  Play a sound (using multichannel buffer pool)
 
-   --  Stop any sound playing (using multichannel buffer pool)
    procedure Stop_Sound_Multi;
+   --  Stop any sound playing (using multichannel buffer pool)
 
-   --  Get number of sounds playing in the multichannel
    function Get_Sounds_Playing return Natural;
+   --  Get number of sounds playing in the multichannel
 
-   --  Check if a sound is currently playing
    function Is_Sound_Playing (Sound : RayLib.Sound) return Boolean;
+   --  Check if a sound is currently playing
 
-   --  Set volume for a sound (1.0 is max level)
    procedure Set_Sound_Volume (Sound : RayLib.Sound; Volume : Float);
+   --  Set volume for a sound (1.0 is max level)
 
-   --  Set pitch for a sound (1.0 is base level)
    procedure Set_Sound_Pitch (Sound : RayLib.Sound; Pitch : Float);
+   --  Set pitch for a sound (1.0 is base level)
 
-   --  Set pan for a sound (0.5 is center)
    procedure Set_Sound_Pan (Sound : RayLib.Sound; Pan : Float);
+   --  Set pan for a sound (0.5 is center)
 
-   --  Copy a wave to a new wave
    function Wave_Copy (Wave : RayLib.Wave) return RayLib.Wave;
+   --  Copy a wave to a new wave
 
-   --  Crop a wave to defined samples range
    procedure Wave_Crop
      (Wave         : in out RayLib.Wave; Init_Sample : Integer;
       Final_Sample :        Integer);
+   --  Crop a wave to defined samples range
 
-   --  Convert wave data to desired format
    procedure Wave_Format
      (Wave : in out RayLib.Wave; Sample_Rate : Integer; Sample_Size : Integer;
       Channels :        Integer);
+   --  Convert wave data to desired format
 
-   --  Load samples data from wave as a 32bit float data array
    function Load_Wave_Samples (Wave : RayLib.Wave) return RayLib.Float_Array;
+   --  Load samples data from wave as a 32bit float data array
 
-   --  Load music stream from file
    function Load_Music_Stream (File_Name : String) return RayLib.Music;
+   --  Load music stream from file
 
-   --  Load music stream from data
    function Load_Music_Stream_From_Memory
      (File_Type : String; Data : Stream_Element_Array) return RayLib.Music;
+   --  Load music stream from data
 
-   --  Start music playing
    procedure Play_Music_Stream (Music : RayLib.Music);
+   --  Start music playing
 
-   --  Check if music is playing
    function Is_Music_Stream_Playing (Music : RayLib.Music) return Boolean;
+   --  Check if music is playing
 
-   --  Updates buffers for music streaming
    procedure Update_Music_Stream (Music : RayLib.Music);
+   --  Updates buffers for music streaming
 
-   --  Stop music playing
    procedure Stop_Music_Stream (Music : RayLib.Music);
+   --  Stop music playing
 
-   --  Pause music playing
    procedure Pause_Music_Stream (Music : RayLib.Music);
+   --  Pause music playing
 
-   --  Resume playing paused music
    procedure Resume_Music_Stream (Music : RayLib.Music);
+   --  Resume playing paused music
 
-   --  Seek music to a position (in seconds)
    procedure Seek_Music_Stream (Music : RayLib.Music; Position : Float);
+   --  Seek music to a position (in seconds)
 
-   --  Set volume for music (1.0 is max level)
    procedure Set_Music_Volume (Music : RayLib.Music; Volume : Float);
+   --  Set volume for music (1.0 is max level)
 
-   --  Set pitch for a music (1.0 is base level)
    procedure Set_Music_Pitch (Music : RayLib.Music; Pitch : Float);
+   --  Set pitch for a music (1.0 is base level)
 
-   --  Set pan for a music (0.5 is center)
    procedure Set_Music_Pan (Music : RayLib.Music; Pan : Float);
+   --  Set pan for a music (0.5 is center)
 
-   --  Get music time length (in seconds)
    function Get_Music_Time_Length (Music : RayLib.Music) return Float;
+   --  Get music time length (in seconds)
 
-   --  Get current music time played (in seconds)
    function Get_Music_Time_Played (Music : RayLib.Music) return Float;
+   --  Get current music time played (in seconds)
 
-   --  Load audio stream (to stream raw audio pcm data)
    function Load_Audio_Stream
      (Sample_Rate : Natural; Sample_Size : Natural; Channels : Natural)
       return RayLib.Audio_Stream;
+   --  Load audio stream (to stream raw audio pcm data)
 
-   --  Update audio stream buffers with data
    procedure Update_Audio_Stream
      (Stream      : RayLib.Audio_Stream; Data : Stream_Element_Array;
       Frame_Count : Integer);
+   --  Update audio stream buffers with data
 
-   --  Check if any audio stream buffers requires refill
    function Is_Audio_Stream_Processed
      (Stream : RayLib.Audio_Stream) return Boolean;
+   --  Check if any audio stream buffers requires refill
 
-   --  Play audio stream
    procedure Play_Audio_Stream (Stream : RayLib.Audio_Stream);
+   --  Play audio stream
 
-   --  Pause audio stream
    procedure Pause_Audio_Stream (Stream : RayLib.Audio_Stream);
+   --  Pause audio stream
 
-   --  Resume audio stream
    procedure Resume_Audio_Stream (Stream : RayLib.Audio_Stream);
+   --  Resume audio stream
 
-   --  Check if audio stream is playing
    function Is_Audio_Stream_Playing
      (Stream : RayLib.Audio_Stream) return Boolean;
+   --  Check if audio stream is playing
 
-   --  Stop audio stream
    procedure Stop_Audio_Stream (Stream : RayLib.Audio_Stream);
+   --  Stop audio stream
 
-   --  Set volume for audio stream (1.0 is max level)
    procedure Set_Audio_Stream_Volume
      (Stream : RayLib.Audio_Stream; Volume : Float);
+   --  Set volume for audio stream (1.0 is max level)
 
-   --  Set pitch for audio stream (1.0 is base level)
    procedure Set_Audio_Stream_Pitch
      (Stream : RayLib.Audio_Stream; Pitch : Float);
+   --  Set pitch for audio stream (1.0 is base level)
 
-   --  Set pan for audio stream (0.5 is centered)
    procedure Set_Audio_Stream_Pan (Stream : RayLib.Audio_Stream; Pan : Float);
+   --  Set pan for audio stream (0.5 is centered)
 
-   --  Default size for new audio streams
    procedure Set_Audio_Stream_Buffer_Size_Default (Size : Integer);
+   --  Default size for new audio streams
 end RayLib;
