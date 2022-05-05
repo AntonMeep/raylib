@@ -1,6 +1,5 @@
 with Ada.Streams;  use Ada.Streams;
 with Ada.Calendar; use Ada.Calendar;
-with Ada.Containers.Indefinite_Holders;
 with Ada.Finalization;
 with Ada.Numerics;
 
@@ -1253,42 +1252,55 @@ package RayLib is
    end record;
    --  Camera2D, defines position/orientation in 2d space
 
-   type Mesh (Vertex_Count, Triangle_Count : Natural) is record
-      --  Number of vertices stored in arrays
-      --  Number of triangles stored (indexed or not)
-      Vertices : Vector3_Array (1 .. Vertex_Count);
-      --  Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
-      Texcoords : Vector2_Array (1 .. Vertex_Count);
-      --  Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-      Texcoords2 : Vector2_Array (1 .. Vertex_Count);
-      --  Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
-      Normals : Vector3_Array (1 .. Vertex_Count);
-      --  Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
-      Tangents : Vector4_Array (1 .. Vertex_Count);
-   --  Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
-      Colors : Color_Array (1 .. Vertex_Count);
-      --  Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-      Indices : Integer_Array (1 .. Vertex_Count);
-      --  Vertex indices (in case vertex data comes indexed)
-      Anim_Vertices : Vector3_Array (1 .. Vertex_Count);
-      --  Animated vertex positions (after bones transformations)
-      Anim_Normals : Vector3_Array (1 .. Vertex_Count);
-      --  Animated normals (after bones transformations)
-      Bone_Ids : Stream_Element_Array (1 .. 255);
-      --  Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
-      Bone_Weights : Float_Array (1 .. Vertex_Count); -- * 4
-      --  Vertex bone weight, up to 4 bones influence by vertex (skinning)
-      VAO_Id : OpenGL_Id;
-      --  OpenGL Vertex Array Object id
-      VBO_Id : OpenGL_Id_Array (1 .. Max_Mesh_Vertex_Buffers);
-      --  OpenGL Vertex Buffer Objects id (default vertex data)
-   end record;
+   type Mesh is tagged private;
    --  Mesh, vertex data and vao/vbo
 
-   package Mesh_Holders is new Ada.Containers.Indefinite_Holders (Mesh);
-   subtype Mesh_Holder is Mesh_Holders.Holder;
+   function Vertex_Count (Self : Mesh'Class) return Natural;
+   --  Number of vertices stored in arrays
 
-   type Mesh_Array is array (Natural range <>) of Mesh_Holder;
+   function Triangle_Count (Self : Mesh'Class) return Natural;
+   --  Number of triangles stored (indexed or not)
+
+   function Vertices (Self : Mesh'Class) return Vector3_Array;
+   --  Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
+
+   function Texcoords (Self : Mesh'Class) return Vector2_Array;
+   --  Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+
+   function Texcoords2 (Self : Mesh'Class) return Vector2_Array;
+   --  Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
+
+   function Normals (Self : Mesh'Class) return Vector3_Array;
+   --  Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
+
+   function Tangents (Self : Mesh'Class) return Vector4_Array;
+   --  Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
+
+   function Colors (Self : Mesh'Class) return Color_Array;
+   --  Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
+
+   function Indices (Self : Mesh'Class) return Integer_Array;
+   --  Vertex indices (in case vertex data comes indexed)
+
+   function Animated_Vertices (Self : Mesh'Class) return Vector3_Array;
+   --  Animated vertex positions (after bones transformations)
+
+   function Animated_Normals (Self : Mesh'Class) return Vector3_Array;
+   --  Animated normals (after bones transformations)
+
+   function Bone_Ids (Self : Mesh'Class) return Stream_Element_Array;
+   --  Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
+
+   function Bone_Weights (Self : Mesh'Class) return Float_Array;
+   --  Vertex bone weight, up to 4 bones influence by vertex (skinning)
+
+   function VAO_Id (Self : Mesh'Class) return OpenGL_Id;
+   --  OpenGL Vertex Array Object id
+
+   function VBO_Id (Self : Mesh'Class) return OpenGL_Id_Array;
+   --  OpenGL Vertex Buffer Objects id (default vertex data)
+
+   type Mesh_Array is array (Natural range <>) of Mesh;
 
    type Shader is tagged private;
    --  Shader
@@ -1311,15 +1323,17 @@ package RayLib is
 
    type Material_Map_Array is array (Natural range <>) of Material_Map;
 
-   type Material is record
-      Shader : RayLib.Shader;
-      --  Material shader
-      Maps : Material_Map_Array (1 .. Max_Material_Maps);
-      --  Material maps array (MAX_MATERIAL_MAPS)
-      Params : Float_Array (1 .. 4);
-      --  Material generic parameters (if required)
-   end record;
+   type Material is tagged private;
    --  Material, includes shader and maps
+
+   function Get_Shader (Self : Material'Class) return RayLib.Shader'Class;
+   --  Material shader
+
+   function Maps (Self : Material'Class) return Material_Map_Array;
+   --  Material maps array (MAX_MATERIAL_MAPS)
+
+   function Parameters (Self : Material'Class) return Float_Array;
+   --  Material generic parameters (if required)
 
    type Material_Array is array (Natural range <>) of Material;
 
@@ -1345,41 +1359,52 @@ package RayLib is
 
    type Bone_Info_Array is array (Natural range <>) of Bone_Info;
 
-   type Model (Mesh_Count, Material_Count, Bone_Count : Natural) is record
-      --  Number of meshes
-      --  Number of materials
-      --  Number of bones
-      Transform : RayLib.Matrix;
-      --  Local transform matrix
-      Meshes : Mesh_Array (1 .. Mesh_Count);
-      --  Meshes array
-      Materials : Material_Array (1 .. Material_Count);
-      --  Materials array
-      Mesh_Material : Integer_Array (1 .. Mesh_Count);
-      --  Mesh material number
-      Bones : Bone_Info_Array (1 .. Bone_Count);
-      --  Bones information (skeleton)
-      Bind_Pose : Transform_Array (1 .. Bone_Count);
-      --  Bones base transformation (pose)
-   end record;
+   type Model is tagged private;
    --  Model, meshes, materials and animation data
 
-   type Model_Animation (Bone_Count, Frame_Count : Natural) is record
-      --  Number of bones
-      --  Number of animation frames
-      Bones : Bone_Info_Array (1 .. Bone_Count);
-      --  Bones information (skeleton)
-      Frame_Poses : Transform_Array (1 .. Frame_Count);
-      --  Poses array by frame
-   end record;
+   function Mesh_Count (Self : Model'Class) return Natural;
+   --  Number of meshes
+
+   function Material_Count (Self : Model'Class) return Natural;
+   --  Number of materials
+
+   function Bone_Count (Self : Model'Class) return Natural;
+   --  Number of bones
+
+   function Get_Transform (Self : Model'Class) return RayLib.Matrix;
+   --  Local transform matrix
+
+   function Meshes (Self : Model'Class) return Mesh_Array;
+   --  Meshes array
+
+   function Materials (Self : Model'Class) return Material_Array;
+   --  Materials array
+
+   function Mesh_Material (Self : Model'Class) return Integer_Array;
+   --  Mesh material number
+
+   function Bones (Self : Model'Class) return Bone_Info_Array;
+   --  Bones information (skeleton)
+
+   function Bind_Pose (Self : Model'Class) return Natural;
+   --  Bones base transformation (pose)
+
+   type Model_Animation is tagged private;
    --  ModelAnimation
 
-   package Model_Animation_Holders is new Ada.Containers.Indefinite_Holders
-     (Model_Animation);
-   subtype Model_Animation_Holder is Model_Animation_Holders.Holder;
+   function Bone_Count (Self : Model_Animation'Class) return Natural;
+   --  Number of bones
 
-   type Model_Animation_Array is
-     array (Natural range <>) of Model_Animation_Holder;
+   function Frame_Count (Self : Model_Animation'Class) return Natural;
+   --  Number of animation frames
+
+   function Bones (Self : Model_Animation'Class) return Bone_Info_Array;
+   --  Bones information (skeleton)
+
+   function Frame_Poses (Self : Model_Animation'Class) return Transform_Array;
+   --  Poses array by frame
+
+   type Model_Animation_Array is array (Natural range <>) of Model_Animation;
 
    type Ray is record
       Position : RayLib.Vector3;
@@ -3014,7 +3039,8 @@ package RayLib is
    function Load_Model (File_Name : String) return RayLib.Model;
    --  Load model from files (meshes and materials)
 
-   function Load_Model_From_Mesh (Mesh : RayLib.Mesh) return RayLib.Model;
+   function Load_Model_From_Mesh
+     (Mesh : RayLib.Mesh'Class) return RayLib.Model'Class;
    --  Load model from generated mesh (default material)
 
    function Get_Model_Bounding_Box
@@ -3073,12 +3099,12 @@ package RayLib is
    --  Update mesh vertex data in GPU for a specific buffer index
 
    procedure Draw_Mesh
-     (Mesh      : RayLib.Mesh; Material : RayLib.Material;
+     (Mesh      : RayLib.Mesh'Class; Material : RayLib.Material'Class;
       Transform : RayLib.Matrix);
    --  Draw a 3d mesh with material and transform
 
    procedure Draw_Mesh_Instanced
-     (Mesh       : RayLib.Mesh; Material : RayLib.Material;
+     (Mesh       : RayLib.Mesh'Class; Material : RayLib.Material'Class;
       Transforms : Transform_Array; Instances : Integer);
    --  Draw multiple mesh instances with material and different transforms
 
@@ -3135,11 +3161,13 @@ package RayLib is
    --  Generate trefoil knot mesh
 
    function Gen_Mesh_Heightmap
-     (Heightmap : RayLib.Image; Size : RayLib.Vector3) return RayLib.Mesh;
+     (Heightmap : RayLib.Image'Class; Size : RayLib.Vector3)
+      return RayLib.Mesh'Class;
    --  Generate heightmap mesh from image data
 
    function Gen_Mesh_Cubicmap
-     (Cubicmap : RayLib.Image; Cube_Size : RayLib.Vector3) return RayLib.Mesh;
+     (Cubicmap : RayLib.Image'Class; Cube_Size : RayLib.Vector3)
+      return RayLib.Mesh'Class;
    --  Generate cubes-based map mesh from image data
 
    function Load_Materials (File_Name : String) return RayLib.Material_Array;
@@ -3149,8 +3177,8 @@ package RayLib is
    --  Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 
    procedure Set_Material_Texture
-     (Material : in out RayLib.Material; Map_Type : Integer;
-      Texture  :        RayLib.Texture2D);
+     (Material : in out RayLib.Material'Class; Map_Type : Integer;
+      Texture  :        RayLib.Texture2D'Class);
    --  Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
 
    procedure Set_Model_Mesh_Material
@@ -3162,11 +3190,13 @@ package RayLib is
    --  Load model animations from file
 
    procedure Update_Model_Animation
-     (Model : RayLib.Model; Anim : RayLib.Model_Animation; Frame : Integer);
+     (Model : RayLib.Model'Class; Anim : RayLib.Model_Animation'Class;
+      Frame : Integer);
    --  Update model animation pose
 
    function Is_Model_Animation_Valid
-     (Model : RayLib.Model; Anim : RayLib.Model_Animation) return Boolean;
+     (Model : RayLib.Model'Class; Anim : RayLib.Model_Animation'Class)
+      return Boolean;
    --  Check model animation skeleton match
 
    function Check_Collision_Spheres
@@ -3452,6 +3482,27 @@ private
    overriding procedure Adjust (Self : in out Font);
    overriding procedure Finalize (Self : in out Font);
 
+   type Mesh_Payload (Vertex_Count, Triangle_Count : Natural) is record
+      Vertices      : Vector3_Array (1 .. Vertex_Count);
+      Texcoords     : Vector2_Array (1 .. Vertex_Count);
+      Texcoords2    : Vector2_Array (1 .. Vertex_Count);
+      Normals       : Vector3_Array (1 .. Vertex_Count);
+      Tangents      : Vector4_Array (1 .. Vertex_Count);
+      Colors        : Color_Array (1 .. Vertex_Count);
+      Indices       : Integer_Array (1 .. Vertex_Count);
+      Anim_Vertices : Vector3_Array (1 .. Vertex_Count);
+      Anim_Normals  : Vector3_Array (1 .. Vertex_Count);
+      Bone_Ids      : Stream_Element_Array (1 .. 255);
+      Bone_Weights  : Float_Array (1 .. Vertex_Count); -- * 4
+      VAO_Id        : OpenGL_Id;
+      VBO_Id        : OpenGL_Id_Array (1 .. Max_Mesh_Vertex_Buffers);
+   end record;
+   type Mesh_Payload_Access is access all Mesh_Payload;
+
+   type Mesh is new Ada.Finalization.Controlled with record
+      Payload : Mesh_Payload_Access;
+   end record;
+
    type Shader_Payload is record
       Id        : OpenGL_Id;
       Locations : Integer_Array (1 .. Rl_Max_Shader_Locations);
@@ -3464,4 +3515,49 @@ private
 
    overriding procedure Adjust (Self : in out Shader);
    overriding procedure Finalize (Self : in out Shader);
+
+   type Material_Payload is record
+      Shader : RayLib.Shader;
+      Maps   : Material_Map_Array (1 .. Max_Material_Maps);
+      Params : Float_Array (1 .. 4);
+   end record;
+   type Material_Payload_Access is access all Material_Payload;
+
+   type Material is new Ada.Finalization.Controlled with record
+      Payload : Material_Payload_Access;
+   end record;
+
+   overriding procedure Adjust (Self : in out Material);
+   overriding procedure Finalize (Self : in out Material);
+
+   type Model_Payload (Mesh_Count, Material_Count, Bone_Count : Natural)
+   is record
+      Transform     : RayLib.Matrix;
+      Meshes        : Mesh_Array (1 .. Mesh_Count);
+      Materials     : Material_Array (1 .. Material_Count);
+      Mesh_Material : Integer_Array (1 .. Mesh_Count);
+      Bones         : Bone_Info_Array (1 .. Bone_Count);
+      Bind_Pose     : Transform_Array (1 .. Bone_Count);
+   end record;
+   type Model_Payload_Access is access all Model_Payload;
+
+   type Model is new Ada.Finalization.Controlled with record
+      Payload : Model_Payload_Access;
+   end record;
+
+   overriding procedure Adjust (Self : in out Model);
+   overriding procedure Finalize (Self : in out Model);
+
+   type Model_Animation_Payload (Bone_Count, Frame_Count : Natural) is record
+      Bones       : Bone_Info_Array (1 .. Bone_Count);
+      Frame_Poses : Transform_Array (1 .. Frame_Count);
+   end record;
+   type Model_Animation_Payload_Access is access all Model_Animation_Payload;
+
+   type Model_Animation is new Ada.Finalization.Controlled with record
+      Payload : Model_Animation_Payload_Access;
+   end record;
+
+   overriding procedure Adjust (Self : in out Model_Animation);
+   overriding procedure Finalize (Self : in out Model_Animation);
 end RayLib;
