@@ -1203,20 +1203,26 @@ package RayLib is
 
    type Glyph_Info_Array is array (Natural range <>) of Glyph_Info;
 
-   type Font (Glyph_Count : Natural) is record
-      --  Number of glyph characters
-      Base_Size : Integer;
-      --  Base size (default chars height)
-      Glyph_Padding : Integer;
-      --  Padding around the glyph characters
-      Texture : RayLib.Texture2D;
-      --  Texture atlas containing the glyphs
-      Recs : Rectangle_Array (1 .. Glyph_Count);
-      --  Rectangles in texture for the glyphs
-      Glyphs : Glyph_Info_Array (1 .. Glyph_Count);
-      --  Glyphs info data
-   end record;
+   type Font is tagged private;
    --  Font, font texture and GlyphInfo array data
+
+   function Glyph_Count (Self : Font'Class) return Natural;
+   --  Number of glyph characters
+
+   function Base_Size (Self : Font'Class) return Integer;
+   --  Base size (default chars height)
+
+   function Glyph_Padding (Self : Font'Class) return Natural;
+   --  Padding around the glyph characters
+
+   function Get_Texture (Self : Font'Class) return RayLib.Texture2D'Class;
+   --  Texture atlas containing the glyphs
+
+   function Recs (Self : Font'Class) return Rectangle_Array;
+   --  Rectangles in texture for the glyphs
+
+   function Glyphs (Self : Font'Class) return Glyph_Info_Array;
+   --  Glyphs info data
 
    type Camera3D is record
       Position : RayLib.Vector3;
@@ -2467,8 +2473,8 @@ package RayLib is
    --  Create an image from text (default font)
 
    function Image_Text
-     (Font : RayLib.Font; Text : String; Font_Size : Float; Spacing : Float;
-      Tint : RayLib.Color) return RayLib.Image;
+     (Font    : RayLib.Font'Class; Text : String; Font_Size : Float;
+      Spacing : Float; Tint : RayLib.Color) return RayLib.Image'Class;
    --  Create an image from text (custom sprite font)
 
    procedure Image_Format (Image : in out RayLib.Image; New_Format : Integer);
@@ -2631,7 +2637,7 @@ package RayLib is
    --  Draw text (using default font) within an image (destination)
 
    procedure Image_Draw_Text
-     (Dst      : in out RayLib.Image; Font : RayLib.Font; Text : String;
+     (Dst : in out RayLib.Image'Class; Font : RayLib.Font'Class; Text : String;
       Position :        RayLib.Vector2; Font_Size : Float; Spacing : Float;
       Tint     :        RayLib.Color);
    --  Draw text (custom sprite font) within an image (destination)
@@ -2775,8 +2781,8 @@ package RayLib is
    -- function Load_Font_Ex (File_Name : String; Font_Size : Integer; Font_Chars : RayLib.Int *; Glyph_Count : Integer) return RayLib.Font;
 
    function Load_Font_From_Image
-     (Image : RayLib.Image; Key : RayLib.Color; First_Char : Integer)
-      return RayLib.Font;
+     (Image : RayLib.Image'Class; Key : RayLib.Color; First_Char : Integer)
+      return RayLib.Font'Class;
    --  Load font from Image (XNA style)
 
    --  Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
@@ -3394,7 +3400,7 @@ private
    type Image_Payload_Access is access all Image_Payload;
 
    type Image is new Ada.Finalization.Controlled with record
-      Payload : Image_Payload;
+      Payload : Image_Payload_Access;
    end record;
 
    overriding procedure Adjust (Self : in out Image);
@@ -3410,7 +3416,7 @@ private
    type Texture_Payload_Access is access all Texture_Payload;
 
    type Texture is new Ada.Finalization.Controlled with record
-      Payload : Texture_Payload;
+      Payload : Texture_Payload_Access;
    end record;
 
    overriding procedure Adjust (Self : in out Texture);
@@ -3424,11 +3430,27 @@ private
    type Render_Texture_Payload_Access is access all Render_Texture_Payload;
 
    type Render_Texture is new Ada.Finalization.Controlled with record
-      Payload : Render_Texture_Payload;
+      Payload : Render_Texture_Payload_Access;
    end record;
 
    overriding procedure Adjust (Self : in out Render_Texture);
    overriding procedure Finalize (Self : in out Render_Texture);
+
+   type Font_Payload (Glyph_Count : Natural) is record
+      Base_Size     : Integer;
+      Glyph_Padding : Integer;
+      Texture       : RayLib.Texture2D;
+      Recs          : Rectangle_Array (1 .. Glyph_Count);
+      Glyphs        : Glyph_Info_Array (1 .. Glyph_Count);
+   end record;
+   type Font_Payload_Access is access all Font_Payload;
+
+   type Font is new Ada.Finalization.Controlled with record
+      Payload : Font_Payload_Access;
+   end record;
+
+   overriding procedure Adjust (Self : in out Font);
+   overriding procedure Finalize (Self : in out Font);
 
    type Shader_Payload is record
       Id        : OpenGL_Id;
