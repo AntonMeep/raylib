@@ -7,12 +7,21 @@ with Interfaces.C;
 with System;
 
 package RayLib is
+   ------------------------------
+   --  Basic defines
+   ------------------------------
+
    Version : constant String := "4.0";
+   --  Version of the underlying raylib
 
    Pi : constant := Ada.Numerics.Pi;
+   --  Convenience Pi constant
 
    DEG2RAD : constant := Pi / 180.0;
+   --  Provded only for compatibility with raylib.h
+
    RAD2DEG : constant := 180.0 / Pi;
+   --  Provded only for compatibility with raylib.h
 
    subtype Unsigned_8 is Interfaces.Unsigned_8;
    subtype Unsigned_16 is Interfaces.Unsigned_16;
@@ -26,18 +35,17 @@ package RayLib is
    type Integer_Array is array (Natural range <>) of Integer;
    type Integer_Array_Access is access all Integer_Array;
 
-   --  Vector2, 2 components
    type Vector2 is record
       X : Float;
       --  Vector x component
       Y : Float;
       --  Vector y component
    end record;
+   --  Vector2, 2 components
 
    type Vector2_Array is array (Natural range <>) of Vector2;
    type Vector2_Array_Access is access all Vector2_Array;
 
-   --  Vector3, 3 components
    type Vector3 is record
       X : Float;
       --  Vector x component
@@ -46,11 +54,11 @@ package RayLib is
       Z : Float;
       --  Vector z component
    end record;
+   --  Vector3, 3 components
 
    type Vector3_Array is array (Natural range <>) of Vector3;
    type Vector3_Array_Access is access all Vector3_Array;
 
-   --  Vector4, 4 components
    type Vector4 is record
       X : Float;
       --  Vector x component
@@ -61,14 +69,14 @@ package RayLib is
       W : Float;
       --  Vector w component
    end record;
+   --  Vector4, 4 components
 
-   --  Quaternion, 4 components (Vector4 alias)
    subtype Quaternion is RayLib.Vector4;
+   --  Quaternion, 4 components (Vector4 alias)
 
    type Vector4_Array is array (Natural range <>) of Vector4;
    type Vector4_Array_Access is access all Vector4_Array;
 
-   --  Matrix, 4x4 components, column major, OpenGL style, right handed
    type Matrix is record
       M0 : Float;
       --  Matrix first row (4 components)
@@ -103,11 +111,11 @@ package RayLib is
       M15 : Float;
       --  Matrix fourth row (4 components)
    end record;
+   --  Matrix, 4x4 components, column major, OpenGL style, right handed
 
    type Matrix_Array is array (Natural range <>) of Matrix;
    type Matrix_Array_Access is access all Matrix_Array;
 
-   --  Color, 4 components, R8G8B8A8 (32bit)
    type Color is record
       R : Unsigned_8;
       --  Color red value
@@ -118,11 +126,11 @@ package RayLib is
       A : Unsigned_8;
       --  Color alpha value
    end record;
+   --  Color, 4 components, R8G8B8A8 (32bit)
 
    type Color_Array is array (Natural range <>) of Color;
    type Color_Array_Access is access all Color_Array;
 
-   --  Rectangle, 4 components
    type Rectangle is record
       X : Float;
       --  Rectangle top-left corner position x
@@ -133,11 +141,11 @@ package RayLib is
       Height : Float;
       --  Rectangle height
    end record;
+   --  Rectangle, 4 components
 
    type Rectangle_Array is array (Natural range <>) of Rectangle;
    type Rectangle_Array_Access is access all Rectangle_Array;
 
-   --  Image, pixel data stored in CPU memory (RAM)
    type Image is record
       Data : System.Address;
       --  Image raw data
@@ -150,11 +158,11 @@ package RayLib is
       Format : Integer;
       --  Data format (PixelFormat type)
    end record;
+   --  Image, pixel data stored in CPU memory (RAM)
 
    type Image_Array is array (Natural range <>) of Image;
    type Image_Array_Access is access all Image_Array;
 
-   --  Texture, tex data stored in GPU memory (VRAM)
    type Texture is record
       Id : Natural;
       --  OpenGL texture id
@@ -167,17 +175,17 @@ package RayLib is
       Format : Integer;
       --  Data format (PixelFormat type)
    end record;
+   --  Texture, tex data stored in GPU memory (VRAM)
 
-   --  Texture2D, same as Texture
    subtype Texture2D is RayLib.Texture;
+   --  Texture2D, same as Texture
 
-   --  TextureCubemap, same as Texture
    subtype Texture_Cubemap is RayLib.Texture;
+   --  TextureCubemap, same as Texture
 
    type Texture_Array is array (Natural range <>) of Texture;
    type Texture_Array_Access is access all Texture_Array;
 
-   --  RenderTexture, fbo for texture rendering
    type Render_Texture is record
       Id : Natural;
       --  OpenGL framebuffer object id
@@ -186,14 +194,14 @@ package RayLib is
       Depth : RayLib.Texture;
       --  Depth buffer attachment texture
    end record;
+   --  RenderTexture, fbo for texture rendering
 
-   --  RenderTexture2D, same as RenderTexture
    subtype Render_Texture2D is RayLib.Render_Texture;
+   --  RenderTexture2D, same as RenderTexture
 
    type Render_Texture_Array is array (Natural range <>) of Render_Texture;
    type Render_Texture_Array_Access is access all Render_Texture_Array;
 
-   --  NPatchInfo, n-patch layout info
    type N_Patch_Info is record
       Source : RayLib.Rectangle;
       --  Texture source rectangle
@@ -208,11 +216,11 @@ package RayLib is
       Layout : Integer;
       --  Layout of the n-patch: 3x3, 1x3 or 3x1
    end record;
+   --  NPatchInfo, n-patch layout info
 
    type N_Patch_Info_Array is array (Natural range <>) of N_Patch_Info;
    type N_Patch_Info_Array_Access is access all N_Patch_Info_Array;
 
-   --  GlyphInfo, font characters glyphs info
    type Glyph_Info is record
       Value : Integer;
       --  Character value (Unicode)
@@ -225,11 +233,11 @@ package RayLib is
       Image : RayLib.Image;
       --  Character image data
    end record;
+   --  GlyphInfo, font characters glyphs info
 
    type Glyph_Info_Array is array (Natural range <>) of Glyph_Info;
    type Glyph_Info_Array_Access is access all Glyph_Info_Array;
 
-   --  Font, font texture and GlyphInfo array data
    type Font is record
       Base_Size : Integer;
       --  Base size (default chars height)
@@ -244,11 +252,11 @@ package RayLib is
       Glyphs : Glyph_Info_Array_Access;
       --  Glyphs info data
    end record;
+   --  Font, font texture and GlyphInfo array data
 
    type Font_Array is array (Natural range <>) of Font;
    type Font_Array_Access is access all Font_Array;
 
-   --  Camera, defines position/orientation in 3d space
    type Camera3D is record
       Position : RayLib.Vector3;
       --  Camera position
@@ -261,14 +269,14 @@ package RayLib is
       Projection : Integer;
       --  Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
    end record;
+   --  Camera, defines position/orientation in 3d space
 
-   --  Camera type fallback, defaults to Camera3D
    subtype Camera is RayLib.Camera3D;
+   --  Camera type fallback, defaults to Camera3D
 
    type Camera3D_Array is array (Natural range <>) of Camera3D;
    type Camera3D_Array_Access is access all Camera3D_Array;
 
-   --  Camera2D, defines position/orientation in 2d space
    type Camera2D is record
       Offset : RayLib.Vector2;
       --  Camera offset (displacement from target)
@@ -279,11 +287,11 @@ package RayLib is
       Zoom : Float;
       --  Camera zoom (scaling), should be 1.0f by default
    end record;
+   --  Camera2D, defines position/orientation in 2d space
 
    type Camera2D_Array is array (Natural range <>) of Camera2D;
    type Camera2D_Array_Access is access all Camera2D_Array;
 
-   --  Mesh, vertex data and vao/vbo
    type Mesh is record
       Vertex_Count : Integer;
       --  Number of vertices stored in arrays
@@ -316,22 +324,22 @@ package RayLib is
       Vbo_Id : Natural_Array_Access;
       --  OpenGL Vertex Buffer Objects id (default vertex data)
    end record;
+   --  Mesh, vertex data and vao/vbo
 
    type Mesh_Array is array (Natural range <>) of Mesh;
    type Mesh_Array_Access is access all Mesh_Array;
 
-   --  Shader
    type Shader is record
       Id : Natural;
       --  Shader program id
       Locs : Integer_Array_Access;
       --  Shader locations array (RL_MAX_SHADER_LOCATIONS)
    end record;
+   --  Shader
 
    type Shader_Array is array (Natural range <>) of Shader;
    type Shader_Array_Access is access all Shader_Array;
 
-   --  MaterialMap
    type Material_Map is record
       Texture : RayLib.Texture2D;
       --  Material map texture
@@ -340,11 +348,11 @@ package RayLib is
       Value : Float;
       --  Material map value
    end record;
+   --  MaterialMap
 
    type Material_Map_Array is array (Natural range <>) of Material_Map;
    type Material_Map_Array_Access is access all Material_Map_Array;
 
-   --  Material, includes shader and maps
    type Material is record
       Shader : RayLib.Shader;
       --  Material shader
@@ -353,11 +361,11 @@ package RayLib is
       Params : Float_Array (1 .. 4);
       --  Material generic parameters (if required)
    end record;
+   --  Material, includes shader and maps
 
    type Material_Array is array (Natural range <>) of Material;
    type Material_Array_Access is access all Material_Array;
 
-   --  Transform, vectex transformation data
    type Transform is record
       Translation : RayLib.Vector3;
       --  Translation
@@ -366,6 +374,7 @@ package RayLib is
       Scale : RayLib.Vector3;
       --  Scale
    end record;
+   --  Transform, vectex transformation data
 
    type Transform_Array is array (Natural range <>) of Transform;
    type Transform_Array_Access is access all Transform_Array;
@@ -373,18 +382,17 @@ package RayLib is
      array (Natural range <>, Natural range <>) of Transform;
    type Transform_Array_Array_Access is access all Transform_Array_Array;
 
-   --  Bone, skeletal animation bone
    type Bone_Info is record
       Name : String (1 .. 32);
       --  Bone name
       Parent : Integer;
       --  Bone parent
    end record;
+   --  Bone, skeletal animation bone
 
    type Bone_Info_Array is array (Natural range <>) of Bone_Info;
    type Bone_Info_Array_Access is access all Bone_Info_Array;
 
-   --  Model, meshes, materials and animation data
    type Model is record
       Transform : RayLib.Matrix;
       --  Local transform matrix
@@ -405,11 +413,11 @@ package RayLib is
       Bind_Pose : Transform_Array_Access;
       --  Bones base transformation (pose)
    end record;
+   --  Model, meshes, materials and animation data
 
    type Model_Array is array (Natural range <>) of Model;
    type Model_Array_Access is access all Model_Array;
 
-   --  ModelAnimation
    type Model_Animation is record
       Bone_Count : Integer;
       --  Number of bones
@@ -420,22 +428,22 @@ package RayLib is
       Frame_Poses : Transform_Array_Array_Access;
       --  Poses array by frame
    end record;
+   --  ModelAnimation
 
    type Model_Animation_Array is array (Natural range <>) of Model_Animation;
    type Model_Animation_Array_Access is access all Model_Animation_Array;
 
-   --  Ray, ray for raycasting
    type Ray is record
       Position : RayLib.Vector3;
       --  Ray position (origin)
       Direction : RayLib.Vector3;
       --  Ray direction
    end record;
+   --  Ray, ray for raycasting
 
    type Ray_Array is array (Natural range <>) of Ray;
    type Ray_Array_Access is access all Ray_Array;
 
-   --  RayCollision, ray hit information
    type Ray_Collision is record
       Hit : Boolean;
       --  Did the ray hit something?
@@ -446,22 +454,22 @@ package RayLib is
       Normal : RayLib.Vector3;
       --  Surface normal of hit
    end record;
+   --  RayCollision, ray hit information
 
    type Ray_Collision_Array is array (Natural range <>) of Ray_Collision;
    type Ray_Collision_Array_Access is access all Ray_Collision_Array;
 
-   --  BoundingBox
    type Bounding_Box is record
       Min : RayLib.Vector3;
       --  Minimum vertex box-corner
       Max : RayLib.Vector3;
       --  Maximum vertex box-corner
    end record;
+   --  BoundingBox
 
    type Bounding_Box_Array is array (Natural range <>) of Bounding_Box;
    type Bounding_Box_Array_Access is access all Bounding_Box_Array;
 
-   --  Wave, audio wave data
    type Wave is record
       Frame_Count : Natural;
       --  Total number of frames (considering channels)
@@ -474,11 +482,11 @@ package RayLib is
       Data : System.Address;
       --  Buffer data pointer
    end record;
+   --  Wave, audio wave data
 
    type Wave_Array is array (Natural range <>) of Wave;
    type Wave_Array_Access is access all Wave_Array;
 
-   --  AudioStream, custom audio stream
    type Audio_Stream is record
       Buffer : System.Address;
       --  Pointer to internal data used by the audio system
@@ -491,22 +499,22 @@ package RayLib is
       Channels : Natural;
       --  Number of channels (1-mono, 2-stereo, ...)
    end record;
+   --  AudioStream, custom audio stream
 
    type Audio_Stream_Array is array (Natural range <>) of Audio_Stream;
    type Audio_Stream_Array_Access is access all Audio_Stream_Array;
 
-   --  Sound
    type Sound is record
       Stream : RayLib.Audio_Stream;
       --  Audio stream
       Frame_Count : Natural;
       --  Total number of frames (considering channels)
    end record;
+   --  Sound
 
    type Sound_Array is array (Natural range <>) of Sound;
    type Sound_Array_Access is access all Sound_Array;
 
-   --  Music, audio stream, anything longer than ~10 seconds should be streamed
    type Music is record
       Stream : RayLib.Audio_Stream;
       --  Audio stream
@@ -519,11 +527,11 @@ package RayLib is
       Ctx_Data : System.Address;
       --  Audio context data, depends on type
    end record;
+   --  Music, audio stream, anything longer than ~10 seconds should be streamed
 
    type Music_Array is array (Natural range <>) of Music;
    type Music_Array_Access is access all Music_Array;
 
-   --  VrDeviceInfo, Head-Mounted-Display device parameters
    type VR_Device_Info is record
       H_Resolution : Integer;
       --  Horizontal resolution in pixels
@@ -546,11 +554,11 @@ package RayLib is
       Chroma_Ab_Correction : Float_Array (1 .. 4);
       --  Chromatic aberration correction parameters
    end record;
+   --  VrDeviceInfo, Head-Mounted-Display device parameters
 
    type VR_Device_Info_Array is array (Natural range <>) of VR_Device_Info;
    type VR_Device_Info_Array_Access is access all VR_Device_Info_Array;
 
-   --  VrStereoConfig, VR stereo rendering configuration for simulator
    type VR_Stereo_Config is record
       Projection : Matrix_Array (1 .. 2);
       --  VR projection matrices (per eye)
@@ -569,12 +577,14 @@ package RayLib is
       Scale_In : Float_Array (1 .. 2);
       --  VR distortion scale in
    end record;
+   --  VrStereoConfig, VR stereo rendering configuration for simulator
 
    type VR_Stereo_Config_Array is array (Natural range <>) of VR_Stereo_Config;
    type VR_Stereo_Config_Array_Access is access all VR_Stereo_Config_Array;
 
    --  Some Basic Colors
---  NOTE: Custom raylib color palette for amazing visuals on WHITE background
+   --  NOTE: Custom raylib color palette for amazing visuals
+   --   on WHITE background
 
    Light_Gray  : constant Color := (200, 200, 200, 255);
    Gray        : constant Color := (130, 130, 130, 255);
