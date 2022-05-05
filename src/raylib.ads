@@ -1762,54 +1762,81 @@ package RayLib is
    procedure Clear_Background (Color : RayLib.Color);
    --  Set background color (framebuffer clear color)
 
-   procedure Begin_Drawing;
-   --  Setup canvas (framebuffer) to start drawing
+   procedure Begin_Drawing with
+      Import,
+      Convention    => C,
+      External_Name => "BeginDrawing";
+      --  Setup canvas (framebuffer) to start drawing
 
-   procedure End_Drawing;
-   --  End canvas drawing and swap buffers (double buffering)
+   procedure End_Drawing with
+      Import,
+      Convention    => C,
+      External_Name => "EndDrawing";
+      --  End canvas drawing and swap buffers (double buffering)
 
    procedure Begin_Mode2D (Camera : RayLib.Camera2D);
    --  Begin 2D mode with custom camera (2D)
 
-   procedure End_Mode2D;
-   --  Ends 2D mode with custom camera
+   procedure End_Mode2D with
+      Import,
+      Convention    => C,
+      External_Name => "EndMode2D";
+      --  Ends 2D mode with custom camera
 
    procedure Begin_Mode3D (Camera : RayLib.Camera3D);
    --  Begin 3D mode with custom camera (3D)
 
-   procedure End_Mode3D;
-   --  Ends 3D mode and returns to default 2D orthographic mode
+   procedure End_Mode3D with
+      Import,
+      Convention    => C,
+      External_Name => "EndMode3D";
+      --  Ends 3D mode and returns to default 2D orthographic mode
 
    procedure Begin_Texture_Mode (Target : RayLib.Render_Texture2D);
    --  Begin drawing to render texture
 
-   procedure End_Texture_Mode;
-   --  Ends drawing to render texture
+   procedure End_Texture_Mode with
+      Import,
+      Convention    => C,
+      External_Name => "EndTextureMode";
+      --  Ends drawing to render texture
 
    procedure Begin_Shader_Mode (Shader : RayLib.Shader);
    --  Begin custom shader drawing
 
-   procedure End_Shader_Mode;
-   --  End custom shader drawing (use default shader)
+   procedure End_Shader_Mode with
+      Import,
+      Convention    => C,
+      External_Name => "EndShaderMode";
+      --  End custom shader drawing (use default shader)
 
    procedure Begin_Blend_Mode (Mode : Integer);
    --  Begin blending mode (alpha, additive, multiplied, subtract, custom)
 
-   procedure End_Blend_Mode;
-   --  End blending mode (reset to default: alpha blending)
+   procedure End_Blend_Mode with
+      Import,
+      Convention    => C,
+      External_Name => "EndBlendMode";
+      --  End blending mode (reset to default: alpha blending)
 
    procedure Begin_Scissor_Mode
      (X : Integer; Y : Integer; Width : Integer; Height : Integer);
    --  Begin scissor mode (define screen area for following drawing)
 
-   procedure End_Scissor_Mode;
-   --  End scissor mode
+   procedure End_Scissor_Mode with
+      Import,
+      Convention    => C,
+      External_Name => "EndScissorMode";
+      --  End scissor mode
 
    procedure Begin_VR_Stereo_Mode (Config : RayLib.VR_Stereo_Config);
    --  Begin stereo rendering (requires VR simulator)
 
-   procedure End_VR_Stereo_Mode;
-   --  End stereo rendering (requires VR simulator)
+   procedure End_VR_Stereo_Mode with
+      Import,
+      Convention    => C,
+      External_Name => "EndVrStereoMode";
+      --  End stereo rendering (requires VR simulator)
 
    function Load_VR_Stereo_Config
      (Device : RayLib.VR_Device_Info) return RayLib.VR_Stereo_Config;
@@ -3212,11 +3239,17 @@ package RayLib is
       P3  : RayLib.Vector3; P4 : RayLib.Vector3) return RayLib.Ray_Collision;
    --  Get collision info between ray and quad
 
-   procedure Init_Audio_Device;
-   --  Initialize audio device and context
+   procedure Init_Audio_Device with
+      Import,
+      Convention    => C,
+      External_Name => "InitAudioDevice";
+      --  Initialize audio device and context
 
-   procedure Close_Audio_Device;
-   --  Close the audio device and context
+   procedure Close_Audio_Device with
+      Import,
+      Convention    => C,
+      External_Name => "CloseAudioDevice";
+      --  Close the audio device and context
 
    function Is_Audio_Device_Ready return Boolean;
    --  Check if audio device has been initialized successfully
@@ -3265,8 +3298,11 @@ package RayLib is
    procedure Play_Sound_Multi (Sound : RayLib.Sound);
    --  Play a sound (using multichannel buffer pool)
 
-   procedure Stop_Sound_Multi;
-   --  Stop any sound playing (using multichannel buffer pool)
+   procedure Stop_Sound_Multi with
+      Import,
+      Convention    => C,
+      External_Name => "StopSoundMulti";
+      --  Stop any sound playing (using multichannel buffer pool)
 
    function Get_Sounds_Playing return Natural;
    --  Get number of sounds playing in the multichannel
