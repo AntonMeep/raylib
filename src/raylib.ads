@@ -1434,55 +1434,60 @@ package RayLib is
    end record;
    --  BoundingBox
 
-   type Wave is record
-      Frame_Count : Natural;
-      --  Total number of frames (considering channels)
-      Sample_Rate : Natural;
-      --  Frequency (samples per second)
-      Sample_Size : Natural;
-      --  Bit depth (bits per sample): 8, 16, 32 (24 not supported)
-      Channels : Natural;
-      --  Number of channels (1-mono, 2-stereo, ...)
-      Data : System.Address;
-      --  Buffer data pointer
-   end record;
+   type Wave is tagged private;
    --  Wave, audio wave data
 
-   type Audio_Stream is record
-      Buffer : System.Address;
-      --  Pointer to internal data used by the audio system
-      Processor : System.Address;
-      --  Pointer to internal data processor, useful for audio effects
-      Sample_Rate : Natural;
-      --  Frequency (samples per second)
-      Sample_Size : Natural;
-      --  Bit depth (bits per sample): 8, 16, 32 (24 not supported)
-      Channels : Natural;
-      --  Number of channels (1-mono, 2-stereo, ...)
-   end record;
+   function Frame_Count (Self : Wave'Class) return Natural;
+   --  Total number of frames (considering channels)
+
+   function Sample_Rate (Self : Wave'Class) return Natural;
+   --  Frequency (samples per second)
+
+   function Sample_Size (Self : Wave'Class) return Natural;
+   --  Bit depth (bits per sample): 8, 16, 32 (24 not supported)
+
+   function Channels (Self : Wave'Class) return Natural;
+   --  Number of channels (1-mono, 2-stereo, ...)
+
+   function Data (Self : Wave'Class) return Stream_Element_Array;
+
+   type Audio_Stream is tagged private;
    --  AudioStream, custom audio stream
 
-   type Sound is record
-      Stream : RayLib.Audio_Stream;
-      --  Audio stream
-      Frame_Count : Natural;
-      --  Total number of frames (considering channels)
-   end record;
+   function Buffer (Self : Audio_Stream'Class) return Stream_Element_Array;
+   --  Pointer to internal data used by the audio system
+
+   --  TODO: Audio_Stream's processor
+
+   function Sample_Rate (Self : Audio_Stream'Class) return Natural;
+   --  Frequency (samples per second)
+
+   function Sample_Size (Self : Audio_Stream'Class) return Natural;
+   --  Bit depth (bits per sample): 8, 16, 32 (24 not supported)
+
+   function Channels (Self : Audio_Stream'Class) return Natural;
+   --  Number of channels (1-mono, 2-stereo, ...)
+
+   type Sound is tagged private;
    --  Sound
 
-   type Music is record
-      Stream : RayLib.Audio_Stream;
-      --  Audio stream
-      Frame_Count : Natural;
-      --  Total number of frames (considering channels)
-      Looping : Boolean;
-      --  Music looping enable
-      Ctx_Type : Integer;
-      --  Type of music context (audio filetype)
-      Ctx_Data : System.Address;
-      --  Audio context data, depends on type
-   end record;
+   function Stream (Self : Sound'Class) return Audio_Stream;
+   --  Audio stream
+
+   function Frame_Count (Self : Sound'Class) return Natural;
+   --  Total number of frames (considering channels)
+
+   type Music is tagged private;
    --  Music, audio stream, anything longer than ~10 seconds should be streamed
+
+   function Stream (Self : Music'Class) return Audio_Stream;
+   --  Audio stream
+
+   function Frame_Count (Self : Music'Class) return Natural;
+   --  Total number of frames (considering channels)
+
+   function Looping (Self : Music'Class) return Boolean;
+   --  Music looping enable
 
    type VR_Device_Info is record
       H_Resolution : Integer;
@@ -3265,7 +3270,8 @@ package RayLib is
    function Load_Sound (File_Name : String) return RayLib.Sound;
    --  Load sound from file
 
-   function Load_Sound_From_Wave (Wave : RayLib.Wave) return RayLib.Sound;
+   function Load_Sound_From_Wave
+     (Wave : RayLib.Wave'Class) return RayLib.Sound'Class;
    --  Load sound from wave data
 
    procedure Update_Sound
@@ -3560,4 +3566,65 @@ private
 
    overriding procedure Adjust (Self : in out Model_Animation);
    overriding procedure Finalize (Self : in out Model_Animation);
+
+   type Wave_Payload is record
+      Frame_Count : Natural;
+      Sample_Rate : Natural;
+      Sample_Size : Natural;
+      Channels    : Natural;
+      Data        : System.Address;
+   end record;
+   type Wave_Payload_Access is access all Wave_Payload;
+
+   type Wave is new Ada.Finalization.Controlled with record
+      Payload : Wave_Payload_Access;
+   end record;
+
+   overriding procedure Adjust (Self : in out Wave);
+   overriding procedure Finalize (Self : in out Wave);
+
+   type Audio_Stream_Payload is record
+      Buffer      : System.Address;
+      Processor   : System.Address;
+      Sample_Rate : Natural;
+      Sample_Size : Natural;
+      Channels    : Natural;
+   end record;
+   type Audio_Stream_Payload_Access is access all Audio_Stream_Payload;
+
+   type Audio_Stream is new Ada.Finalization.Controlled with record
+      Payload : Audio_Stream_Payload_Access;
+   end record;
+
+   overriding procedure Adjust (Self : in out Audio_Stream);
+   overriding procedure Finalize (Self : in out Audio_Stream);
+
+   type Sound_Payload is record
+      Stream      : RayLib.Audio_Stream;
+      Frame_Count : Natural;
+   end record;
+   type Sound_Payload_Access is access all Sound_Payload;
+
+   type Sound is new Ada.Finalization.Controlled with record
+      Payload : Sound_Payload_Access;
+   end record;
+
+   overriding procedure Adjust (Self : in out Sound);
+   overriding procedure Finalize (Self : in out Sound);
+
+   type Music_Payload is record
+      Stream      : RayLib.Audio_Stream;
+      Frame_Count : Natural;
+      Looping     : Boolean;
+      Ctx_Type    : Integer;
+      Ctx_Data    : System.Address;
+   end record;
+   type Music_Payload_Access is access all Music_Payload;
+
+   type Music is new Ada.Finalization.Controlled with record
+      Payload : Music_Payload_Access;
+   end record;
+
+   overriding procedure Adjust (Self : in out Music);
+   overriding procedure Finalize (Self : in out Music);
 end RayLib;
