@@ -1,6 +1,7 @@
 with Ada.Streams;  use Ada.Streams;
 with Ada.Calendar; use Ada.Calendar;
 with Ada.Containers.Indefinite_Holders;
+with Ada.Finalization;
 with Ada.Numerics;
 
 with Interfaces.C;
@@ -1112,33 +1113,41 @@ package RayLib is
 
    type Rectangle_Array is array (Natural range <>) of Rectangle;
 
-   type Image is record
-      Data : System.Address;
-      --  Image raw data
-      Width : Integer;
-      --  Image base width
-      Height : Integer;
-      --  Image base height
-      Mipmaps : Integer;
-      --  Mipmap levels, 1 by default
-      Format : Pixel_Format;
-      --  Data format (Pixel_Format type)
-   end record;
+   type Image is tagged private;
    --  Image, pixel data stored in CPU memory (RAM)
 
-   type Texture is record
-      Id : OpenGL_Id;
-      --  OpenGL texture id
-      Width : Integer;
-      --  Texture base width
-      Height : Integer;
-      --  Texture base height
-      Mipmaps : Integer;
-      --  Mipmap levels, 1 by default
-      Format : Pixel_Format;
-      --  Data format (Pixel_Format type)
-   end record;
+   function Data (Self : Image'Class) return Stream_Element_Array;
+   --  Image raw data
+
+   function Width (Self : Image'Class) return Integer;
+   --  Image base width
+
+   function Height (Self : Image'Class) return Integer;
+   --  Image base height
+
+   function Mipmaps (Self : Image'Class) return Integer;
+   --  Mipmap levels, 1 by default
+
+   function Format (Self : Image'Class) return Pixel_Format;
+   --  Data format (Pixel_Format type)
+
+   type Texture is tagged private;
    --  Texture, tex data stored in GPU memory (VRAM)
+
+   function Id (Self : Texture'Class) return OpenGL_Id;
+   --  OpenGL texture id
+
+   function Width (Self : Texture'Class) return Integer;
+   --  Texture base width
+
+   function Height (Self : Texture'Class) return Integer;
+   --  Texture base height
+
+   function Mipmaps (Self : Texture'Class) return Integer;
+   --  Mipmap levels, 1 by default
+
+   function Format (Self : Texture'Class) return Pixel_Format;
+   --  Data format (Pixel_Format type)
 
    subtype Texture2D is RayLib.Texture;
    --  Texture2D, same as Texture
@@ -1146,15 +1155,18 @@ package RayLib is
    subtype Texture_Cubemap is RayLib.Texture;
    --  TextureCubemap, same as Texture
 
-   type Render_Texture is record
-      Id : OpenGL_Id;
-      --  OpenGL framebuffer object id
-      Texture : RayLib.Texture;
-      --  Color buffer attachment texture
-      Depth : RayLib.Texture;
-      --  Depth buffer attachment texture
-   end record;
+   type Render_Texture is tagged private;
    --  RenderTexture, fbo for texture rendering
+
+   function Id (Self : Render_Texture'Class) return OpenGL_Id;
+   --  OpenGL framebuffer object id
+
+   function Get_Texture
+     (Self : Render_Texture'Class) return RayLib.Texture'Class;
+   --  Color buffer attachment texture
+
+   function Depth (Self : Render_Texture'Class) return RayLib.Texture'Class;
+   --  Depth buffer attachment texture
 
    subtype Render_Texture2D is RayLib.Render_Texture;
    --  RenderTexture2D, same as RenderTexture
@@ -1272,13 +1284,14 @@ package RayLib is
 
    type Mesh_Array is array (Natural range <>) of Mesh_Holder;
 
-   type Shader is record
-      Id : OpenGL_Id;
-      --  Shader program id
-      Locations : Integer_Array (1 .. Rl_Max_Shader_Locations);
-      --  Shader locations array (RL_MAX_SHADER_LOCATIONS)
-   end record;
+   type Shader is tagged private;
    --  Shader
+
+   function Id (Self : Shader'Class) return OpenGL_Id;
+   --  Shader program id
+
+   function Locations (Self : Shader'Class) return Integer_Array;
+   --  Shader locations array (RL_MAX_SHADER_LOCATIONS)
 
    type Material_Map is record
       Texture : RayLib.Texture2D;
@@ -1820,7 +1833,8 @@ package RayLib is
    --  Set shader uniform value (matrix 4x4)
 
    procedure Set_Shader_Value_Texture
-     (Shader : RayLib.Shader; Loc_Index : Integer; Texture : RayLib.Texture2D);
+     (Shader  : RayLib.Shader'Class; Loc_Index : Integer;
+      Texture : RayLib.Texture2D'Class);
    --  Set shader uniform value for texture (sampler2d)
 
    function Get_Mouse_Ray
@@ -2391,7 +2405,7 @@ package RayLib is
       return RayLib.Image;
 
    function Load_Image_From_Texture
-     (Texture : RayLib.Texture2D) return RayLib.Image;
+     (Texture : RayLib.Texture2D'Class) return RayLib.Image'Class;
    --  Load image from GPU texture data
 
    function Load_Image_From_Screen return RayLib.Image;
@@ -2626,11 +2640,12 @@ package RayLib is
    --  Load texture from file into GPU memory (VRAM)
 
    function Load_Texture_From_Image
-     (Image : RayLib.Image) return RayLib.Texture2D;
+     (Image : RayLib.Image'Class) return RayLib.Texture2D'Class;
    --  Load texture from image data
 
    function Load_Texture_Cubemap
-     (Image : RayLib.Image; Layout : Integer) return RayLib.Texture_Cubemap;
+     (Image : RayLib.Image'Class; Layout : Integer)
+      return RayLib.Texture_Cubemap'Class;
    --  Load cubemap from image, multiple image cubemap layouts supported
 
    function Load_Render_Texture
@@ -3368,4 +3383,63 @@ package RayLib is
 
    procedure Set_Audio_Stream_Buffer_Size_Default (Size : Integer);
    --  Default size for new audio streams
+private
+   type Image_Payload is record
+      Data    : System.Address;
+      Width   : Integer;
+      Height  : Integer;
+      Mipmaps : Integer;
+      Format  : Pixel_Format;
+   end record;
+   type Image_Payload_Access is access all Image_Payload;
+
+   type Image is new Ada.Finalization.Controlled with record
+      Payload : Image_Payload;
+   end record;
+
+   overriding procedure Adjust (Self : in out Image);
+   overriding procedure Finalize (Self : in out Image);
+
+   type Texture_Payload is record
+      Id      : OpenGL_Id;
+      Width   : Integer;
+      Height  : Integer;
+      Mipmaps : Integer;
+      Format  : Pixel_Format;
+   end record;
+   type Texture_Payload_Access is access all Texture_Payload;
+
+   type Texture is new Ada.Finalization.Controlled with record
+      Payload : Texture_Payload;
+   end record;
+
+   overriding procedure Adjust (Self : in out Texture);
+   overriding procedure Finalize (Self : in out Texture);
+
+   type Render_Texture_Payload is record
+      Id      : OpenGL_Id;
+      Texture : RayLib.Texture;
+      Depth   : RayLib.Texture;
+   end record;
+   type Render_Texture_Payload_Access is access all Render_Texture_Payload;
+
+   type Render_Texture is new Ada.Finalization.Controlled with record
+      Payload : Render_Texture_Payload;
+   end record;
+
+   overriding procedure Adjust (Self : in out Render_Texture);
+   overriding procedure Finalize (Self : in out Render_Texture);
+
+   type Shader_Payload is record
+      Id        : OpenGL_Id;
+      Locations : Integer_Array (1 .. Rl_Max_Shader_Locations);
+   end record;
+   type Shader_Payload_Access is access all Shader_Payload;
+
+   type Shader is new Ada.Finalization.Controlled with record
+      Payload : Shader_Payload_Access;
+   end record;
+
+   overriding procedure Adjust (Self : in out Shader);
+   overriding procedure Finalize (Self : in out Shader);
 end RayLib;
