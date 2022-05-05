@@ -764,67 +764,67 @@ package RayLib is
    type Pixel_Format is new Interfaces.C.unsigned;
    --  Pixel formats
 
-   Pixelformat_Uncompressed_Grayscale : constant Pixel_Format := 1;
+   Pixel_Format_Uncompressed_Grayscale : constant Pixel_Format := 1;
    --  8 bit per pixel (no alpha)
 
-   Pixelformat_Uncompressed_Gray_Alpha : constant Pixel_Format := 2;
+   Pixel_Format_Uncompressed_Gray_Alpha : constant Pixel_Format := 2;
    --  8*2 bpp (2 channels)
 
-   Pixelformat_Uncompressed_R5G6B5 : constant Pixel_Format := 3;
+   Pixel_Format_Uncompressed_R5G6B5 : constant Pixel_Format := 3;
    --  16 bpp
 
-   Pixelformat_Uncompressed_R8G8B8 : constant Pixel_Format := 4;
+   Pixel_Format_Uncompressed_R8G8B8 : constant Pixel_Format := 4;
    --  24 bpp
 
-   Pixelformat_Uncompressed_R5G5B5A1 : constant Pixel_Format := 5;
+   Pixel_Format_Uncompressed_R5G5B5A1 : constant Pixel_Format := 5;
    --  16 bpp (1 bit alpha)
 
-   Pixelformat_Uncompressed_R4G4B4A4 : constant Pixel_Format := 6;
+   Pixel_Format_Uncompressed_R4G4B4A4 : constant Pixel_Format := 6;
    --  16 bpp (4 bit alpha)
 
-   Pixelformat_Uncompressed_R8G8B8A8 : constant Pixel_Format := 7;
+   Pixel_Format_Uncompressed_R8G8B8A8 : constant Pixel_Format := 7;
    --  32 bpp
 
-   Pixelformat_Uncompressed_R32 : constant Pixel_Format := 8;
+   Pixel_Format_Uncompressed_R32 : constant Pixel_Format := 8;
    --  32 bpp (1 channel - float)
 
-   Pixelformat_Uncompressed_R32G32B32 : constant Pixel_Format := 9;
+   Pixel_Format_Uncompressed_R32G32B32 : constant Pixel_Format := 9;
    --  32*3 bpp (3 channels - float)
 
-   Pixelformat_Uncompressed_R32G32B32A32 : constant Pixel_Format := 10;
+   Pixel_Format_Uncompressed_R32G32B32A32 : constant Pixel_Format := 10;
    --  32*4 bpp (4 channels - float)
 
-   Pixelformat_Compressed_DXT1_RGB : constant Pixel_Format := 11;
+   Pixel_Format_Compressed_DXT1_RGB : constant Pixel_Format := 11;
    --  4 bpp (no alpha)
 
-   Pixelformat_Compressed_DXT1_RGBA : constant Pixel_Format := 12;
+   Pixel_Format_Compressed_DXT1_RGBA : constant Pixel_Format := 12;
    --  4 bpp (1 bit alpha)
 
-   Pixelformat_Compressed_DXT3_RGBA : constant Pixel_Format := 13;
+   Pixel_Format_Compressed_DXT3_RGBA : constant Pixel_Format := 13;
    --  8 bpp
 
-   Pixelformat_Compressed_DXT5_RGBA : constant Pixel_Format := 14;
+   Pixel_Format_Compressed_DXT5_RGBA : constant Pixel_Format := 14;
    --  8 bpp
 
-   Pixelformat_Compressed_ETC1_RGB : constant Pixel_Format := 15;
+   Pixel_Format_Compressed_ETC1_RGB : constant Pixel_Format := 15;
    --  4 bpp
 
-   Pixelformat_Compressed_ETC2_RGB : constant Pixel_Format := 16;
+   Pixel_Format_Compressed_ETC2_RGB : constant Pixel_Format := 16;
    --  4 bpp
 
-   Pixelformat_Compressed_ETC2_EAC_RGBA : constant Pixel_Format := 17;
+   Pixel_Format_Compressed_ETC2_EAC_RGBA : constant Pixel_Format := 17;
    --  8 bpp
 
-   Pixelformat_Compressed_PVRT_RGB : constant Pixel_Format := 18;
+   Pixel_Format_Compressed_PVRT_RGB : constant Pixel_Format := 18;
    --  4 bpp
 
-   Pixelformat_Compressed_PVRT_RGBA : constant Pixel_Format := 19;
+   Pixel_Format_Compressed_PVRT_RGBA : constant Pixel_Format := 19;
    --  4 bpp
 
-   Pixelformat_Compressed_ASTC_4X4_RGBA : constant Pixel_Format := 20;
+   Pixel_Format_Compressed_ASTC_4X4_RGBA : constant Pixel_Format := 20;
    --  8 bpp
 
-   Pixelformat_Compressed_ASTC_8X8_RGBA : constant Pixel_Format := 21;
+   Pixel_Format_Compressed_ASTC_8X8_RGBA : constant Pixel_Format := 21;
    --  2 bpp
 
    type Texture_Filter is new Interfaces.C.unsigned;
@@ -1122,7 +1122,7 @@ package RayLib is
       Mipmaps : Integer;
       --  Mipmap levels, 1 by default
       Format : Pixel_Format;
-      --  Data format (PixelFormat type)
+      --  Data format (Pixel_Format type)
    end record;
    --  Image, pixel data stored in CPU memory (RAM)
 
@@ -1136,7 +1136,7 @@ package RayLib is
       Mipmaps : Integer;
       --  Mipmap levels, 1 by default
       Format : Pixel_Format;
-      --  Data format (PixelFormat type)
+      --  Data format (Pixel_Format type)
    end record;
    --  Texture, tex data stored in GPU memory (VRAM)
 
