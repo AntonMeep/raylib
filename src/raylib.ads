@@ -2503,12 +2503,12 @@ package RayLib is
       Color : RayLib.Color);
 
    --  Draw text using font and additional parameters
-   procedure Draw_Text_Ex
+   procedure Draw_Text
      (Font      : RayLib.Font; Text : String; Position : RayLib.Vector2;
       Font_Size : Float; Spacing : Float; Tint : RayLib.Color);
 
    --  Draw text using Font and pro parameters (rotation)
-   procedure Draw_Text_Pro
+   procedure Draw_Text
      (Font    : RayLib.Font; Text : String; Position : RayLib.Vector2;
       Origin  : RayLib.Vector2; Rotation : Float; Font_Size : Float;
       Spacing : Float; Tint : RayLib.Color);
@@ -2528,7 +2528,7 @@ package RayLib is
    function Measure_Text (Text : String; Font_Size : Integer) return Integer;
 
    --  Measure string size for Font
-   function Measure_Text_Ex
+   function Measure_Text
      (Font : RayLib.Font; Text : String; Font_Size : Float; Spacing : Float)
       return RayLib.Vector2;
 
@@ -2541,7 +2541,7 @@ package RayLib is
      (Font : RayLib.Font; Codepoint : Integer) return RayLib.Glyph_Info;
 
    --  Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
-   function Get_Glyph_Atlas_Rec
+   function Get_Glyph_Atlas
      (Font : RayLib.Font; Codepoint : Integer) return RayLib.Rectangle;
 
    --  Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
@@ -2637,7 +2637,7 @@ package RayLib is
       Color    : RayLib.Color);
 
    --  Draw cube (Vector version)
-   procedure Draw_Cube_V
+   procedure Draw_Cube
      (Position : RayLib.Vector3; Size : RayLib.Vector3; Color : RayLib.Color);
 
    --  Draw cube wires
@@ -2646,7 +2646,7 @@ package RayLib is
       Color    : RayLib.Color);
 
    --  Draw cube wires (Vector version)
-   procedure Draw_Cube_Wires_V
+   procedure Draw_Cube_Wires
      (Position : RayLib.Vector3; Size : RayLib.Vector3; Color : RayLib.Color);
 
    --  Draw cube textured
@@ -2655,7 +2655,7 @@ package RayLib is
       Height  : Float; Length : Float; Color : RayLib.Color);
 
    --  Draw cube with a region of a texture
-   procedure Draw_Cube_Texture_Rec
+   procedure Draw_Cube_Texture
      (Texture  : RayLib.Texture2D; Source : RayLib.Rectangle;
       Position : RayLib.Vector3; Width : Float; Height : Float; Length : Float;
       Color    : RayLib.Color);
@@ -2665,7 +2665,7 @@ package RayLib is
      (Center_Pos : RayLib.Vector3; Radius : Float; Color : RayLib.Color);
 
    --  Draw sphere with extended parameters
-   procedure Draw_Sphere_Ex
+   procedure Draw_Sphere
      (Center_Pos : RayLib.Vector3; Radius : Float; Rings : Integer;
       Slices     : Integer; Color : RayLib.Color);
 
@@ -2680,7 +2680,7 @@ package RayLib is
       Height   : Float; Slices : Integer; Color : RayLib.Color);
 
    --  Draw a cylinder with base at startPos and top at endPos
-   procedure Draw_Cylinder_Ex
+   procedure Draw_Cylinder
      (Start_Pos    : RayLib.Vector3; End_Pos : RayLib.Vector3;
       Start_Radius : Float; End_Radius : Float; Sides : Integer;
       Color        : RayLib.Color);
@@ -2691,7 +2691,7 @@ package RayLib is
       Height   : Float; Slices : Integer; Color : RayLib.Color);
 
    --  Draw a cylinder wires with base at startPos and top at endPos
-   procedure Draw_Cylinder_Wires_Ex
+   procedure Draw_Cylinder_Wires
      (Start_Pos    : RayLib.Vector3; End_Pos : RayLib.Vector3;
       Start_Radius : Float; End_Radius : Float; Sides : Integer;
       Color        : RayLib.Color);
@@ -2713,12 +2713,6 @@ package RayLib is
    --  Load model from generated mesh (default material)
    function Load_Model_From_Mesh (Mesh : RayLib.Mesh) return RayLib.Model;
 
-   --  Unload model (including meshes) from memory (RAM and/or VRAM)
-   procedure Unload_Model (Model : RayLib.Model);
-
-   --  Unload model (but not meshes) from memory (RAM and/or VRAM)
-   procedure Unload_Model_Keep_Meshes (Model : RayLib.Model);
-
    --  Compute model bounding box limits (considers all meshes)
    function Get_Model_Bounding_Box
      (Model : RayLib.Model) return RayLib.Bounding_Box;
@@ -2729,7 +2723,7 @@ package RayLib is
       Tint  : RayLib.Color);
 
    --  Draw a model with extended parameters
-   procedure Draw_Model_Ex
+   procedure Draw_Model
      (Model         : RayLib.Model; Position : RayLib.Vector3;
       Rotation_Axis : RayLib.Vector3; Rotation_Angle : Float;
       Scale         : RayLib.Vector3; Tint : RayLib.Color);
@@ -2740,7 +2734,7 @@ package RayLib is
       Tint  : RayLib.Color);
 
    --  Draw a model wires (with texture if set) with extended parameters
-   procedure Draw_Model_Wires_Ex
+   procedure Draw_Model_Wires
      (Model         : RayLib.Model; Position : RayLib.Vector3;
       Rotation_Axis : RayLib.Vector3; Rotation_Angle : Float;
       Scale         : RayLib.Vector3; Tint : RayLib.Color);
@@ -2755,13 +2749,13 @@ package RayLib is
       Position : RayLib.Vector3; Size : Float; Tint : RayLib.Color);
 
    --  Draw a billboard texture defined by source
-   procedure Draw_Billboard_Rec
+   procedure Draw_Billboard
      (Camera : RayLib.Camera; Texture : RayLib.Texture2D;
       Source : RayLib.Rectangle; Position : RayLib.Vector3;
       Size   : RayLib.Vector2; Tint : RayLib.Color);
 
    --  Draw a billboard texture defined by source and rotation
-   procedure Draw_Billboard_Pro
+   procedure Draw_Billboard
      (Camera   : RayLib.Camera; Texture : RayLib.Texture2D;
       Source   : RayLib.Rectangle; Position : RayLib.Vector3;
       Up : RayLib.Vector3; Size : RayLib.Vector2; Origin : RayLib.Vector2;
@@ -2773,9 +2767,6 @@ package RayLib is
    --  Update mesh vertex data in GPU for a specific buffer index
    procedure Update_Mesh_Buffer
      (Mesh : RayLib.Mesh; Index : Integer; Data : Stream_Element_Array);
-
-   --  Unload mesh data from CPU and GPU
-   procedure Unload_Mesh (Mesh : RayLib.Mesh);
 
    --  Draw a 3d mesh with material and transform
    procedure Draw_Mesh
@@ -2942,12 +2933,6 @@ package RayLib is
      (Sound        : RayLib.Sound; Data : Stream_Element_Array;
       Sample_Count : Integer);
 
-   --  Unload wave data
-   procedure Unload_Wave (Wave : RayLib.Wave);
-
-   --  Unload sound
-   procedure Unload_Sound (Sound : RayLib.Sound);
-
    --  Export wave data to file, returns true on success
    function Export_Wave
      (Wave : RayLib.Wave; File_Name : String) return Boolean;
@@ -2975,7 +2960,7 @@ package RayLib is
    procedure Stop_Sound_Multi;
 
    --  Get number of sounds playing in the multichannel
-   function Get_Sounds_Playing return Integer;
+   function Get_Sounds_Playing return Natural;
 
    --  Check if a sound is currently playing
    function Is_Sound_Playing (Sound : RayLib.Sound) return Boolean;
@@ -3011,9 +2996,6 @@ package RayLib is
    --  Load music stream from data
    function Load_Music_Stream_From_Memory
      (File_Type : String; Data : Stream_Element_Array) return RayLib.Music;
-
-   --  Unload music stream
-   procedure Unload_Music_Stream (Music : RayLib.Music);
 
    --  Start music playing
    procedure Play_Music_Stream (Music : RayLib.Music);
@@ -3055,9 +3037,6 @@ package RayLib is
    function Load_Audio_Stream
      (Sample_Rate : Natural; Sample_Size : Natural; Channels : Natural)
       return RayLib.Audio_Stream;
-
-   --  Unload audio stream and free memory
-   procedure Unload_Audio_Stream (Stream : RayLib.Audio_Stream);
 
    --  Update audio stream buffers with data
    procedure Update_Audio_Stream
