@@ -602,36 +602,36 @@ package RayLib is
    Ray_White : constant Color := (245, 245, 245, 255);
 
    --  System/Window config flags
-   type Config_Flags is new Interfaces.C.unsigned;
+   type Config_Flag is new Interfaces.C.unsigned;
 
    --  Set to try enabling V-Sync on GPU
-   Flag_Vsync_Hint : constant Config_Flags := 16#0000_0040#;
+   Flag_Vsync_Hint : constant Config_Flag := 16#0000_0040#;
    --  Set to run program in fullscreen
-   Flag_Fullscreen_Mode : constant Config_Flags := 16#0000_0002#;
+   Flag_Fullscreen_Mode : constant Config_Flag := 16#0000_0002#;
    --  Set to allow resizable window
-   Flag_Window_Resizable : constant Config_Flags := 16#0000_0004#;
+   Flag_Window_Resizable : constant Config_Flag := 16#0000_0004#;
    --  Set to disable window decoration (frame and buttons)
-   Flag_Window_Undecorated : constant Config_Flags := 16#0000_0008#;
+   Flag_Window_Undecorated : constant Config_Flag := 16#0000_0008#;
    --  Set to hide window
-   Flag_Window_Hidden : constant Config_Flags := 16#0000_0080#;
+   Flag_Window_Hidden : constant Config_Flag := 16#0000_0080#;
    --  Set to minimize window (iconify)
-   Flag_Window_Minimized : constant Config_Flags := 16#0000_0200#;
+   Flag_Window_Minimized : constant Config_Flag := 16#0000_0200#;
    --  Set to maximize window (expanded to monitor)
-   Flag_Window_Maximized : constant Config_Flags := 16#0000_0400#;
+   Flag_Window_Maximized : constant Config_Flag := 16#0000_0400#;
    --  Set to window non focused
-   Flag_Window_Unfocused : constant Config_Flags := 16#0000_0800#;
+   Flag_Window_Unfocused : constant Config_Flag := 16#0000_0800#;
    --  Set to window always on top
-   Flag_Window_Topmost : constant Config_Flags := 16#0000_1000#;
+   Flag_Window_Topmost : constant Config_Flag := 16#0000_1000#;
    --  Set to allow windows running while minimized
-   Flag_Window_Always_Run : constant Config_Flags := 16#0000_0100#;
+   Flag_Window_Always_Run : constant Config_Flag := 16#0000_0100#;
    --  Set to allow transparent framebuffer
-   Flag_Window_Transparent : constant Config_Flags := 16#0000_0010#;
+   Flag_Window_Transparent : constant Config_Flag := 16#0000_0010#;
    --  Set to support HighDPI
-   Flag_Window_HighDPI : constant Config_Flags := 16#0000_2000#;
+   Flag_Window_HighDPI : constant Config_Flag := 16#0000_2000#;
    --  Set to try enabling MSAA 4X
-   Flag_MSAA_4x_Hint : constant Config_Flags := 16#0000_0020#;
+   Flag_MSAA_4x_Hint : constant Config_Flag := 16#0000_0020#;
    --  Set to try enabling interlaced video format (for V3D)
-   Flag_Interlaced_Hint : constant Config_Flags := 16#0001_0000#;
+   Flag_Interlaced_Hint : constant Config_Flag := 16#0001_0000#;
 
    --  Trace log level
    type Trace_Log_Level is
@@ -1295,7 +1295,7 @@ package RayLib is
    --  Initialize window and OpenGL context
    procedure Init_Window (Width : Integer; Height : Integer; Title : String);
 
-   --  Check if KEY_ESCAPE pressed or Close icon pressed
+   --  Check if Key_Escape pressed or Close icon pressed
    function Window_Should_Close return Boolean;
 
    --  Close window and unload OpenGL context
@@ -1323,13 +1323,13 @@ package RayLib is
    function Is_Window_Resized return Boolean;
 
    --  Check if one specific window flag is enabled
-   function Is_Window_State (Flag : Natural) return Boolean;
+   function Is_Window_State (Flag : Config_Flag) return Boolean;
 
    --  Set window configuration state using flags (only PLATFORM_DESKTOP)
-   procedure Set_Window_State (Flags : Natural);
+   procedure Set_Window_State (Flags : Config_Flag);
 
    --  Clear window configuration state flags
-   procedure Clear_Window_State (Flags : Natural);
+   procedure Clear_Window_State (Flags : Config_Flag);
 
    --  Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
    procedure Toggle_Fullscreen;
@@ -1558,7 +1558,7 @@ package RayLib is
      (Position : RayLib.Vector3; Camera : RayLib.Camera) return RayLib.Vector2;
 
    --  Get size position for a 3d world space position
-   function Get_World_To_Screen_Ex
+   function Get_World_To_Screen
      (Position : RayLib.Vector3; Camera : RayLib.Camera; Width : Integer;
       Height   : Integer) return RayLib.Vector2;
 
@@ -1594,13 +1594,13 @@ package RayLib is
    procedure Take_Screenshot (File_Name : String);
 
    --  Setup init configuration flags (view FLAGS)
-   procedure Set_Config_Flags (Flags : Natural);
+   procedure Set_Config_Flags (Flags : Config_Flag);
 
    --  Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
-   procedure Trace_Log (Log_Level : Integer; Text : String);
+   procedure Trace_Log (Log_Level : Trace_Log_Level; Text : String);
 
    --  Set the current threshold (minimum) log level
-   procedure Set_Trace_Log_Level (Log_Level : Integer);
+   procedure Set_Trace_Log_Level (Log_Level : Trace_Log_Level);
 
    --  Set custom trace log
    procedure Set_Trace_Log_Callback (Callback : RayLib.Trace_Log_Callback);
@@ -1626,13 +1626,12 @@ package RayLib is
 
    --  Save data to file from byte array (write), returns true on success
    function Save_File_Data
-     (File_Name      : String; Data : Stream_Element_Array;
-      Bytes_To_Write : Natural) return Boolean;
+     (File_Name : String; Data : Stream_Element_Array) return Boolean;
 
-   --  Load text data from file (read), returns a '\0' terminated string
+   --  Load text data from file (read), returns string
    function Load_File_Text (File_Name : String) return String;
 
-   --  Save text data to file (write), string must be '\0' terminated, returns true on success
+   --  Save text data to file (write), returns true on success
    function Save_File_Text (File_Name : String; Text : String) return Boolean;
 
    --  Check if file exists
@@ -1672,9 +1671,6 @@ package RayLib is
    --  Get filenames in a directory path (memory must be freed)
    -- function Get_Directory_Files (Dir_Path : String; Count : RayLib.Int *) return RayLib.Char **;
 
-   --  Clear directory files paths buffers (free memory)
-   procedure Clear_Directory_Files;
-
    --  Change working directory, return true on success
    function Change_Directory (Dir : String) return Boolean;
 
@@ -1690,18 +1686,18 @@ package RayLib is
    --  Get file modification time (last write time)
    function Get_File_Mod_Time (File_Name : String) return Time;
 
-   --  Compress data (DEFLATE algorithm), memory must be MemFree()
+   --  Compress data (DEFLATE algorithm)
    function Compress_Data
      (Data : Stream_Element_Array) return Stream_Element_Array;
 
-   --  Decompress data (DEFLATE algorithm), memory must be MemFree()
+   --  Decompress data (DEFLATE algorithm)
    function Decompress_Data
      (Comp_Data : Stream_Element_Array) return Stream_Element_Array;
 
-   --  Encode data to Base64 string, memory must be MemFree()
+   --  Encode data to Base64 string
    function Encode_Data_Base64 (Data : Stream_Element_Array) return String;
 
-   --  Decode Base64 string data, memory must be MemFree()
+   --  Decode Base64 string data
    function Decode_Data_Base64 (Data : String) return Stream_Element_Array;
 
    --  Save integer value to storage file (to defined position), returns true on success
@@ -1715,25 +1711,25 @@ package RayLib is
    procedure Open_URL (Url : String);
 
    --  Check if a key has been pressed once
-   function Is_Key_Pressed (Key : Integer) return Boolean;
+   function Is_Key_Pressed (Key : Keyboard_Key) return Boolean;
 
    --  Check if a key is being pressed
-   function Is_Key_Down (Key : Integer) return Boolean;
+   function Is_Key_Down (Key : Keyboard_Key) return Boolean;
 
    --  Check if a key has been released once
-   function Is_Key_Released (Key : Integer) return Boolean;
+   function Is_Key_Released (Key : Keyboard_Key) return Boolean;
 
    --  Check if a key is NOT being pressed
-   function Is_Key_Up (Key : Integer) return Boolean;
+   function Is_Key_Up (Key : Keyboard_Key) return Boolean;
 
    --  Set a custom key to exit program (default is ESC)
-   procedure Set_Exit_Key (Key : Integer);
+   procedure Set_Exit_Key (Key : Keyboard_Key);
 
-   --  Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty
-   function Get_Key_Pressed return Integer;
+   --  Get key pressed (keycode), call it multiple times for keys queued, returns Key_Null when the queue is empty
+   function Get_Key_Pressed return Keyboard_Key;
 
-   --  Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty
-   function Get_Char_Pressed return Integer;
+   --  Get char pressed (unicode), call it multiple times for chars queued, returns ASCII.NUL when the queue is empty
+   function Get_Char_Pressed return Character;
 
    --  Check if a gamepad is available
    function Is_Gamepad_Available (Gamepad : Integer) return Boolean;
@@ -1743,44 +1739,44 @@ package RayLib is
 
    --  Check if a gamepad button has been pressed once
    function Is_Gamepad_Button_Pressed
-     (Gamepad : Integer; Button : Integer) return Boolean;
+     (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
 
    --  Check if a gamepad button is being pressed
    function Is_Gamepad_Button_Down
-     (Gamepad : Integer; Button : Integer) return Boolean;
+     (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
 
    --  Check if a gamepad button has been released once
    function Is_Gamepad_Button_Released
-     (Gamepad : Integer; Button : Integer) return Boolean;
+     (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
 
    --  Check if a gamepad button is NOT being pressed
    function Is_Gamepad_Button_Up
-     (Gamepad : Integer; Button : Integer) return Boolean;
+     (Gamepad : Integer; Button : Gamepad_Button) return Boolean;
 
    --  Get the last gamepad button pressed
-   function Get_Gamepad_Button_Pressed return Integer;
+   function Get_Gamepad_Button_Pressed return Gamepad_Button;
 
    --  Get gamepad axis count for a gamepad
    function Get_Gamepad_Axis_Count (Gamepad : Integer) return Integer;
 
    --  Get axis movement value for a gamepad axis
    function Get_Gamepad_Axis_Movement
-     (Gamepad : Integer; Axis : Integer) return Float;
+     (Gamepad : Integer; Axis : Gamepad_Axis) return Float;
 
    --  Set internal gamepad mappings (SDL_GameControllerDB)
    function Set_Gamepad_Mappings (Mappings : String) return Integer;
 
    --  Check if a mouse button has been pressed once
-   function Is_Mouse_Button_Pressed (Button : Integer) return Boolean;
+   function Is_Mouse_Button_Pressed (Button : Mouse_Button) return Boolean;
 
    --  Check if a mouse button is being pressed
-   function Is_Mouse_Button_Down (Button : Integer) return Boolean;
+   function Is_Mouse_Button_Down (Button : Mouse_Button) return Boolean;
 
    --  Check if a mouse button has been released once
-   function Is_Mouse_Button_Released (Button : Integer) return Boolean;
+   function Is_Mouse_Button_Released (Button : Mouse_Button) return Boolean;
 
    --  Check if a mouse button is NOT being pressed
-   function Is_Mouse_Button_Up (Button : Integer) return Boolean;
+   function Is_Mouse_Button_Up (Button : Mouse_Button) return Boolean;
 
    --  Get mouse position X
    function Get_Mouse_X return Integer;
@@ -1807,7 +1803,7 @@ package RayLib is
    function Get_Mouse_Wheel_Move return Float;
 
    --  Set mouse cursor
-   procedure Set_Mouse_Cursor (Cursor : Integer);
+   procedure Set_Mouse_Cursor (Cursor : Mouse_Cursor);
 
    --  Get touch position X for touch point 0 (relative to screen size)
    function Get_Touch_X return Integer;
@@ -1828,10 +1824,10 @@ package RayLib is
    procedure Set_Gestures_Enabled (Flags : Natural);
 
    --  Check if a gesture have been detected
-   function Is_Gesture_Detected (Gesture : Integer) return Boolean;
+   function Is_Gesture_Detected (Gesture : RayLib.Gesture) return Boolean;
 
    --  Get latest detected gesture
-   function Get_Gesture_Detected return Integer;
+   function Get_Gesture_Detected return RayLib.Gesture;
 
    --  Get gesture hold time in milliseconds
    function Get_Gesture_Hold_Duration return Float;
@@ -1849,24 +1845,25 @@ package RayLib is
    function Get_Gesture_Pinch_Angle return Float;
 
    --  Set camera mode (multiple camera modes available)
-   procedure Set_Camera_Mode (Camera : RayLib.Camera; Mode : Integer);
+   procedure Set_Camera_Mode (Camera : RayLib.Camera; Mode : Camera_Mode);
 
    --  Update camera position for selected mode
    procedure Update_Camera (Camera : in out RayLib.Camera);
 
    --  Set camera pan key to combine with mouse movement (free camera)
-   procedure Set_Camera_Pan_Control (Key_Pan : Integer);
+   procedure Set_Camera_Pan_Control (Key_Pan : Keyboard_Key);
 
    --  Set camera alt key to combine with mouse movement (free camera)
-   procedure Set_Camera_Alt_Control (Key_Alt : Integer);
+   procedure Set_Camera_Alt_Control (Key_Alt : Keyboard_Key);
 
    --  Set camera smooth zoom key to combine with mouse (free camera)
-   procedure Set_Camera_Smooth_Zoom_Control (Key_Smooth_Zoom : Integer);
+   procedure Set_Camera_Smooth_Zoom_Control (Key_Smooth_Zoom : Keyboard_Key);
 
    --  Set camera move controls (1st person and 3rd person cameras)
    procedure Set_Camera_Move_Controls
-     (Key_Front : Integer; Key_Back : Integer; Key_Right : Integer;
-      Key_Left  : Integer; Key_Up : Integer; Key_Down : Integer);
+     (Key_Front : Keyboard_Key; Key_Back : Keyboard_Key;
+      Key_Right : Keyboard_Key; Key_Left : Keyboard_Key; Key_Up : Keyboard_Key;
+      Key_Down  : Keyboard_Key);
 
    --  Set texture and rectangle to be used on shapes drawing
    procedure Set_Shapes_Texture
@@ -1877,7 +1874,7 @@ package RayLib is
      (Pos_X : Integer; Pos_Y : Integer; Color : RayLib.Color);
 
    --  Draw a pixel (Vector version)
-   procedure Draw_Pixel_V (Position : RayLib.Vector2; Color : RayLib.Color);
+   procedure Draw_Pixel (Position : RayLib.Vector2; Color : RayLib.Color);
 
    --  Draw a line
    procedure Draw_Line
@@ -1885,12 +1882,12 @@ package RayLib is
       End_Pos_Y   : Integer; Color : RayLib.Color);
 
    --  Draw a line (Vector version)
-   procedure Draw_Line_V
+   procedure Draw_Line
      (Start_Pos : RayLib.Vector2; End_Pos : RayLib.Vector2;
       Color     : RayLib.Color);
 
    --  Draw a line defining thickness
-   procedure Draw_Line_Ex
+   procedure Draw_Line
      (Start_Pos : RayLib.Vector2; End_Pos : RayLib.Vector2; Thick : Float;
       Color     : RayLib.Color);
 
@@ -1912,8 +1909,7 @@ package RayLib is
 
    --  Draw lines sequence
    procedure Draw_Line_Strip
-     (Points : RayLib.Vector2_Array; Point_Count : Integer;
-      Color  : RayLib.Color);
+     (Points : RayLib.Vector2_Array; Color : RayLib.Color);
 
    --  Draw a color-filled circle
    procedure Draw_Circle
@@ -1936,7 +1932,7 @@ package RayLib is
       Color1   : RayLib.Color; Color2 : RayLib.Color);
 
    --  Draw a color-filled circle (Vector version)
-   procedure Draw_Circle_V
+   procedure Draw_Circle
      (Center : RayLib.Vector2; Radius : Float; Color : RayLib.Color);
 
    --  Draw circle outline
@@ -1972,29 +1968,29 @@ package RayLib is
       Color : RayLib.Color);
 
    --  Draw a color-filled rectangle (Vector version)
-   procedure Draw_Rectangle_V
+   procedure Draw_Rectangle
      (Position : RayLib.Vector2; Size : RayLib.Vector2; Color : RayLib.Color);
 
    --  Draw a color-filled rectangle
-   procedure Draw_Rectangle_Rec (Rec : RayLib.Rectangle; Color : RayLib.Color);
+   procedure Draw_Rectangle (Rec : RayLib.Rectangle; Color : RayLib.Color);
 
    --  Draw a color-filled rectangle with pro parameters
-   procedure Draw_Rectangle_Pro
+   procedure Draw_Rectangle
      (Rec   : RayLib.Rectangle; Origin : RayLib.Vector2; Rotation : Float;
       Color : RayLib.Color);
 
    --  Draw a vertical-gradient-filled rectangle
-   procedure Draw_Rectangle_Gradient_V
+   procedure Draw_Rectangle_Gradient_Vertical
      (Pos_X  : Integer; Pos_Y : Integer; Width : Integer; Height : Integer;
       Color1 : RayLib.Color; Color2 : RayLib.Color);
 
    --  Draw a horizontal-gradient-filled rectangle
-   procedure Draw_Rectangle_Gradient_H
+   procedure Draw_Rectangle_Gradient_Horizontal
      (Pos_X  : Integer; Pos_Y : Integer; Width : Integer; Height : Integer;
       Color1 : RayLib.Color; Color2 : RayLib.Color);
 
    --  Draw a gradient-filled rectangle with custom vertex colors
-   procedure Draw_Rectangle_Gradient_Ex
+   procedure Draw_Rectangle_Gradient
      (Rec  : RayLib.Rectangle; Col1 : RayLib.Color; Col2 : RayLib.Color;
       Col3 : RayLib.Color; Col4 : RayLib.Color);
 
@@ -2004,7 +2000,7 @@ package RayLib is
       Color : RayLib.Color);
 
    --  Draw rectangle outline with extended parameters
-   procedure Draw_Rectangle_Lines_Ex
+   procedure Draw_Rectangle_Lines
      (Rec : RayLib.Rectangle; Line_Thick : Float; Color : RayLib.Color);
 
    --  Draw rectangle with rounded edges
@@ -2029,13 +2025,11 @@ package RayLib is
 
    --  Draw a triangle fan defined by points (first vertex is the center)
    procedure Draw_Triangle_Fan
-     (Points : RayLib.Vector2_Array; Point_Count : Integer;
-      Color  : RayLib.Color);
+     (Points : RayLib.Vector2_Array; Color : RayLib.Color);
 
    --  Draw a triangle strip defined by points
    procedure Draw_Triangle_Strip
-     (Points : RayLib.Vector2_Array; Point_Count : Integer;
-      Color  : RayLib.Color);
+     (Points : RayLib.Vector2_Array; Color : RayLib.Color);
 
    --  Draw a regular polygon (Vector version)
    procedure Draw_Poly
@@ -2048,7 +2042,7 @@ package RayLib is
       Rotation : Float; Color : RayLib.Color);
 
    --  Draw a polygon outline of n sides with extended parameters
-   procedure Draw_Poly_Lines_Ex
+   procedure Draw_Poly_Lines
      (Center   : RayLib.Vector2; Sides : Integer; Radius : Float;
       Rotation : Float; Line_Thick : Float; Color : RayLib.Color);
 
@@ -2120,9 +2114,6 @@ package RayLib is
    --  Load image from screen buffer and (screenshot)
    function Load_Image_From_Screen return RayLib.Image;
 
-   --  Unload image from CPU memory (RAM)
-   procedure Unload_Image (Image : RayLib.Image);
-
    --  Export image data to file, returns true on success
    function Export_Image
      (Image : RayLib.Image; File_Name : String) return Boolean;
@@ -2137,12 +2128,12 @@ package RayLib is
       return RayLib.Image;
 
    --  Generate image: vertical gradient
-   function Gen_Image_Gradient_V
+   function Gen_Image_Gradient_Vertical
      (Width  : Integer; Height : Integer; Top : RayLib.Color;
       Bottom : RayLib.Color) return RayLib.Image;
 
    --  Generate image: horizontal gradient
-   function Gen_Image_Gradient_H
+   function Gen_Image_Gradient_Horizontal
      (Width : Integer; Height : Integer; Left : RayLib.Color;
       Right : RayLib.Color) return RayLib.Image;
 
@@ -2179,7 +2170,7 @@ package RayLib is
       return RayLib.Image;
 
    --  Create an image from text (custom sprite font)
-   function Image_Text_Ex
+   function Image_Text
      (Font : RayLib.Font; Text : String; Font_Size : Float; Spacing : Float;
       Tint : RayLib.Color) return RayLib.Image;
 
@@ -2288,7 +2279,7 @@ package RayLib is
       Color :        RayLib.Color);
 
    --  Draw pixel within an image (Vector version)
-   procedure Image_Draw_Pixel_V
+   procedure Image_Draw_Pixel
      (Dst   : in out RayLib.Image; Position : RayLib.Vector2;
       Color :        RayLib.Color);
 
@@ -2298,7 +2289,7 @@ package RayLib is
       End_Pos_X :        Integer; End_Pos_Y : Integer; Color : RayLib.Color);
 
    --  Draw line within an image (Vector version)
-   procedure Image_Draw_Line_V
+   procedure Image_Draw_Line
      (Dst    : in out RayLib.Image; Start : RayLib.Vector2;
       Finish :        RayLib.Vector2; Color : RayLib.Color);
 
@@ -2308,7 +2299,7 @@ package RayLib is
       Radius :        Integer; Color : RayLib.Color);
 
    --  Draw circle within an image (Vector version)
-   procedure Image_Draw_Circle_V
+   procedure Image_Draw_Circle
      (Dst   : in out RayLib.Image; Center : RayLib.Vector2; Radius : Integer;
       Color :        RayLib.Color);
 
@@ -2318,12 +2309,12 @@ package RayLib is
       Width :        Integer; Height : Integer; Color : RayLib.Color);
 
    --  Draw rectangle within an image (Vector version)
-   procedure Image_Draw_Rectangle_V
+   procedure Image_Draw_Rectangle
      (Dst  : in out RayLib.Image; Position : RayLib.Vector2;
       Size :        RayLib.Vector2; Color : RayLib.Color);
 
    --  Draw rectangle within an image
-   procedure Image_Draw_Rectangle_Rec
+   procedure Image_Draw_Rectangle
      (Dst : in out RayLib.Image; Rec : RayLib.Rectangle; Color : RayLib.Color);
 
    --  Draw rectangle lines within an image
@@ -2343,7 +2334,7 @@ package RayLib is
       Pos_Y :        Integer; Font_Size : Integer; Color : RayLib.Color);
 
    --  Draw text (custom sprite font) within an image (destination)
-   procedure Image_Draw_Text_Ex
+   procedure Image_Draw_Text
      (Dst      : in out RayLib.Image; Font : RayLib.Font; Text : String;
       Position :        RayLib.Vector2; Font_Size : Float; Spacing : Float;
       Tint     :        RayLib.Color);
@@ -2363,18 +2354,12 @@ package RayLib is
    function Load_Render_Texture
      (Width : Integer; Height : Integer) return RayLib.Render_Texture2D;
 
-   --  Unload texture from GPU memory (VRAM)
-   procedure Unload_Texture (Texture : RayLib.Texture2D);
-
-   --  Unload render texture from GPU memory (VRAM)
-   procedure Unload_Render_Texture (Target : RayLib.Render_Texture2D);
-
    --  Update GPU texture with new data
    procedure Update_Texture
      (Texture : RayLib.Texture2D; Pixels : Stream_Element_Array);
 
    --  Update GPU texture rectangle with new data
-   procedure Update_Texture_Rec
+   procedure Update_Texture
      (Texture : RayLib.Texture2D; Rec : RayLib.Rectangle;
       Pixels  : Stream_Element_Array);
 
@@ -2382,10 +2367,12 @@ package RayLib is
    procedure Gen_Texture_Mipmaps (Texture : in out RayLib.Texture2D);
 
    --  Set texture scaling filter mode
-   procedure Set_Texture_Filter (Texture : RayLib.Texture2D; Filter : Integer);
+   procedure Set_Texture_Filter
+     (Texture : RayLib.Texture2D; Filter : Texture_Filter);
 
    --  Set texture wrapping mode
-   procedure Set_Texture_Wrap (Texture : RayLib.Texture2D; Wrap : Integer);
+   procedure Set_Texture_Wrap
+     (Texture : RayLib.Texture2D; Wrap : Texture_Wrap);
 
    --  Draw a Texture2D
    procedure Draw_Texture
@@ -2393,17 +2380,17 @@ package RayLib is
       Tint    : RayLib.Color);
 
    --  Draw a Texture2D with position defined as Vector2
-   procedure Draw_Texture_V
+   procedure Draw_Texture
      (Texture : RayLib.Texture2D; Position : RayLib.Vector2;
       Tint    : RayLib.Color);
 
    --  Draw a Texture2D with extended parameters
-   procedure Draw_Texture_Ex
+   procedure Draw_Texture
      (Texture : RayLib.Texture2D; Position : RayLib.Vector2; Rotation : Float;
       Scale   : Float; Tint : RayLib.Color);
 
    --  Draw a part of a texture defined by a rectangle
-   procedure Draw_Texture_Rec
+   procedure Draw_Texture
      (Texture  : RayLib.Texture2D; Source : RayLib.Rectangle;
       Position : RayLib.Vector2; Tint : RayLib.Color);
 
