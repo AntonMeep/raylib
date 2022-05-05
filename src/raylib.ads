@@ -104,7 +104,8 @@ package RayLib is
    --  Trace logging, intended for internal use only
 
    Log_Debug : constant Trace_Log_Level := 2;
-   --  Debug logging, used for internal debugging, it should be disabled on release builds
+   --  Debug logging, used for internal debugging,
+   --  it should be disabled on release builds
 
    Log_Info : constant Trace_Log_Level := 3;
    --  Info logging, used for program execution info
@@ -682,10 +683,12 @@ package RayLib is
    --  Shader location: vector uniform: ambient color
 
    Shader_Loc_Map_Albedo : constant Shader_Location_Index := 15;
-   --  Shader location: sampler2d texture: albedo (same as: SHADER_LOC_MAP_DIFFUSE)
+   --  Shader location: sampler2d texture: albedo
+   --  (same as: Shader_Loc_Map_Diffuse)
 
    Shader_Loc_Map_Metalness : constant Shader_Location_Index := 16;
-   --  Shader location: sampler2d texture: metalness (same as: SHADER_LOC_MAP_SPECULAR)
+   --  Shader location: sampler2d texture: metalness
+   --  (same as: Shader_Loc_Map_Specular)
 
    Shader_Loc_Map_Normal : constant Shader_Location_Index := 17;
    --  Shader location: sampler2d texture: normal
@@ -1235,7 +1238,8 @@ package RayLib is
       Up : RayLib.Vector3;
       --  Camera up vector (rotation over its axis)
       Fovy : Float;
-      --  Camera field-of-view apperture in Y (degrees) in perspective, used as near plane width in orthographic
+      --  Camera field-of-view apperture in Y (degrees) in perspective,
+      --  used as near plane width in orthographic
       Projection : Camera_Projection;
       --  Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
    end record;
@@ -1269,10 +1273,12 @@ package RayLib is
    --  Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
 
    function Texcoords (Self : Mesh'Class) return Vector2_Array;
-   --  Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+   --  Vertex texture coordinates (UV - 2 components per vertex)
+   --  (shader-location = 1)
 
    function Texcoords2 (Self : Mesh'Class) return Vector2_Array;
-   --  Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
+   --  Vertex texture second coordinates (UV - 2 components per vertex)
+   --  (shader-location = 5)
 
    function Normals (Self : Mesh'Class) return Vector3_Array;
    --  Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
@@ -1293,7 +1299,8 @@ package RayLib is
    --  Animated normals (after bones transformations)
 
    function Bone_Ids (Self : Mesh'Class) return Stream_Element_Array;
-   --  Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
+   --  Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex
+   --  (skinning)
 
    function Bone_Weights (Self : Mesh'Class) return Float_Array;
    --  Vertex bone weight, up to 4 bones influence by vertex (skinning)
@@ -2005,7 +2012,8 @@ package RayLib is
    --  Get the directory if the running application (uses static string)
 
    --  Get filenames in a directory path (memory must be freed)
-   -- function Get_Directory_Files (Dir_Path : String; Count : RayLib.Int *) return RayLib.Char **;
+   --  function Get_Directory_Files (Dir_Path : String; Count : RayLib.Int *)
+   --  return RayLib.Char **;
 
    function Change_Directory (Dir : String) return Boolean;
    --  Change working directory, return true on success
@@ -2014,10 +2022,10 @@ package RayLib is
    --  Check if a file has been dropped into window
 
    --  Get dropped files names (memory must be freed)
-   -- function Get_Dropped_Files (Count : RayLib.Int *) return RayLib.Char **;
+   --  function Get_Dropped_Files (Count : RayLib.Int *) return RayLib.Char **;
 
    --  Clear dropped files paths buffer (free memory)
-   -- procedure Clear_Dropped_Files;
+   --  procedure Clear_Dropped_Files;
 
    function Get_File_Mod_Time (File_Name : String) return Time;
    --  Get file modification time (last write time)
@@ -2038,7 +2046,8 @@ package RayLib is
 
    function Save_Storage_Value
      (Position : Natural; Value : Integer) return Boolean;
-   --  Save integer value to storage file (to defined position), returns true on success
+   --  Save integer value to storage file (to defined position),
+   --  returns true on success
 
    function Load_Storage_Value (Position : Natural) return Integer;
    --  Load integer value from storage file (from defined position)
@@ -2062,10 +2071,12 @@ package RayLib is
    --  Set a custom key to exit program (default is ESC)
 
    function Get_Key_Pressed return Keyboard_Key;
-   --  Get key pressed (keycode), call it multiple times for keys queued, returns Key_Null when the queue is empty
+   --  Get key pressed (keycode), call it multiple times for keys queued,
+   --  returns Key_Null when the queue is empty
 
    function Get_Char_Pressed return Character;
-   --  Get char pressed (unicode), call it multiple times for chars queued, returns ASCII.NUL when the queue is empty
+   --  Get char pressed (unicode), call it multiple times for chars queued,
+   --  returns ASCII.NUL when the queue is empty
 
    function Is_Gamepad_Available (Gamepad : Gamepad_Id) return Boolean;
    --  Check if a gamepad is available
@@ -2414,12 +2425,14 @@ package RayLib is
      (Start_Pos1      :     RayLib.Vector2; End_Pos1 : RayLib.Vector2;
       Start_Pos2      :     RayLib.Vector2; End_Pos2 : RayLib.Vector2;
       Collision_Point : out RayLib.Vector2) return Boolean;
-   --  Check the collision between two lines defined by two points each, returns collision point by reference
+   --  Check the collision between two lines defined by two points each,
+   --  returns collision point by reference
 
    function Check_Collision_Point_Line
      (Point     : RayLib.Vector2; P1 : RayLib.Vector2; P2 : RayLib.Vector2;
       Threshold : Natural) return Boolean;
-   --  Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
+   --  Check if point belongs to line created between two points [p1] and [p2]
+   --  with defined margin in pixels [threshold]
 
    function Get_Collision_Rec
      (Rec1 : RayLib.Rectangle; Rec2 : RayLib.Rectangle)
@@ -2456,7 +2469,8 @@ package RayLib is
 
    function Export_Image_As_Code
      (Image : RayLib.Image; File_Name : String) return Boolean;
-   --  Export image as code file defining an array of bytes, returns true on success
+   --  Export image as code file defining an array of bytes,
+   --  returns true on success
 
    function Gen_Image_Color
      (Width : Natural; Height : Natural; Color : RayLib.Color)
@@ -2741,7 +2755,8 @@ package RayLib is
      (Texture : RayLib.Texture2D; Source : RayLib.Rectangle;
       Dest    : RayLib.Rectangle; Origin : RayLib.Vector2; Rotation : Float;
       Scale   : Float; Tint : RayLib.Color);
-   --  Draw part of a texture (defined by a rectangle) with rotation and scale tiled into dest.
+   --  Draw part of a texture (defined by a rectangle) with rotation
+   --  and scale tiled into dest.
 
    procedure Draw_Texture_Pro
      (Texture : RayLib.Texture2D; Source : RayLib.Rectangle;
@@ -2811,8 +2826,10 @@ package RayLib is
    function Load_Font (File_Name : String) return RayLib.Font;
    --  Load font from file into GPU memory (VRAM)
 
-   --  Load font from file with extended parameters, use NULL for fontChars and 0 for glyphCount to load the default character set
-   -- function Load_Font_Ex (File_Name : String; Font_Size : Integer; Font_Chars : RayLib.Int *; Glyph_Count : Integer) return RayLib.Font;
+   --  function Load_Font_Ex (File_Name : String; Font_Size : Integer;
+   --  Font_Chars : RayLib.Int *; Glyph_Count : Integer) return RayLib.Font;
+   --  Load font from file with extended parameters, use NULL for fontChars
+   --  and 0 for glyphCount to load the default character set
 
    function Load_Font_From_Image
      (Image : RayLib.Image'Class; Key : RayLib.Color; First_Char : Integer)
@@ -2820,13 +2837,20 @@ package RayLib is
    --  Load font from Image (XNA style)
 
    --  Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
-   -- function Load_Font_From_Memory (File_Type : String; File_Data : RayLib.Const unsigned char *; Data_Size : Integer; Font_Size : Integer; Font_Chars : RayLib.Int *; Glyph_Count : Integer) return RayLib.Font;
+   --  function Load_Font_From_Memory (File_Type : String;
+   --  File_Data : RayLib.Const unsigned char *; Data_Size : Integer;
+   --  Font_Size : Integer; Font_Chars : RayLib.Int *; Glyph_Count : Integer)
+   --    return RayLib.Font;
 
    --  Load font data for further use
-   -- function Load_Font_Data (File_Data : RayLib.Const unsigned char *; Data_Size : Integer; Font_Size : Integer; Font_Chars : RayLib.Int *; Glyph_Count : Integer; Type : Integer) return RayLib.Glyph_Info *;
+   --  function Load_Font_Data (File_Data : RayLib.Const unsigned char *;
+   --  Data_Size : Integer; Font_Size : Integer; Font_Chars : RayLib.Int *;
+   --  Glyph_Count : Integer; Type : Integer) return RayLib.Glyph_Info *;
 
    --  Generate image font atlas using chars info
-   -- function Gen_Image_Font_Atlas (Chars : RayLib.Const _Glyph_Info *; Recs : RayLib.Rectangle **; Glyph_Count : Integer; Font_Size : Integer; Padding : Integer; Pack_Method : Integer) return RayLib.Image;
+   --  function Gen_Image_Font_Atlas (Chars : RayLib.Const _Glyph_Info *;
+   --  Recs : RayLib.Rectangle **; Glyph_Count : Integer; Font_Size : Integer;
+   --  Padding : Integer; Pack_Method : Integer) return RayLib.Image;
 
    function Export_Font_As_Code
      (Font : RayLib.Font; File_Name : String) return Boolean;
@@ -2872,32 +2896,38 @@ package RayLib is
 
    function Get_Glyph_Index
      (Font : RayLib.Font; Codepoint : Integer) return Integer;
-   --  Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
+   --  Get glyph index position in font for a codepoint (unicode character),
+   --  fallback to '?' if not found
 
    function Get_Glyph_Info
      (Font : RayLib.Font; Codepoint : Integer) return RayLib.Glyph_Info;
-   --  Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
+   --  Get glyph font info data for a codepoint (unicode character),
+   --  fallback to '?' if not found
 
    function Get_Glyph_Atlas
      (Font : RayLib.Font; Codepoint : Integer) return RayLib.Rectangle;
-   --  Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
+   --  Get glyph rectangle in font atlas for a codepoint (unicode character),
+   --  fallback to '?' if not found
 
    function Load_Codepoints
      (Text : String; Count : out Integer) return Integer_Array;
-   --  Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
+   --  Load all codepoints from a UTF-8 text string,
+   --  codepoints count returned by parameter
 
    function Get_Codepoint_Count (Text : String) return Integer;
    --  Get total number of codepoints in a UTF-8 encoded string
 
    function Get_Codepoint
      (Text : String; Bytes_Processed : out Integer) return Integer;
-   --  Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
+   --  Get next codepoint in a UTF-8 encoded string,
+   --  0x3f('?') is returned on failure
 
    function Codepoint_To_UTF8 (Codepoint : Integer) return String;
-   --  Encode one codepoint into UTF-8 byte array (array length returned as parameter)
+   --  Encode one codepoint into UTF-8 byte array
+   --  (array length returned as parameter)
 
    function Text_Codepoints_To_UTF8 (Codepoints : Integer_Array) return String;
-   --  Encode text as codepoints array into UTF-8 text string (WARNING: memory must be freed!)
+   --  Encode text as codepoints array into UTF-8 text string
 
    procedure Text_Copy (Dst : out String; Src : String);
    --  Copy one string to another, returns bytes copied
@@ -2908,7 +2938,7 @@ package RayLib is
    function Text_Length (Text : String) return Natural;
    --  Get text length, checks for '\0' ending
 
-   -- function Text_Format (Text : String; Args : RayLib....) return String;
+   --  function Text_Format (Text : String; Args : RayLib....) return String;
    --  Text formatting with variables (sprintf() style)
 
    function Text_Subtext
@@ -2923,13 +2953,16 @@ package RayLib is
      (Text : String; Insert : String; Position : Integer) return String;
    --  Insert text in a position (WARNING: memory must be freed!)
 
-   -- function Text_Join (Text_List : RayLib.Const char **; Count : Integer; Delimiter : String) return String;
+   --  function Text_Join (Text_List : RayLib.Const char **; Count : Integer;
+   --  Delimiter : String) return String;
    --  Join text strings with delimiter
 
-   -- function Text_Split (Text : String; Delimiter : RayLib.Char; Count : RayLib.Int *) return RayLib.Const char **;
+   --  function Text_Split (Text : String; Delimiter : RayLib.Char;
+   --  Count : RayLib.Int *) return RayLib.Const char **;
    --  Split text into multiple strings
 
-   -- procedure Text_Append (Text : RayLib.Char *; Append : String; Position : RayLib.Int *);
+   --  procedure Text_Append (Text : RayLib.Char *; Append : String;
+   --  Position : RayLib.Int *);
    --  Append text at specific position and move cursor!
 
    function Text_Find_Index (Text : String; Find : String) return Integer;
@@ -3188,7 +3221,8 @@ package RayLib is
    procedure Set_Material_Texture
      (Material : in out RayLib.Material'Class; Map_Type : Integer;
       Texture  :        RayLib.Texture2D'Class);
-   --  Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
+   --  Set texture for a material map type
+   --  (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
 
    procedure Set_Model_Mesh_Material
      (Model : in out RayLib.Model; Mesh_Id : Integer; Material_Id : Integer);
