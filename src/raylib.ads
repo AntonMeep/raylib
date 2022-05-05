@@ -1,7 +1,8 @@
-with Ada.Streams;  use Ada.Streams;
-with Ada.Calendar; use Ada.Calendar;
+with Ada.Streams;           use Ada.Streams;
+with Ada.Calendar;          use Ada.Calendar;
 with Ada.Finalization;
 with Ada.Numerics;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with Interfaces.C;
 with System;
@@ -38,13 +39,17 @@ package RayLib is
 
    type Integer_Array is array (Natural range <>) of Integer;
 
+   type Unbounded_String_Array is array (Natural range <>) of Unbounded_String;
+
    type Color_Component is mod 256;
    --  Single 8-bit color component
    for Color_Component'Size use 8;
 
    type Monitor_Id is new Natural;
+   --  An Id of a connected monitor
 
    type Gamepad_Id is new Natural;
+   --  An Id of a connected gamepad
 
    ------------------------------
    --  Enumerations definition
@@ -2011,9 +2016,9 @@ package RayLib is
    function Get_Application_Directory return String;
    --  Get the directory if the running application (uses static string)
 
-   --  Get filenames in a directory path (memory must be freed)
-   --  function Get_Directory_Files (Dir_Path : String; Count : RayLib.Int *)
-   --  return RayLib.Char **;
+   function Get_Directory_Files
+     (Dir_Path : String) return Unbounded_String_Array;
+   --  Get filenames in a directory path
 
    function Change_Directory (Dir : String) return Boolean;
    --  Change working directory, return true on success
@@ -2021,11 +2026,8 @@ package RayLib is
    function Is_File_Dropped return Boolean;
    --  Check if a file has been dropped into window
 
-   --  Get dropped files names (memory must be freed)
-   --  function Get_Dropped_Files (Count : RayLib.Int *) return RayLib.Char **;
-
-   --  Clear dropped files paths buffer (free memory)
-   --  procedure Clear_Dropped_Files;
+   function Get_Dropped_Files return Unbounded_String_Array;
+   --  Get dropped files name
 
    function Get_File_Mod_Time (File_Name : String) return Time;
    --  Get file modification time (last write time)
@@ -2909,12 +2911,11 @@ package RayLib is
    --  Get glyph rectangle in font atlas for a codepoint (unicode character),
    --  fallback to '?' if not found
 
-   function Load_Codepoints
-     (Text : String; Count : out Integer) return Integer_Array;
+   function Load_Codepoints (Text : String) return Integer_Array;
    --  Load all codepoints from a UTF-8 text string,
    --  codepoints count returned by parameter
 
-   function Get_Codepoint_Count (Text : String) return Integer;
+   function Get_Codepoint_Count (Text : String) return Natural;
    --  Get total number of codepoints in a UTF-8 encoded string
 
    function Get_Codepoint
@@ -2938,9 +2939,6 @@ package RayLib is
    function Text_Length (Text : String) return Natural;
    --  Get text length, checks for '\0' ending
 
-   --  function Text_Format (Text : String; Args : RayLib....) return String;
-   --  Text formatting with variables (sprintf() style)
-
    function Text_Subtext
      (Text : String; Position : Integer; Length : Integer) return String;
    --  Get a piece of a text string
@@ -2953,16 +2951,16 @@ package RayLib is
      (Text : String; Insert : String; Position : Integer) return String;
    --  Insert text in a position (WARNING: memory must be freed!)
 
-   --  function Text_Join (Text_List : RayLib.Const char **; Count : Integer;
-   --  Delimiter : String) return String;
+   function Text_Join
+     (Text_List : Unbounded_String_Array; Delimiter : String) return String;
    --  Join text strings with delimiter
 
-   --  function Text_Split (Text : String; Delimiter : RayLib.Char;
-   --  Count : RayLib.Int *) return RayLib.Const char **;
-   --  Split text into multiple strings
+   function Text_Split
+     (Text : String; Delimiter : Character) return Unbounded_String_Array;
+   -- Split text into multiple strings
 
-   --  procedure Text_Append (Text : RayLib.Char *; Append : String;
-   --  Position : RayLib.Int *);
+   procedure Text_Append
+     (Text : Unbounded_String; Append : String; Position : out Positive);
    --  Append text at specific position and move cursor!
 
    function Text_Find_Index (Text : String; Find : String) return Integer;
