@@ -1,10 +1,19 @@
 with Ada.Streams;  use Ada.Streams;
 with Ada.Calendar; use Ada.Calendar;
+with Ada.Numerics;
 
 with Interfaces;
+with Interfaces.C;
 with System;
 
 package RayLib is
+   Version : constant String := "4.0";
+
+   Pi : constant := Ada.Numerics.Pi;
+
+   DEG2RAD : constant := Pi / 180.0;
+   RAD2DEG : constant := 180.0 / Pi;
+
    subtype Unsigned_8 is Interfaces.Unsigned_8;
    subtype Unsigned_16 is Interfaces.Unsigned_16;
 
@@ -162,6 +171,9 @@ package RayLib is
    --  Texture2D, same as Texture
    subtype Texture2D is RayLib.Texture;
 
+   --  TextureCubemap, same as Texture
+   subtype Texture_Cubemap is RayLib.Texture;
+
    type Texture_Array is array (Natural range <>) of Texture;
    type Texture_Array_Access is access all Texture_Array;
 
@@ -174,6 +186,9 @@ package RayLib is
       Depth : RayLib.Texture;
       --  Depth buffer attachment texture
    end record;
+
+   --  RenderTexture2D, same as RenderTexture
+   subtype Render_Texture2D is RayLib.Render_Texture;
 
    type Render_Texture_Array is array (Natural range <>) of Render_Texture;
    type Render_Texture_Array_Access is access all Render_Texture_Array;
@@ -246,6 +261,9 @@ package RayLib is
       Projection : Integer;
       --  Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
    end record;
+
+   --  Camera type fallback, defaults to Camera3D
+   subtype Camera is RayLib.Camera3D;
 
    type Camera3D_Array is array (Natural range <>) of Camera3D;
    type Camera3D_Array_Access is access all Camera3D_Array;
@@ -555,15 +573,6 @@ package RayLib is
    type VR_Stereo_Config_Array is array (Natural range <>) of VR_Stereo_Config;
    type VR_Stereo_Config_Array_Access is access all VR_Stereo_Config_Array;
 
-   --  TextureCubemap, same as Texture
-   subtype Texture_Cubemap is RayLib.Texture;
-
-   --  RenderTexture2D, same as RenderTexture
-   subtype Render_Texture2D is RayLib.Render_Texture;
-
-   --  Camera type fallback, defaults to Camera3D
-   subtype Camera is RayLib.Camera3D;
-
    Light_Gray  : constant Color := (200, 200, 200, 255);
    Gray        : constant Color := (130, 130, 130, 255);
    Dark_Gray   : constant Color := (80, 80, 80, 255);
@@ -593,59 +602,60 @@ package RayLib is
    Ray_White : constant Color := (245, 245, 245, 255);
 
    --  System/Window config flags
-   subtype Config_Flags is Integer;
+   type Config_Flags is new Interfaces.C.unsigned;
 
    --  Set to try enabling V-Sync on GPU
-   FLAG_VSYNC_HINT : constant Config_Flags := 64;
+   FLAG_VSYNC_HINT : constant Config_Flags := 16#0000_0040#;
    --  Set to run program in fullscreen
-   FLAG_FULLSCREEN_MODE : constant Config_Flags := 2;
+   FLAG_FULLSCREEN_MODE : constant Config_Flags := 16#0000_0002#;
    --  Set to allow resizable window
-   FLAG_WINDOW_RESIZABLE : constant Config_Flags := 4;
+   FLAG_WINDOW_RESIZABLE : constant Config_Flags := 16#0000_0004#;
    --  Set to disable window decoration (frame and buttons)
-   FLAG_WINDOW_UNDECORATED : constant Config_Flags := 8;
+   FLAG_WINDOW_UNDECORATED : constant Config_Flags := 16#0000_0008#;
    --  Set to hide window
-   FLAG_WINDOW_HIDDEN : constant Config_Flags := 128;
+   FLAG_WINDOW_HIDDEN : constant Config_Flags := 16#0000_0080#;
    --  Set to minimize window (iconify)
-   FLAG_WINDOW_MINIMIZED : constant Config_Flags := 512;
+   FLAG_WINDOW_MINIMIZED : constant Config_Flags := 16#0000_0200#;
    --  Set to maximize window (expanded to monitor)
-   FLAG_WINDOW_MAXIMIZED : constant Config_Flags := 1_024;
+   FLAG_WINDOW_MAXIMIZED : constant Config_Flags := 16#0000_0400#;
    --  Set to window non focused
-   FLAG_WINDOW_UNFOCUSED : constant Config_Flags := 2_048;
+   FLAG_WINDOW_UNFOCUSED : constant Config_Flags := 16#0000_0800#;
    --  Set to window always on top
-   FLAG_WINDOW_TOPMOST : constant Config_Flags := 4_096;
+   FLAG_WINDOW_TOPMOST : constant Config_Flags := 16#0000_1000#;
    --  Set to allow windows running while minimized
-   FLAG_WINDOW_ALWAYS_RUN : constant Config_Flags := 256;
+   FLAG_WINDOW_ALWAYS_RUN : constant Config_Flags := 16#0000_0100#;
    --  Set to allow transparent framebuffer
-   FLAG_WINDOW_TRANSPARENT : constant Config_Flags := 16;
+   FLAG_WINDOW_TRANSPARENT : constant Config_Flags := 16#0000_0010#;
    --  Set to support HighDPI
-   FLAG_WINDOW_HIGHDPI : constant Config_Flags := 8_192;
+   FLAG_WINDOW_HIGHDPI : constant Config_Flags := 16#0000_2000#;
    --  Set to try enabling MSAA 4X
-   FLAG_MSAA_4X_HINT : constant Config_Flags := 32;
+   FLAG_MSAA_4X_HINT : constant Config_Flags := 16#0000_0020#;
    --  Set to try enabling interlaced video format (for V3D)
-   FLAG_INTERLACED_HINT : constant Config_Flags := 65_536;
+   FLAG_INTERLACED_HINT : constant Config_Flags := 16#0001_0000#;
 
    --  Trace log level
-   subtype Trace_Log_Level is Integer;
-
+   type Trace_Log_Level is
+     (
    --  Display all logs
-   LOG_ALL : constant Trace_Log_Level := 0;
+   Log_All,
    --  Trace logging, intended for internal use only
-   LOG_TRACE : constant Trace_Log_Level := 1;
+   Log_Trace,
    --  Debug logging, used for internal debugging, it should be disabled on release builds
-   LOG_DEBUG : constant Trace_Log_Level := 2;
+   Log_Debug,
    --  Info logging, used for program execution info
-   LOG_INFO : constant Trace_Log_Level := 3;
+   Log_Info,
    --  Warning logging, used on recoverable failures
-   LOG_WARNING : constant Trace_Log_Level := 4;
+   Log_Warning,
    --  Error logging, used on unrecoverable failures
-   LOG_ERROR : constant Trace_Log_Level := 5;
+   Log_Error,
    --  Fatal logging, used to abort program: exit(EXIT_FAILURE)
-   LOG_FATAL : constant Trace_Log_Level := 6;
+
+      Log_Fatal,
    --  Disable logging
-   LOG_NONE : constant Trace_Log_Level := 7;
+   Log_None);
 
    --  Keyboard keys (US keyboard layout)
-   subtype Keyboard_Key is Integer;
+   type Keyboard_Key is new Interfaces.C.unsigned;
 
    --  Key: NULL, used for no key pressed
    KEY_NULL : constant Keyboard_Key := 0;
@@ -869,7 +879,7 @@ package RayLib is
    KEY_VOLUME_DOWN : constant Keyboard_Key := 25;
 
    --  Mouse buttons
-   subtype Mouse_Button is Integer;
+   type Mouse_Button is new Interfaces.C.unsigned;
 
    --  Mouse button left
    MOUSE_BUTTON_LEFT : constant Mouse_Button := 0;
