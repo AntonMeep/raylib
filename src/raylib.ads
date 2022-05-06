@@ -7,6 +7,8 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Interfaces.C;
 with System;
 
+with raylib_h;
+
 package RayLib is
    ------------------------------
    --  Basic defines
@@ -1591,11 +1593,8 @@ package RayLib is
    function Window_Should_Close return Boolean;
    --  Check if Key_Escape pressed or Close icon pressed
 
-   procedure Close_Window with
-      Import,
-      Convention    => C,
-      External_Name => "CloseWindow";
-      --  Close window and unload OpenGL context
+   procedure Close_Window;
+   --  Close window and unload OpenGL context
 
    function Is_Window_Ready return Boolean;
    --  Check if window has been initialized successfully
@@ -1627,29 +1626,17 @@ package RayLib is
    procedure Clear_Window_State (Flags : Config_Flag);
    --  Clear window configuration state flags
 
-   procedure Toggle_Fullscreen with
-      Import,
-      Convention    => C,
-      External_Name => "ToggleFullscreen";
-      --  Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
+   procedure Toggle_Fullscreen;
+   --  Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
 
-   procedure Maximize_Window with
-      Import,
-      Convention    => C,
-      External_Name => "MaximizeWindow";
-      --  Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
+   procedure Maximize_Window;
+   --  Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
 
-   procedure Minimize_Window with
-      Import,
-      Convention    => C,
-      External_Name => "MinimizeWindow";
-      --  Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
+   procedure Minimize_Window;
+   --  Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
 
-   procedure Restore_Window with
-      Import,
-      Convention    => C,
-      External_Name => "RestoreWindow";
-      --  Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
+   procedure Restore_Window;
+   --  Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
 
    procedure Set_Window_Icon (Image : RayLib.Image'Class);
    --  Set icon for window (only PLATFORM_DESKTOP)
@@ -1669,10 +1656,6 @@ package RayLib is
    procedure Set_Window_Size (Width : Natural; Height : Natural);
    --  Set window dimensions
 
-   procedure Set_Window_Opacity (Opacity : Float) with
-      Pre => Opacity >= 0.0 and Opacity <= 1.0;
-      --  Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
-
    function Get_Window_Handle return System.Address;
    --  Get native window handle
 
@@ -1681,12 +1664,6 @@ package RayLib is
 
    function Get_Screen_Height return Natural;
    --  Get current screen height
-
-   function Get_Render_Width return Natural;
-   --  Get current render width (it considers HiDPI)
-
-   function Get_Render_Height return Natural;
-   --  Get current render height (it considers HiDPI)
 
    function Get_Monitor_Count return Natural;
    --  Get number of connected monitors
@@ -1727,47 +1704,29 @@ package RayLib is
    function Get_Clipboard_Text return String;
    --  Get clipboard text content
 
-   procedure Swap_Screen_Buffer with
-      Import,
-      Convention    => C,
-      External_Name => "SwapScreenBuffer";
-      --  Swap back buffer with front buffer (screen drawing)
+   procedure Swap_Screen_Buffer;
+   --  Swap back buffer with front buffer (screen drawing)
 
-   procedure Poll_Input_Events with
-      Import,
-      Convention    => C,
-      External_Name => "PollInputEvents";
-      --  Register all input events
+   procedure Poll_Input_Events;
+   --  Register all input events
 
    procedure Wait_Time (Ms : Float);
    --  Wait for some milliseconds (halt program execution)
 
-   procedure Show_Cursor with
-      Import,
-      Convention    => C,
-      External_Name => "ShowCursor";
-      --  Shows cursor
+   procedure Show_Cursor;
+   --  Shows cursor
 
-   procedure Hide_Cursor with
-      Import,
-      Convention    => C,
-      External_Name => "HideCursor";
-      --  Hides cursor
+   procedure Hide_Cursor;
+   --  Hides cursor
 
    function Is_Cursor_Hidden return Boolean;
    --  Check if cursor is not visible
 
-   procedure Enable_Cursor with
-      Import,
-      Convention    => C,
-      External_Name => "EnableCursor";
-      --  Enables cursor (unlock cursor)
+   procedure Enable_Cursor;
+   --  Enables cursor (unlock cursor)
 
-   procedure Disable_Cursor with
-      Import,
-      Convention    => C,
-      External_Name => "DisableCursor";
-      --  Disables cursor (lock cursor)
+   procedure Disable_Cursor;
+   --  Disables cursor (lock cursor)
 
    function Is_Cursor_On_Screen return Boolean;
    --  Check if cursor is on the screen
@@ -1775,80 +1734,53 @@ package RayLib is
    procedure Clear_Background (Color : RayLib.Color);
    --  Set background color (framebuffer clear color)
 
-   procedure Begin_Drawing with
-      Import,
-      Convention    => C,
-      External_Name => "BeginDrawing";
-      --  Setup canvas (framebuffer) to start drawing
+   procedure Begin_Drawing;
+   --  Setup canvas (framebuffer) to start drawing
 
-   procedure End_Drawing with
-      Import,
-      Convention    => C,
-      External_Name => "EndDrawing";
-      --  End canvas drawing and swap buffers (double buffering)
+   procedure End_Drawing;
+   --  End canvas drawing and swap buffers (double buffering)
 
    procedure Begin_Mode2D (Camera : RayLib.Camera2D);
    --  Begin 2D mode with custom camera (2D)
 
-   procedure End_Mode2D with
-      Import,
-      Convention    => C,
-      External_Name => "EndMode2D";
-      --  Ends 2D mode with custom camera
+   procedure End_Mode2D;
+   --  Ends 2D mode with custom camera
 
    procedure Begin_Mode3D (Camera : RayLib.Camera3D);
    --  Begin 3D mode with custom camera (3D)
 
-   procedure End_Mode3D with
-      Import,
-      Convention    => C,
-      External_Name => "EndMode3D";
-      --  Ends 3D mode and returns to default 2D orthographic mode
+   procedure End_Mode3D;
+   --  Ends 3D mode and returns to default 2D orthographic mode
 
    procedure Begin_Texture_Mode (Target : RayLib.Render_Texture2D);
    --  Begin drawing to render texture
 
-   procedure End_Texture_Mode with
-      Import,
-      Convention    => C,
-      External_Name => "EndTextureMode";
-      --  Ends drawing to render texture
+   procedure End_Texture_Mode;
+   --  Ends drawing to render texture
 
    procedure Begin_Shader_Mode (Shader : RayLib.Shader);
    --  Begin custom shader drawing
 
-   procedure End_Shader_Mode with
-      Import,
-      Convention    => C,
-      External_Name => "EndShaderMode";
-      --  End custom shader drawing (use default shader)
+   procedure End_Shader_Mode;
+   --  End custom shader drawing (use default shader)
 
    procedure Begin_Blend_Mode (Mode : Blend_Mode);
    --  Begin blending mode (alpha, additive, multiplied, subtract, custom)
 
-   procedure End_Blend_Mode with
-      Import,
-      Convention    => C,
-      External_Name => "EndBlendMode";
-      --  End blending mode (reset to default: alpha blending)
+   procedure End_Blend_Mode;
+   --  End blending mode (reset to default: alpha blending)
 
    procedure Begin_Scissor_Mode (X, Y, Width, Height : Natural);
    --  Begin scissor mode (define screen area for following drawing)
 
-   procedure End_Scissor_Mode with
-      Import,
-      Convention    => C,
-      External_Name => "EndScissorMode";
-      --  End scissor mode
+   procedure End_Scissor_Mode;
+   --  End scissor mode
 
    procedure Begin_VR_Stereo_Mode (Config : RayLib.VR_Stereo_Config);
    --  Begin stereo rendering (requires VR simulator)
 
-   procedure End_VR_Stereo_Mode with
-      Import,
-      Convention    => C,
-      External_Name => "EndVrStereoMode";
-      --  End stereo rendering (requires VR simulator)
+   procedure End_VR_Stereo_Mode;
+   --  End stereo rendering (requires VR simulator)
 
    function Load_VR_Stereo_Config
      (Device : RayLib.VR_Device_Info) return RayLib.VR_Stereo_Config;
@@ -3304,17 +3236,11 @@ package RayLib is
       P3  : RayLib.Vector3; P4 : RayLib.Vector3) return RayLib.Ray_Collision;
    --  Get collision info between ray and quad
 
-   procedure Init_Audio_Device with
-      Import,
-      Convention    => C,
-      External_Name => "InitAudioDevice";
-      --  Initialize audio device and context
+   procedure Init_Audio_Device;
+   --  Initialize audio device and context
 
-   procedure Close_Audio_Device with
-      Import,
-      Convention    => C,
-      External_Name => "CloseAudioDevice";
-      --  Close the audio device and context
+   procedure Close_Audio_Device;
+   --  Close the audio device and context
 
    function Is_Audio_Device_Ready return Boolean;
    --  Check if audio device has been initialized successfully
@@ -3365,11 +3291,8 @@ package RayLib is
    procedure Play_Sound_Multi (Sound : RayLib.Sound'Class);
    --  Play a sound (using multichannel buffer pool)
 
-   procedure Stop_Sound_Multi with
-      Import,
-      Convention    => C,
-      External_Name => "StopSoundMulti";
-      --  Stop any sound playing (using multichannel buffer pool)
+   procedure Stop_Sound_Multi;
+   --  Stop any sound playing (using multichannel buffer pool)
 
    function Get_Sounds_Playing return Natural;
    --  Get number of sounds playing in the multichannel
@@ -3705,4 +3628,7 @@ private
 
    overriding procedure Adjust (Self : in out Music);
    overriding procedure Finalize (Self : in out Music);
+
+   function To_C_Color (Color : RayLib.Color) return raylib_h.Color with
+      Inline;
 end RayLib;
