@@ -533,14 +533,9 @@ package body RayLib is
    function Get_Current_Monitor return Monitor_Id is
      (Monitor_Id (raylib_h.GetCurrentMonitor));
 
-   function Get_Monitor_Position (Monitor : Monitor_Id) return RayLib.Vector2
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Monitor_Position unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Monitor_Position";
-   end Get_Monitor_Position;
+   function Get_Monitor_Position
+     (Monitor : Monitor_Id) return RayLib.Vector2
+     (+raylib_h.GetMonitorPosition (int (monitor)));
 
    function Get_Monitor_Width (Monitor : Monitor_Id) return Natural is
      (Natural (raylib_h.GetMonitorWidth (int (Monitor))));
@@ -559,56 +554,32 @@ package body RayLib is
      (Natural (raylib_h.GetMonitorRefreshRate (int (Monitor))));
 
    function Get_Window_Position return RayLib.Vector2 is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Window_Position unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Window_Position";
-   end Get_Window_Position;
+     (+raylib_h.GetWindowPosition);
 
    function Get_Window_Scale_DPI return RayLib.Vector2 is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Window_Scale_DPI unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Window_Scale_DPI";
-   end Get_Window_Scale_DPI;
+     (+raylib_h.GetWindowScaleDPI);
 
    function Get_Monitor_Name (Monitor : Monitor_Id) return String is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Monitor_Name unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Monitor_Name";
-   end Get_Monitor_Name;
+     (Value (raylib_h.GetMonitorName (int (Monitor))));
 
    procedure Set_Clipboard_Text (Text : String) is
+      Text_Copy : chars_ptr := New_String (Text);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Clipboard_Text unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Clipboard_Text";
+      raylib_h.SetClipboardText (Text_Copy);
+      Free (Text_Copy);
    end Set_Clipboard_Text;
 
    function Get_Clipboard_Text return String is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Clipboard_Text unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Clipboard_Text";
-   end Get_Clipboard_Text;
+     (Value (raylib_h.GetClipboardText));
 
    procedure Swap_Screen_Buffer is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Swap_Screen_Buffer unimplemented");
-      raise Program_Error with "Unimplemented procedure Swap_Screen_Buffer";
+      raylib_h.SwapScreenBuffer;
    end Swap_Screen_Buffer;
 
    procedure Poll_Input_Events is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Poll_Input_Events unimplemented");
-      raise Program_Error with "Unimplemented procedure Poll_Input_Events";
+      raylib_h.PollInputEvents;
    end Poll_Input_Events;
 
    procedure Wait_Time (Ms : Float) is
@@ -627,12 +598,7 @@ package body RayLib is
    end Hide_Cursor;
 
    function Is_Cursor_Hidden return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Cursor_Hidden unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Is_Cursor_Hidden";
-   end Is_Cursor_Hidden;
+     (Boolean (raylib_h.IsCursorHidden));
 
    procedure Enable_Cursor is
    begin
@@ -645,16 +611,11 @@ package body RayLib is
    end Disable_Cursor;
 
    function Is_Cursor_On_Screen return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Cursor_On_Screen unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Is_Cursor_On_Screen";
-   end Is_Cursor_On_Screen;
+     (Boolean (raylib_h.IsCursorOnScreen));
 
    procedure Clear_Background (Color : RayLib.Color) is
    begin
-      raylib_h.ClearBackground (To_C_Color (Color));
+      raylib_h.ClearBackground (+Color);
    end Clear_Background;
 
    procedure Begin_Drawing is
@@ -676,8 +637,7 @@ package body RayLib is
 
    procedure End_Mode2D is
    begin
-      pragma Compile_Time_Warning (Standard.True, "End_Mode2D unimplemented");
-      raise Program_Error with "Unimplemented procedure End_Mode2D";
+      raylib_h.EndMode2D;
    end End_Mode2D;
 
    procedure Begin_Mode3D (Camera : RayLib.Camera3D) is
@@ -689,8 +649,7 @@ package body RayLib is
 
    procedure End_Mode3D is
    begin
-      pragma Compile_Time_Warning (Standard.True, "End_Mode3D unimplemented");
-      raise Program_Error with "Unimplemented procedure End_Mode3D";
+      raylib_h.EndMode3D;
    end End_Mode3D;
 
    procedure Begin_Texture_Mode (Target : RayLib.Render_Texture2D) is
@@ -702,9 +661,7 @@ package body RayLib is
 
    procedure End_Texture_Mode is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "End_Texture_Mode unimplemented");
-      raise Program_Error with "Unimplemented procedure End_Texture_Mode";
+      raylib_h.EndTextureMode;
    end End_Texture_Mode;
 
    procedure Begin_Shader_Mode (Shader : RayLib.Shader) is
@@ -716,9 +673,7 @@ package body RayLib is
 
    procedure End_Shader_Mode is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "End_Shader_Mode unimplemented");
-      raise Program_Error with "Unimplemented procedure End_Shader_Mode";
+      raylib_h.EndShaderMode;
    end End_Shader_Mode;
 
    procedure Begin_Blend_Mode (Mode : Blend_Mode) is
@@ -730,9 +685,7 @@ package body RayLib is
 
    procedure End_Blend_Mode is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "End_Blend_Mode unimplemented");
-      raise Program_Error with "Unimplemented procedure End_Blend_Mode";
+      raylib_h.EndBlendMode;
    end End_Blend_Mode;
 
    procedure Begin_Scissor_Mode (X, Y, Width, Height : Natural) is
@@ -744,9 +697,7 @@ package body RayLib is
 
    procedure End_Scissor_Mode is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "End_Scissor_Mode unimplemented");
-      raise Program_Error with "Unimplemented procedure End_Scissor_Mode";
+      raylib_h.EndScissorMode;
    end End_Scissor_Mode;
 
    procedure Begin_VR_Stereo_Mode (Config : RayLib.VR_Stereo_Config) is
@@ -758,9 +709,7 @@ package body RayLib is
 
    procedure End_VR_Stereo_Mode is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "End_VR_Stereo_Mode unimplemented");
-      raise Program_Error with "Unimplemented procedure End_VR_Stereo_Mode";
+      raylib_h.EndVrStereoMode;
    end End_VR_Stereo_Mode;
 
    function Load_VR_Stereo_Config
@@ -1759,8 +1708,7 @@ package body RayLib is
    is
    begin
       raylib_h.DrawRectangle
-        (int (Pos_X), int (Pos_Y), int (Width), int (Height),
-         To_C_Color (Color));
+        (int (Pos_X), int (Pos_Y), int (Width), int (Height), +Color);
    end Draw_Rectangle;
 
    procedure Draw_Rectangle
@@ -2971,8 +2919,7 @@ package body RayLib is
       Text_Copy : chars_ptr := New_String (Text);
    begin
       raylib_h.DrawText
-        (Text_Copy, int (Pos_X), int (Pos_Y), int (Font_Size),
-         To_C_Color (Color));
+        (Text_Copy, int (Pos_X), int (Pos_Y), int (Font_Size), +Color);
       Free (Text_Copy);
    end Draw_Text;
 
@@ -4450,7 +4397,14 @@ package body RayLib is
       raise Program_Error with "Unimplemented procedure Finalize";
    end Finalize;
 
-   function To_C_Color (Color : RayLib.Color) return raylib_h.Color is
-     (r => unsigned_char (Color.R), g => unsigned_char (Color.G),
-      b => unsigned_char (Color.B), a => unsigned_char (Color.A));
+   function "+" (v : RayLib.Color) return raylib_h.Color is
+     (r => unsigned_char (v.R), g => unsigned_char (v.G),
+      b => unsigned_char (v.B), a => unsigned_char (v.A));
+   function "+" (v : raylib_h.Color) return RayLib.Color is
+     (R => Color_Component (v.r), G => Color_Component (v.g),
+      B => Color_Component (v.b), A => Color_Component (v.a));
+   function "+" (V : RayLib.Vector2) return raylib_h.Vector2 is
+     (x => V.X, y => V.Y);
+   function "+"
+     (V : raylib_h.Vector2) return RayLib.Vector2 (x => V.X, y => V.Y);
 end RayLib;

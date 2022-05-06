@@ -3629,6 +3629,12 @@ private
    overriding procedure Adjust (Self : in out Music);
    overriding procedure Finalize (Self : in out Music);
 
-   function To_C_Color (Color : RayLib.Color) return raylib_h.Color with
+   function "+" (V : RayLib.Color) return raylib_h.Color with
+      Inline;
+   function "+" (V : raylib_h.Color) return RayLib.Color with
+      Inline;
+   function "+" (V : RayLib.Vector2) return raylib_h.Vector2 with
+      Inline;
+   function "+" (V : raylib_h.Vector2) return RayLib.Vector2 with
       Inline;
 end RayLib;
