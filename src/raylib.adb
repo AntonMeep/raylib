@@ -534,8 +534,8 @@ package body RayLib is
      (Monitor_Id (raylib_h.GetCurrentMonitor));
 
    function Get_Monitor_Position
-     (Monitor : Monitor_Id) return RayLib.Vector2
-     (+raylib_h.GetMonitorPosition (int (monitor)));
+     (Monitor : Monitor_Id) return RayLib.Vector2 is
+     (+raylib_h.GetMonitorPosition (int (Monitor)));
 
    function Get_Monitor_Width (Monitor : Monitor_Id) return Natural is
      (Natural (raylib_h.GetMonitorWidth (int (Monitor))));
@@ -630,9 +630,7 @@ package body RayLib is
 
    procedure Begin_Mode2D (Camera : RayLib.Camera2D) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Begin_Mode2D unimplemented");
-      raise Program_Error with "Unimplemented procedure Begin_Mode2D";
+      raylib_h.BeginMode2D (+Camera);
    end Begin_Mode2D;
 
    procedure End_Mode2D is
@@ -642,9 +640,7 @@ package body RayLib is
 
    procedure Begin_Mode3D (Camera : RayLib.Camera3D) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Begin_Mode3D unimplemented");
-      raise Program_Error with "Unimplemented procedure Begin_Mode3D";
+      raylib_h.BeginMode3D (+Camera);
    end Begin_Mode3D;
 
    procedure End_Mode3D is
@@ -678,9 +674,7 @@ package body RayLib is
 
    procedure Begin_Blend_Mode (Mode : Blend_Mode) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Begin_Blend_Mode unimplemented");
-      raise Program_Error with "Unimplemented procedure Begin_Blend_Mode";
+      raylib_h.BeginBlendMode (int (Mode));
    end Begin_Blend_Mode;
 
    procedure End_Blend_Mode is
@@ -690,9 +684,7 @@ package body RayLib is
 
    procedure Begin_Scissor_Mode (X, Y, Width, Height : Natural) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Begin_Scissor_Mode unimplemented");
-      raise Program_Error with "Unimplemented procedure Begin_Scissor_Mode";
+      raylib_h.BeginScissorMode (int (X), int (Y), int (Width), int (Height));
    end Begin_Scissor_Mode;
 
    procedure End_Scissor_Mode is
@@ -814,118 +806,62 @@ package body RayLib is
    end Get_Mouse_Ray;
 
    function Get_Camera_Matrix (Camera : RayLib.Camera) return RayLib.Matrix is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Camera_Matrix unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Camera_Matrix";
-   end Get_Camera_Matrix;
+     (+raylib_h.GetCameraMatrix (+Camera));
 
-   function Get_Camera_Matrix2D (Camera : RayLib.Camera2D) return RayLib.Matrix
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Camera_Matrix2D unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Camera_Matrix2D";
-   end Get_Camera_Matrix2D;
+   function Get_Camera_Matrix2D
+     (Camera : RayLib.Camera2D) return RayLib.Matrix is
+     (+raylib_h.GetCameraMatrix2D (+Camera));
 
    function Get_World_To_Screen
-     (Position : RayLib.Vector3; Camera : RayLib.Camera) return RayLib.Vector2
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_World_To_Screen unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_World_To_Screen";
-   end Get_World_To_Screen;
+     (Position : RayLib.Vector3; Camera : RayLib.Camera)
+      return RayLib.Vector2 is
+     (+raylib_h.GetWorldToScreen (+Position, +Camera));
 
    function Get_World_To_Screen
      (Position : RayLib.Vector3; Camera : RayLib.Camera; Width : Natural;
-      Height   : Natural) return RayLib.Vector2
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_World_To_Screen unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_World_To_Screen";
-   end Get_World_To_Screen;
+      Height   : Natural) return RayLib.Vector2 is
+     (+raylib_h.GetWorldToScreenEx
+        (+Position, +Camera, int (Width), int (Height)));
 
    function Get_World_To_Screen2D
      (Position : RayLib.Vector2; Camera : RayLib.Camera2D)
-      return RayLib.Vector2
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_World_To_Screen2D unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_World_To_Screen2D";
-   end Get_World_To_Screen2D;
+      return RayLib.Vector2 is
+     (+raylib_h.GetWorldToScreen2D (+Position, +Camera));
 
    function Get_Screen_To_World2D
      (Position : RayLib.Vector2; Camera : RayLib.Camera2D)
-      return RayLib.Vector2
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Screen_To_World2D unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Screen_To_World2D";
-   end Get_Screen_To_World2D;
+      return RayLib.Vector2 is
+     (+raylib_h.GetScreenToWorld2D (+Position, +Camera));
 
    procedure Set_Target_FPS (Fps : Natural) is
    begin
       raylib_h.SetTargetFPS (int (Fps));
    end Set_Target_FPS;
 
-   function Get_FPS return Natural is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Get_FPS unimplemented");
-      return raise Program_Error with "Unimplemented function Get_FPS";
-   end Get_FPS;
+   function Get_FPS return Natural is (Natural (raylib_h.GetFPS));
 
-   function Get_Frame_Time return Float is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Frame_Time unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Frame_Time";
-   end Get_Frame_Time;
+   function Get_Frame_Time return Float is (raylib_h.GetFrameTime);
 
-   function Get_Time return Long_Float is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Get_Time unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Time";
-   end Get_Time;
+   function Get_Time return Long_Float is (Long_Float (raylib_h.GetTime));
 
    function Get_Random_Value (Min : Integer; Max : Integer) return Integer is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Random_Value unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Random_Value";
-   end Get_Random_Value;
+     (Integer (raylib_h.GetRandomValue (int (Min), int (Max))));
 
    procedure Set_Random_Seed (Seed : Natural) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Random_Seed unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Random_Seed";
+      raylib_h.SetRandomSeed (unsigned (Seed));
    end Set_Random_Seed;
 
    procedure Take_Screenshot (File_Name : String) is
+      File_Name_Copy : chars_ptr := New_String (File_Name);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Take_Screenshot unimplemented");
-      raise Program_Error with "Unimplemented procedure Take_Screenshot";
+      raylib_h.TakeScreenshot (File_Name_Copy);
+      Free (File_Name_Copy);
    end Take_Screenshot;
 
    procedure Set_Config_Flags (Flags : Config_Flag) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Config_Flags unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Config_Flags";
+      raylib_h.SetConfigFlags (unsigned (Flags));
    end Set_Config_Flags;
 
    procedure Trace_Log (Log_Level : Trace_Log_Level; Text : String) is
@@ -936,9 +872,7 @@ package body RayLib is
 
    procedure Set_Trace_Log_Level (Log_Level : Trace_Log_Level) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Trace_Log_Level unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Trace_Log_Level";
+      raylib_h.SetTraceLogLevel (int (Log_Level));
    end Set_Trace_Log_Level;
 
    procedure Set_Trace_Log_Callback (Callback : RayLib.Trace_Log_Callback) is
@@ -4397,14 +4331,46 @@ package body RayLib is
       raise Program_Error with "Unimplemented procedure Finalize";
    end Finalize;
 
+   function "+" (V : RayLib.Vector2) return raylib_h.Vector2 is
+     (x => V.X, y => V.Y);
+   function "+" (V : raylib_h.Vector2) return RayLib.Vector2 is
+     (X => V.x, Y => V.y);
+   function "+" (V : RayLib.Vector3) return raylib_h.Vector3 is
+     (x => V.X, y => V.Y, z => V.Z);
+   function "+" (V : raylib_h.Vector3) return RayLib.Vector3 is
+     (X => V.x, Y => V.y, Z => V.z);
+   function "+" (V : RayLib.Vector4) return raylib_h.Vector4 is
+     (x => V.X, y => V.Y, z => V.Z, w => V.W);
+   function "+" (V : raylib_h.Vector4) return RayLib.Vector4 is
+     (X => V.x, Y => V.y, Z => V.z, W => V.w);
+   function "+" (V : RayLib.Matrix) return raylib_h.Matrix is
+     (m0  => V.M0, m1 => V.M1, m2 => V.M2, m3 => V.M3, m4 => V.M4, m5 => V.M5,
+      m6  => V.M6, m7 => V.M7, m8 => V.M8, m9 => V.M9, m10 => V.M10,
+      m11 => V.M11, m12 => V.M12, m13 => V.M13, m14 => V.M14, m15 => V.M15);
+   function "+" (V : raylib_h.Matrix) return RayLib.Matrix is
+     (M0  => V.m0, M1 => V.m1, M2 => V.m2, M3 => V.m3, M4 => V.m4, M5 => V.m5,
+      M6  => V.m6, M7 => V.m7, M8 => V.m8, M9 => V.m9, M10 => V.m10,
+      M11 => V.m11, M12 => V.m12, M13 => V.m13, M14 => V.m14, M15 => V.m15);
    function "+" (v : RayLib.Color) return raylib_h.Color is
      (r => unsigned_char (v.R), g => unsigned_char (v.G),
       b => unsigned_char (v.B), a => unsigned_char (v.A));
    function "+" (v : raylib_h.Color) return RayLib.Color is
      (R => Color_Component (v.r), G => Color_Component (v.g),
       B => Color_Component (v.b), A => Color_Component (v.a));
-   function "+" (V : RayLib.Vector2) return raylib_h.Vector2 is
-     (x => V.X, y => V.Y);
-   function "+"
-     (V : raylib_h.Vector2) return RayLib.Vector2 (x => V.X, y => V.Y);
+   function "+" (V : RayLib.Rectangle) return raylib_h.Rectangle is
+     (x => V.X, y => V.Y, width => V.Width, height => V.Height);
+   function "+" (V : raylib_h.Rectangle) return RayLib.Rectangle is
+     (X => V.x, Y => V.y, Width => V.width, Height => V.height);
+   function "+" (V : RayLib.Camera3D) return raylib_h.Camera3D is
+     (position => +V.Position, target => +V.Position, up => +V.Up,
+      fovy     => V.Fov_Y, projection => int (V.Projection));
+   function "+" (V : raylib_h.Camera3D) return RayLib.Camera3D is
+     (Position => +V.position, Target => +V.position, Up => +V.up,
+      Fov_Y    => V.fovy, Projection => Camera_Projection (V.projection));
+   function "+" (V : RayLib.Camera2D) return raylib_h.Camera2D is
+     (offset => +V.Offset, target => +V.Target, rotation => V.Rotation,
+      zoom   => +V.Zoom);
+   function "+" (V : raylib_h.Camera2D) return RayLib.Camera2D is
+     (Offset => +V.offset, Target => +V.target, Rotation => V.rotation,
+      Zoom   => +V.zoom);
 end RayLib;

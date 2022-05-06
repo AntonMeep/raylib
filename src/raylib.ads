@@ -1244,7 +1244,7 @@ package RayLib is
       --  Camera target it looks-at
       Up : RayLib.Vector3;
       --  Camera up vector (rotation over its axis)
-      Fovy : Float;
+      Fov_Y : Float;
       --  Camera field-of-view apperture in Y (degrees) in perspective,
       --  used as near plane width in orthographic
       Projection : Camera_Projection;
@@ -3629,12 +3629,36 @@ private
    overriding procedure Adjust (Self : in out Music);
    overriding procedure Finalize (Self : in out Music);
 
+   function "+" (V : RayLib.Vector2) return raylib_h.Vector2 with
+      Inline;
+   function "+" (V : raylib_h.Vector2) return RayLib.Vector2 with
+      Inline;
+   function "+" (V : RayLib.Vector3) return raylib_h.Vector3 with
+      Inline;
+   function "+" (V : raylib_h.Vector3) return RayLib.Vector3 with
+      Inline;
+   function "+" (V : RayLib.Vector4) return raylib_h.Vector4 with
+      Inline;
+   function "+" (V : raylib_h.Vector4) return RayLib.Vector4 with
+      Inline;
+   function "+" (V : RayLib.Matrix) return raylib_h.Matrix with
+      Inline;
+   function "+" (V : raylib_h.Matrix) return RayLib.Matrix with
+      Inline;
    function "+" (V : RayLib.Color) return raylib_h.Color with
       Inline;
    function "+" (V : raylib_h.Color) return RayLib.Color with
       Inline;
-   function "+" (V : RayLib.Vector2) return raylib_h.Vector2 with
+   function "+" (V : RayLib.Rectangle) return raylib_h.Rectangle with
       Inline;
-   function "+" (V : raylib_h.Vector2) return RayLib.Vector2 with
+   function "+" (V : raylib_h.Rectangle) return RayLib.Rectangle with
+      Inline;
+   function "+" (V : RayLib.Camera3D) return raylib_h.Camera3D with
+      Inline;
+   function "+" (V : raylib_h.Camera3D) return RayLib.Camera3D with
+      Inline;
+   function "+" (V : RayLib.Camera2D) return raylib_h.Camera2D with
+      Inline;
+   function "+" (V : raylib_h.Camera2D) return RayLib.Camera2D with
       Inline;
 end RayLib;
