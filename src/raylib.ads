@@ -2684,7 +2684,7 @@ package RayLib is
    --  Draw rectangle within an image
 
    procedure Image_Draw_Rectangle_Lines
-     (Dst : in out RayLib.Imag'Classe; Rec : RayLib.Rectangle; Thick : Natural;
+     (Dst : in out RayLib.Image'Class; Rec : RayLib.Rectangle; Thick : Natural;
       Color :        RayLib.Color);
    --  Draw rectangle lines within an image
 
@@ -2844,8 +2844,8 @@ package RayLib is
    function Load_Font
      (File_Name   : String; Font_Size : Natural; Font_Chars : Wide_Wide_String;
       Glyph_Count : Natural) return RayLib.Font'Class;
-   -- Load font from file with extended parameters, use NULL for fontChars
-   -- and 0 for glyphCount to load the default character set
+   --  Load font from file with extended parameters, use NULL for fontChars
+   --  and 0 for glyphCount to load the default character set
 
    function Load_Font_From_Image
      (Image      : RayLib.Image'Class; Key : RayLib.Color;
@@ -2977,7 +2977,7 @@ package RayLib is
 
    function Text_Split
      (Text : String; Delimiter : Character) return Unbounded_String_Array;
-   -- Split text into multiple strings
+   --  Split text into multiple strings
 
    procedure Text_Append
      (Text : Unbounded_String; Append : String; Position : out Positive);
