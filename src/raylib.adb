@@ -1260,44 +1260,24 @@ package body RayLib is
    end Open_URL;
 
    function Is_Key_Pressed (Key : Keyboard_Key) return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Key_Pressed unimplemented");
-      return raise Program_Error with "Unimplemented function Is_Key_Pressed";
-   end Is_Key_Pressed;
+     (Boolean (raylib_h.IsKeyPressed (int (Key))));
 
    function Is_Key_Down (Key : Keyboard_Key) return Boolean is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Is_Key_Down unimplemented");
-      return raise Program_Error with "Unimplemented function Is_Key_Down";
-   end Is_Key_Down;
+     (Boolean (raylib_h.IsKeyDown (int (Key))));
 
    function Is_Key_Released (Key : Keyboard_Key) return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Key_Released unimplemented");
-      return raise Program_Error with "Unimplemented function Is_Key_Released";
-   end Is_Key_Released;
+     (Boolean (raylib_h.IsKeyReleased (int (Key))));
 
    function Is_Key_Up (Key : Keyboard_Key) return Boolean is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Is_Key_Up unimplemented");
-      return raise Program_Error with "Unimplemented function Is_Key_Up";
-   end Is_Key_Up;
+     (Boolean (raylib_h.IsKeyUp (int (Key))));
 
    procedure Set_Exit_Key (Key : Keyboard_Key) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Exit_Key unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Exit_Key";
+      raylib_h.SetExitKey (int (Key));
    end Set_Exit_Key;
 
    function Get_Key_Pressed return Keyboard_Key is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Key_Pressed unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Key_Pressed";
-   end Get_Key_Pressed;
+     (Keyboard_Key (raylib_h.GetKeyPressed));
 
    function Get_Char_Pressed return Character is
    begin
@@ -1308,12 +1288,7 @@ package body RayLib is
    end Get_Char_Pressed;
 
    function Is_Gamepad_Available (Gamepad : Gamepad_Id) return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Gamepad_Available unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Is_Gamepad_Available";
-   end Is_Gamepad_Available;
+     (Boolean (raylib_h.IsGamepadAvailable (int (Gamepad))));
 
    function Get_Gamepad_Name (Gamepad : Gamepad_Id) return String is
    begin
@@ -1324,56 +1299,24 @@ package body RayLib is
    end Get_Gamepad_Name;
 
    function Is_Gamepad_Button_Pressed
-     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Gamepad_Button_Pressed unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Is_Gamepad_Button_Pressed";
-   end Is_Gamepad_Button_Pressed;
+     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean is
+     (Boolean (raylib_h.IsGamepadButtonPressed (int (Gamepad), int (Button))));
 
    function Is_Gamepad_Button_Down
-     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Gamepad_Button_Down unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Is_Gamepad_Button_Down";
-   end Is_Gamepad_Button_Down;
+     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean is
+     (Boolean (raylib_h.IsGamepadButtonDown (int (Gamepad), int (Button))));
 
    function Is_Gamepad_Button_Released
-     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Gamepad_Button_Released unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Is_Gamepad_Button_Released";
-   end Is_Gamepad_Button_Released;
+     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean is
+     (Boolean
+        (raylib_h.IsGamepadButtonReleased (int (Gamepad), int (Button))));
 
    function Is_Gamepad_Button_Up
-     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Gamepad_Button_Up unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Is_Gamepad_Button_Up";
-   end Is_Gamepad_Button_Up;
+     (Gamepad : Gamepad_Id; Button : Gamepad_Button) return Boolean is
+     (Boolean (raylib_h.IsGamepadButtonUp (int (Gamepad), int (Button))));
 
    function Get_Gamepad_Button_Pressed return Gamepad_Button is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Gamepad_Button_Pressed unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Gamepad_Button_Pressed";
-   end Get_Gamepad_Button_Pressed;
+     (Gamepad_Button (raylib_h.GetGamepadButtonPressed));
 
    function Get_Gamepad_Axis_Count (Gamepad : Gamepad_Id) return Integer is
    begin
@@ -1404,38 +1347,16 @@ package body RayLib is
    end Set_Gamepad_Mappings;
 
    function Is_Mouse_Button_Pressed (Button : Mouse_Button) return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Mouse_Button_Pressed unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Is_Mouse_Button_Pressed";
-   end Is_Mouse_Button_Pressed;
+     (Boolean (raylib_h.IsMouseButtonPressed (int (Button))));
 
    function Is_Mouse_Button_Down (Button : Mouse_Button) return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Mouse_Button_Down unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Is_Mouse_Button_Down";
-   end Is_Mouse_Button_Down;
+     (Boolean (raylib_h.IsMouseButtonDown (int (Button))));
 
    function Is_Mouse_Button_Released (Button : Mouse_Button) return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Mouse_Button_Released unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Is_Mouse_Button_Released";
-   end Is_Mouse_Button_Released;
+     (Boolean (raylib_h.IsMouseButtonReleased (int (Button))));
 
    function Is_Mouse_Button_Up (Button : Mouse_Button) return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Mouse_Button_Up unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Is_Mouse_Button_Up";
-   end Is_Mouse_Button_Up;
+     (Boolean (raylib_h.IsMouseButtonUp (int (Button))));
 
    function Get_Mouse_X return Natural is
    begin
@@ -1500,17 +1421,9 @@ package body RayLib is
       raise Program_Error with "Unimplemented procedure Set_Mouse_Cursor";
    end Set_Mouse_Cursor;
 
-   function Get_Touch_X return Natural is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Get_Touch_X unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Touch_X";
-   end Get_Touch_X;
+   function Get_Touch_X return Natural is (Natural (raylib_h.GetTouchX));
 
-   function Get_Touch_Y return Natural is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Get_Touch_Y unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Touch_Y";
-   end Get_Touch_Y;
+   function Get_Touch_Y return Natural is (Natural (raylib_h.GetTouchX));
 
    function Get_Touch_Position (Index : Natural) return RayLib.Vector2 is
    begin
@@ -1545,12 +1458,7 @@ package body RayLib is
    end Set_Gestures_Enabled;
 
    function Is_Gesture_Detected (Gesture : RayLib.Gesture) return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Gesture_Detected unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Is_Gesture_Detected";
-   end Is_Gesture_Detected;
+     (Boolean (raylib_h.IsGestureDetected (int (Gesture))));
 
    function Get_Gesture_Detected return RayLib.Gesture is
    begin
@@ -1850,9 +1758,9 @@ package body RayLib is
       Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Rectangle unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Rectangle";
+      raylib_h.DrawRectangle
+        (int (Pos_X), int (Pos_Y), int (Width), int (Height),
+         To_C_Color (Color));
    end Draw_Rectangle;
 
    procedure Draw_Rectangle
