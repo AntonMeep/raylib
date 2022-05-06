@@ -1,8 +1,8 @@
 with RayLib; use RayLib;
 
 procedure Core_Basic_Window is
-   Screen_Width  : Integer := 800;
-   Screen_Height : Integer := 450;
+   Screen_Width  : constant Integer := 800;
+   Screen_Height : constant Integer := 450;
 begin
    Init_Window
      (Screen_Width, Screen_Height, "raylib [core] example - basic window");
