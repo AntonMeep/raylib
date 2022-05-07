@@ -2994,9 +2994,8 @@ package body RayLib is
       Width   : Float; Height : Float; Length : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Cube_Texture unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Cube_Texture";
+      raylib_h.DrawCubeTexture
+        (Texture.Payload.all.Data, +Position, Width, Height, Length, +Color);
    end Draw_Cube_Texture;
 
    procedure Draw_Cube_Texture
@@ -3005,9 +3004,9 @@ package body RayLib is
       Color    : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Cube_Texture unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Cube_Texture";
+      raylib_h.DrawCubeTextureRec
+        (Texture.Payload.all.Data, +Source, +Position, Width, Height, Length,
+         +Color);
    end Draw_Cube_Texture;
 
    procedure Draw_Sphere
@@ -3090,14 +3089,13 @@ package body RayLib is
       raylib_h.DrawGrid (int (Slices), Spacing);
    end Draw_Grid;
 
-   function Load_Model (File_Name : String) return RayLib.Model'Class is
+   function Load_Model (File_Name : String) return RayLib.Model is
    begin
       pragma Compile_Time_Warning (Standard.True, "Load_Model unimplemented");
       return raise Program_Error with "Unimplemented function Load_Model";
    end Load_Model;
 
-   function Load_Model_From_Mesh
-     (Mesh : RayLib.Mesh'Class) return RayLib.Model'Class
+   function Load_Model_From_Mesh (Mesh : RayLib.Mesh'Class) return RayLib.Model
    is
    begin
       pragma Compile_Time_Warning
@@ -3107,23 +3105,15 @@ package body RayLib is
    end Load_Model_From_Mesh;
 
    function Get_Model_Bounding_Box
-     (Model : RayLib.Model'Class) return RayLib.Bounding_Box
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Model_Bounding_Box unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Model_Bounding_Box";
-   end Get_Model_Bounding_Box;
+     (Model : RayLib.Model'Class) return RayLib.Bounding_Box is
+     (+raylib_h.GetModelBoundingBox (Model.Payload.all.Data));
 
    procedure Draw_Model
      (Model : RayLib.Model'Class; Position : RayLib.Vector3; Scale : Float;
       Tint  : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Model unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Model";
+      raylib_h.DrawModel (Model.Payload.all.Data, +Position, Scale, +Tint);
    end Draw_Model;
 
    procedure Draw_Model
@@ -3132,8 +3122,9 @@ package body RayLib is
       Scale         : RayLib.Vector3; Tint : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Model unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Model";
+      raylib_h.DrawModelEx
+        (Model.Payload.all.Data, +Position, +Rotation_Axis, Rotation_Angle,
+         +Scale, +Tint);
    end Draw_Model;
 
    procedure Draw_Model_Wires
@@ -3141,9 +3132,8 @@ package body RayLib is
       Tint  : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Model_Wires unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Model_Wires";
+      raylib_h.DrawModelWires
+        (Model.Payload.all.Data, +Position, Scale, +Tint);
    end Draw_Model_Wires;
 
    procedure Draw_Model_Wires
@@ -3152,9 +3142,9 @@ package body RayLib is
       Scale         : RayLib.Vector3; Tint : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Model_Wires unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Model_Wires";
+      raylib_h.DrawModelWiresEx
+        (Model.Payload.all.Data, +Position, +Rotation_Axis, Rotation_Angle,
+         +Scale, +Tint);
    end Draw_Model_Wires;
 
    procedure Draw_Bounding_Box
@@ -3169,9 +3159,8 @@ package body RayLib is
       Position : RayLib.Vector3; Size : Float; Tint : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Billboard unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Billboard";
+      raylib_h.DrawBillboard
+        (+Camera, Texture.Payload.all.Data, +Position, Size, +Tint);
    end Draw_Billboard;
 
    procedure Draw_Billboard
@@ -3180,9 +3169,8 @@ package body RayLib is
       Size   : RayLib.Vector2; Tint : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Billboard unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Billboard";
+      raylib_h.DrawBillboardRec
+        (+Camera, Texture.Payload.all.Data, +Source, +Position, +Size, +Tint);
    end Draw_Billboard;
 
    procedure Draw_Billboard
@@ -3192,9 +3180,9 @@ package body RayLib is
       Rotation : Float; Tint : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Billboard unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Billboard";
+      raylib_h.DrawBillboardPro
+        (+Camera, Texture.Payload.all.Data, +Source, +Position, +Up, +Size,
+         +Origin, Rotation, +Tint);
    end Draw_Billboard;
 
    procedure Upload_Mesh (Mesh : in out RayLib.Mesh'Class; Dynamic : Boolean)

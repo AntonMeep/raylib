@@ -3029,11 +3029,11 @@ package RayLib is
    procedure Draw_Grid (Slices : Natural; Spacing : Float);
    --  Draw a grid (centered at (0, 0, 0))
 
-   function Load_Model (File_Name : String) return RayLib.Model'Class;
+   function Load_Model (File_Name : String) return RayLib.Model;
    --  Load model from files (meshes and materials)
 
    function Load_Model_From_Mesh
-     (Mesh : RayLib.Mesh'Class) return RayLib.Model'Class;
+     (Mesh : RayLib.Mesh'Class) return RayLib.Model;
    --  Load model from generated mesh (default material)
 
    function Get_Model_Bounding_Box
