@@ -1648,7 +1648,7 @@ package RayLib is
    procedure Set_Window_Title (Title : String);
    --  Set title for window (only PLATFORM_DESKTOP)
 
-   procedure Set_Window_Position (X : Natural; Y : Natural);
+   procedure Set_Window_Position (X : Integer; Y : Integer);
    --  Set window position on screen (only PLATFORM_DESKTOP)
 
    procedure Set_Window_Monitor (Monitor : Monitor_Id);
@@ -1774,7 +1774,7 @@ package RayLib is
    procedure End_Blend_Mode;
    --  End blending mode (reset to default: alpha blending)
 
-   procedure Begin_Scissor_Mode (X, Y, Width, Height : Natural);
+   procedure Begin_Scissor_Mode (X, Y : Integer; Width, Height : Natural);
    --  Begin scissor mode (define screen area for following drawing)
 
    procedure End_Scissor_Mode;
@@ -2063,10 +2063,10 @@ package RayLib is
    function Is_Mouse_Button_Up (Button : Mouse_Button) return Boolean;
    --  Check if a mouse button is NOT being pressed
 
-   function Get_Mouse_X return Natural;
+   function Get_Mouse_X return Integer;
    --  Get mouse position X
 
-   function Get_Mouse_Y return Natural;
+   function Get_Mouse_Y return Integer;
    --  Get mouse position Y
 
    function Get_Mouse_Position return RayLib.Vector2;
@@ -2075,7 +2075,7 @@ package RayLib is
    function Get_Mouse_Delta return RayLib.Vector2;
    --  Get mouse delta between frames
 
-   procedure Set_Mouse_Position (X : Natural; Y : Natural);
+   procedure Set_Mouse_Position (X : Integer; Y : Integer);
    --  Set mouse position XY
 
    procedure Set_Mouse_Offset (Offset_X : Integer; Offset_Y : Integer);
@@ -2090,10 +2090,10 @@ package RayLib is
    procedure Set_Mouse_Cursor (Cursor : Mouse_Cursor);
    --  Set mouse cursor
 
-   function Get_Touch_X return Natural;
+   function Get_Touch_X return Integer;
    --  Get touch position X for touch point 0 (relative to screen size)
 
-   function Get_Touch_Y return Natural;
+   function Get_Touch_Y return Integer;
    --  Get touch position Y for touch point 0 (relative to screen size)
 
    function Get_Touch_Position (Index : Natural) return RayLib.Vector2;
@@ -2155,15 +2155,15 @@ package RayLib is
    --  Set texture and rectangle to be used on shapes drawing
 
    procedure Draw_Pixel
-     (Pos_X : Natural; Pos_Y : Natural; Color : RayLib.Color);
+     (Pos_X : Integer; Pos_Y : Integer; Color : RayLib.Color);
    --  Draw a pixel
 
    procedure Draw_Pixel (Position : RayLib.Vector2; Color : RayLib.Color);
    --  Draw a pixel (Vector version)
 
    procedure Draw_Line
-     (Start_Pos_X : Natural; Start_Pos_Y : Natural; End_Pos_X : Natural;
-      End_Pos_Y   : Natural; Color : RayLib.Color);
+     (Start_Pos_X : Integer; Start_Pos_Y : Integer; End_Pos_X : Integer;
+      End_Pos_Y   : Integer; Color : RayLib.Color);
    --  Draw a line
 
    procedure Draw_Line
@@ -2197,7 +2197,7 @@ package RayLib is
    --  Draw lines sequence
 
    procedure Draw_Circle
-     (Center_X : Natural; Center_Y : Natural; Radius : Float;
+     (Center_X : Integer; Center_Y : Integer; Radius : Float;
       Color    : RayLib.Color);
    --  Draw a color-filled circle
 
@@ -2212,7 +2212,7 @@ package RayLib is
    --  Draw circle sector outline
 
    procedure Draw_Circle_Gradient
-     (Center_X : Natural; Center_Y : Natural; Radius : Float;
+     (Center_X : Integer; Center_Y : Integer; Radius : Float;
       Color1   : RayLib.Color; Color2 : RayLib.Color);
    --  Draw a gradient-filled circle
 
@@ -2221,17 +2221,17 @@ package RayLib is
    --  Draw a color-filled circle (Vector version)
 
    procedure Draw_Circle_Lines
-     (Center_X : Natural; Center_Y : Natural; Radius : Float;
+     (Center_X : Integer; Center_Y : Integer; Radius : Float;
       Color    : RayLib.Color);
    --  Draw circle outline
 
    procedure Draw_Ellipse
-     (Center_X : Natural; Center_Y : Natural; Radius_H : Float;
+     (Center_X : Integer; Center_Y : Integer; Radius_H : Float;
       Radius_V : Float; Color : RayLib.Color);
    --  Draw ellipse
 
    procedure Draw_Ellipse_Lines
-     (Center_X : Natural; Center_Y : Natural; Radius_H : Float;
+     (Center_X : Integer; Center_Y : Integer; Radius_H : Float;
       Radius_V : Float; Color : RayLib.Color);
    --  Draw ellipse outline
 
@@ -2248,7 +2248,7 @@ package RayLib is
    --  Draw ring outline
 
    procedure Draw_Rectangle
-     (Pos_X : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
+     (Pos_X : Integer; Pos_Y : Integer; Width : Natural; Height : Natural;
       Color : RayLib.Color);
    --  Draw a color-filled rectangle
 
@@ -2265,12 +2265,12 @@ package RayLib is
    --  Draw a color-filled rectangle with pro parameters
 
    procedure Draw_Rectangle_Gradient_Vertical
-     (Pos_X  : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
+     (Pos_X  : Integer; Pos_Y : Integer; Width : Natural; Height : Natural;
       Color1 : RayLib.Color; Color2 : RayLib.Color);
    --  Draw a vertical-gradient-filled rectangle
 
    procedure Draw_Rectangle_Gradient_Horizontal
-     (Pos_X  : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
+     (Pos_X  : Integer; Pos_Y : Integer; Width : Natural; Height : Natural;
       Color1 : RayLib.Color; Color2 : RayLib.Color);
    --  Draw a horizontal-gradient-filled rectangle
 
@@ -2280,7 +2280,7 @@ package RayLib is
    --  Draw a gradient-filled rectangle with custom vertex colors
 
    procedure Draw_Rectangle_Lines
-     (Pos_X : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
+     (Pos_X : Integer; Pos_Y : Integer; Width : Natural; Height : Natural;
       Color : RayLib.Color);
    --  Draw rectangle outline
 
@@ -2502,7 +2502,7 @@ package RayLib is
 
    procedure Image_Resize_Canvas
      (Image      : in out RayLib.Image'Class; New_Width : Natural;
-      New_Height :        Natural; Offset_X : Natural; Offset_Y : Natural;
+      New_Height :        Natural; Offset_X : Integer; Offset_Y : Integer;
       Fill       :        RayLib.Color);
    --  Resize canvas and fill with color
 
@@ -2572,7 +2572,7 @@ package RayLib is
    --  Clear image background with given color
 
    procedure Image_Draw_Pixel
-     (Dst   : in out RayLib.Image'Class; Pos_X : Natural; Pos_Y : Natural;
+     (Dst   : in out RayLib.Image'Class; Pos_X : Integer; Pos_Y : Integer;
       Color :        RayLib.Color);
    --  Draw pixel within an image
 
@@ -2582,8 +2582,8 @@ package RayLib is
    --  Draw pixel within an image (Vector version)
 
    procedure Image_Draw_Line
-     (Dst         : in out RayLib.Image'Class; Start_Pos_X : Natural;
-      Start_Pos_Y :        Natural; End_Pos_X : Natural; End_Pos_Y : Natural;
+     (Dst         : in out RayLib.Image'Class; Start_Pos_X : Integer;
+      Start_Pos_Y :        Integer; End_Pos_X : Integer; End_Pos_Y : Integer;
       Color       :        RayLib.Color);
    --  Draw line within an image
 
@@ -2593,7 +2593,7 @@ package RayLib is
    --  Draw line within an image (Vector version)
 
    procedure Image_Draw_Circle
-     (Dst : in out RayLib.Image'Class; Center_X : Natural; Center_Y : Natural;
+     (Dst : in out RayLib.Image'Class; Center_X : Integer; Center_Y : Integer;
       Radius :        Natural; Color : RayLib.Color);
    --  Draw circle within an image
 
@@ -2603,7 +2603,7 @@ package RayLib is
    --  Draw circle within an image (Vector version)
 
    procedure Image_Draw_Rectangle
-     (Dst   : in out RayLib.Image'Class; Pos_X : Natural; Pos_Y : Natural;
+     (Dst   : in out RayLib.Image'Class; Pos_X : Integer; Pos_Y : Integer;
       Width :        Natural; Height : Natural; Color : RayLib.Color);
    --  Draw rectangle within an image
 
@@ -2629,8 +2629,8 @@ package RayLib is
    --  Draw a source image within a destination image (tint applied to source)
 
    procedure Image_Draw_Text
-     (Dst   : in out RayLib.Image'Class; Text : String; Pos_X : Natural;
-      Pos_Y :        Natural; Font_Size : Natural; Color : RayLib.Color);
+     (Dst   : in out RayLib.Image'Class; Text : String; Pos_X : Integer;
+      Pos_Y :        Integer; Font_Size : Natural; Color : RayLib.Color);
    --  Draw text (using default font) within an image (destination)
 
    procedure Image_Draw_Text
@@ -2676,7 +2676,7 @@ package RayLib is
    --  Set texture wrapping mode
 
    procedure Draw_Texture
-     (Texture : RayLib.Texture2D'Class; Pos_X : Natural; Pos_Y : Natural;
+     (Texture : RayLib.Texture2D'Class; Pos_X : Integer; Pos_Y : Integer;
       Tint    : RayLib.Color);
    --  Draw a Texture2D
 
@@ -2808,11 +2808,11 @@ package RayLib is
      (Font : RayLib.Font'Class; File_Name : String) return Boolean;
    --  Export font as code file, returns true on success
 
-   procedure Draw_FPS (Pos_X : Natural; Pos_Y : Natural);
+   procedure Draw_FPS (Pos_X : Integer; Pos_Y : Integer);
    --  Draw current FPS
 
    procedure Draw_Text
-     (Text  : String; Pos_X : Natural; Pos_Y : Natural; Font_Size : Natural;
+     (Text  : String; Pos_X : Integer; Pos_Y : Integer; Font_Size : Natural;
       Color : RayLib.Color);
    --  Draw text (using default font)
 

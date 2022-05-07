@@ -476,7 +476,7 @@ package body RayLib is
       Free (Title_Copy);
    end Set_Window_Title;
 
-   procedure Set_Window_Position (X : Natural; Y : Natural) is
+   procedure Set_Window_Position (X : Integer; Y : Integer) is
    begin
       raylib_h.SetWindowPosition (int (X), int (Y));
    end Set_Window_Position;
@@ -660,7 +660,7 @@ package body RayLib is
       raylib_h.EndBlendMode;
    end End_Blend_Mode;
 
-   procedure Begin_Scissor_Mode (X, Y, Width, Height : Natural) is
+   procedure Begin_Scissor_Mode (X, Y : Integer; Width, Height : Natural) is
    begin
       raylib_h.BeginScissorMode (int (X), int (Y), int (Width), int (Height));
    end Begin_Scissor_Mode;
@@ -1197,16 +1197,16 @@ package body RayLib is
    function Is_Mouse_Button_Up (Button : Mouse_Button) return Boolean is
      (Boolean (raylib_h.IsMouseButtonUp (int (Button))));
 
-   function Get_Mouse_X return Natural is (Natural (raylib_h.GetMouseX));
+   function Get_Mouse_X return Integer is (Integer (raylib_h.GetMouseX));
 
-   function Get_Mouse_Y return Natural is (Natural (raylib_h.GetMouseY));
+   function Get_Mouse_Y return Integer is (Integer (raylib_h.GetMouseY));
 
    function Get_Mouse_Position return RayLib.Vector2 is
      (+raylib_h.GetMousePosition);
 
    function Get_Mouse_Delta return RayLib.Vector2 is (+raylib_h.GetMouseDelta);
 
-   procedure Set_Mouse_Position (X : Natural; Y : Natural) is
+   procedure Set_Mouse_Position (X : Integer; Y : Integer) is
    begin
       raylib_h.SetMousePosition (int (X), int (Y));
    end Set_Mouse_Position;
@@ -1228,9 +1228,9 @@ package body RayLib is
       raylib_h.SetMouseCursor (int (Cursor));
    end Set_Mouse_Cursor;
 
-   function Get_Touch_X return Natural is (Natural (raylib_h.GetTouchX));
+   function Get_Touch_X return Integer is (Integer (raylib_h.GetTouchX));
 
-   function Get_Touch_Y return Natural is (Natural (raylib_h.GetTouchX));
+   function Get_Touch_Y return Integer is (Integer (raylib_h.GetTouchX));
 
    function Get_Touch_Position (Index : Natural) return RayLib.Vector2 is
      (+raylib_h.GetTouchPosition (int (Index)));
@@ -1315,7 +1315,7 @@ package body RayLib is
    end Set_Shapes_Texture;
 
    procedure Draw_Pixel
-     (Pos_X : Natural; Pos_Y : Natural; Color : RayLib.Color)
+     (Pos_X : Integer; Pos_Y : Integer; Color : RayLib.Color)
    is
    begin
       raylib_h.DrawPixel (int (Pos_X), int (Pos_Y), +Color);
@@ -1327,8 +1327,8 @@ package body RayLib is
    end Draw_Pixel;
 
    procedure Draw_Line
-     (Start_Pos_X : Natural; Start_Pos_Y : Natural; End_Pos_X : Natural;
-      End_Pos_Y   : Natural; Color : RayLib.Color)
+     (Start_Pos_X : Integer; Start_Pos_Y : Integer; End_Pos_X : Integer;
+      End_Pos_Y   : Integer; Color : RayLib.Color)
    is
    begin
       raylib_h.DrawLine
@@ -1390,7 +1390,7 @@ package body RayLib is
    end Draw_Line_Strip;
 
    procedure Draw_Circle
-     (Center_X : Natural; Center_Y : Natural; Radius : Float;
+     (Center_X : Integer; Center_Y : Integer; Radius : Float;
       Color    : RayLib.Color)
    is
    begin
@@ -1416,7 +1416,7 @@ package body RayLib is
    end Draw_Circle_Sector_Lines;
 
    procedure Draw_Circle_Gradient
-     (Center_X : Natural; Center_Y : Natural; Radius : Float;
+     (Center_X : Integer; Center_Y : Integer; Radius : Float;
       Color1   : RayLib.Color; Color2 : RayLib.Color)
    is
    begin
@@ -1432,7 +1432,7 @@ package body RayLib is
    end Draw_Circle;
 
    procedure Draw_Circle_Lines
-     (Center_X : Natural; Center_Y : Natural; Radius : Float;
+     (Center_X : Integer; Center_Y : Integer; Radius : Float;
       Color    : RayLib.Color)
    is
    begin
@@ -1441,7 +1441,7 @@ package body RayLib is
    end Draw_Circle_Lines;
 
    procedure Draw_Ellipse
-     (Center_X : Natural; Center_Y : Natural; Radius_H : Float;
+     (Center_X : Integer; Center_Y : Integer; Radius_H : Float;
       Radius_V : Float; Color : RayLib.Color)
    is
    begin
@@ -1450,7 +1450,7 @@ package body RayLib is
    end Draw_Ellipse;
 
    procedure Draw_Ellipse_Lines
-     (Center_X : Natural; Center_Y : Natural; Radius_H : Float;
+     (Center_X : Integer; Center_Y : Integer; Radius_H : Float;
       Radius_V : Float; Color : RayLib.Color)
    is
    begin
@@ -1481,7 +1481,7 @@ package body RayLib is
    end Draw_Ring_Lines;
 
    procedure Draw_Rectangle
-     (Pos_X : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
+     (Pos_X : Integer; Pos_Y : Integer; Width : Natural; Height : Natural;
       Color : RayLib.Color)
    is
    begin
@@ -1510,7 +1510,7 @@ package body RayLib is
    end Draw_Rectangle;
 
    procedure Draw_Rectangle_Gradient_Vertical
-     (Pos_X  : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
+     (Pos_X  : Integer; Pos_Y : Integer; Width : Natural; Height : Natural;
       Color1 : RayLib.Color; Color2 : RayLib.Color)
    is
    begin
@@ -1520,7 +1520,7 @@ package body RayLib is
    end Draw_Rectangle_Gradient_Vertical;
 
    procedure Draw_Rectangle_Gradient_Horizontal
-     (Pos_X  : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
+     (Pos_X  : Integer; Pos_Y : Integer; Width : Natural; Height : Natural;
       Color1 : RayLib.Color; Color2 : RayLib.Color)
    is
    begin
@@ -1538,7 +1538,7 @@ package body RayLib is
    end Draw_Rectangle_Gradient;
 
    procedure Draw_Rectangle_Lines
-     (Pos_X : Natural; Pos_Y : Natural; Width : Natural; Height : Natural;
+     (Pos_X : Integer; Pos_Y : Integer; Width : Natural; Height : Natural;
       Color : RayLib.Color)
    is
    begin
@@ -2021,7 +2021,7 @@ package body RayLib is
 
    procedure Image_Resize_Canvas
      (Image      : in out RayLib.Image'Class; New_Width : Natural;
-      New_Height :        Natural; Offset_X : Natural; Offset_Y : Natural;
+      New_Height :        Natural; Offset_X : Integer; Offset_Y : Integer;
       Fill       :        RayLib.Color)
    is
    begin
@@ -2179,7 +2179,7 @@ package body RayLib is
    end Image_Clear_Background;
 
    procedure Image_Draw_Pixel
-     (Dst   : in out RayLib.Image'Class; Pos_X : Natural; Pos_Y : Natural;
+     (Dst   : in out RayLib.Image'Class; Pos_X : Integer; Pos_Y : Integer;
       Color :        RayLib.Color)
    is
    begin
@@ -2199,8 +2199,8 @@ package body RayLib is
    end Image_Draw_Pixel;
 
    procedure Image_Draw_Line
-     (Dst         : in out RayLib.Image'Class; Start_Pos_X : Natural;
-      Start_Pos_Y :        Natural; End_Pos_X : Natural; End_Pos_Y : Natural;
+     (Dst         : in out RayLib.Image'Class; Start_Pos_X : Integer;
+      Start_Pos_Y :        Integer; End_Pos_X : Integer; End_Pos_Y : Integer;
       Color       :        RayLib.Color)
    is
    begin
@@ -2220,7 +2220,7 @@ package body RayLib is
    end Image_Draw_Line;
 
    procedure Image_Draw_Circle
-     (Dst : in out RayLib.Image'Class; Center_X : Natural; Center_Y : Natural;
+     (Dst : in out RayLib.Image'Class; Center_X : Integer; Center_Y : Integer;
       Radius :        Natural; Color : RayLib.Color)
    is
    begin
@@ -2240,7 +2240,7 @@ package body RayLib is
    end Image_Draw_Circle;
 
    procedure Image_Draw_Rectangle
-     (Dst   : in out RayLib.Image'Class; Pos_X : Natural; Pos_Y : Natural;
+     (Dst   : in out RayLib.Image'Class; Pos_X : Integer; Pos_Y : Integer;
       Width :        Natural; Height : Natural; Color : RayLib.Color)
    is
    begin
@@ -2291,8 +2291,8 @@ package body RayLib is
    end Image_Draw;
 
    procedure Image_Draw_Text
-     (Dst   : in out RayLib.Image'Class; Text : String; Pos_X : Natural;
-      Pos_Y :        Natural; Font_Size : Natural; Color : RayLib.Color)
+     (Dst   : in out RayLib.Image'Class; Text : String; Pos_X : Integer;
+      Pos_Y :        Integer; Font_Size : Natural; Color : RayLib.Color)
    is
    begin
       pragma Compile_Time_Warning
@@ -2395,7 +2395,7 @@ package body RayLib is
    end Set_Texture_Wrap;
 
    procedure Draw_Texture
-     (Texture : RayLib.Texture2D'Class; Pos_X : Natural; Pos_Y : Natural;
+     (Texture : RayLib.Texture2D'Class; Pos_X : Integer; Pos_Y : Integer;
       Tint    : RayLib.Color)
    is
    begin
@@ -2610,13 +2610,13 @@ package body RayLib is
         raise Program_Error with "Unimplemented function Export_Font_As_Code";
    end Export_Font_As_Code;
 
-   procedure Draw_FPS (Pos_X : Natural; Pos_Y : Natural) is
+   procedure Draw_FPS (Pos_X : Integer; Pos_Y : Integer) is
    begin
       raylib_h.DrawFPS (int (Pos_X), int (Pos_Y));
    end Draw_FPS;
 
    procedure Draw_Text
-     (Text  : String; Pos_X : Natural; Pos_Y : Natural; Font_Size : Natural;
+     (Text  : String; Pos_X : Integer; Pos_Y : Integer; Font_Size : Natural;
       Color : RayLib.Color)
    is
       Text_Copy : chars_ptr := New_String (Text);
