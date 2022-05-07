@@ -1154,12 +1154,7 @@ package body RayLib is
      (Keyboard_Key (raylib_h.GetKeyPressed));
 
    function Get_Char_Pressed return Character is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Char_Pressed unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Char_Pressed";
-   end Get_Char_Pressed;
+     (Character'Val (raylib_h.GetCharPressed));
 
    function Is_Gamepad_Available (Gamepad : Gamepad_Id) return Boolean is
      (Boolean (raylib_h.IsGamepadAvailable (int (Gamepad))));
@@ -1192,25 +1187,12 @@ package body RayLib is
    function Get_Gamepad_Button_Pressed return Gamepad_Button is
      (Gamepad_Button (raylib_h.GetGamepadButtonPressed));
 
-   function Get_Gamepad_Axis_Count (Gamepad : Gamepad_Id) return Integer is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Gamepad_Axis_Count unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Gamepad_Axis_Count";
-   end Get_Gamepad_Axis_Count;
+   function Get_Gamepad_Axis_Count (Gamepad : Gamepad_Id) return Natural is
+     (Natural (raylib_h.GetGamepadAxisCount (int (Gamepad))));
 
    function Get_Gamepad_Axis_Movement
-     (Gamepad : Gamepad_Id; Axis : Gamepad_Axis) return Float
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Gamepad_Axis_Movement unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Gamepad_Axis_Movement";
-   end Get_Gamepad_Axis_Movement;
+     (Gamepad : Gamepad_Id; Axis : Gamepad_Axis) return Float is
+     (raylib_h.GetGamepadAxisMovement (int (Gamepad), int (Axis)));
 
    function Set_Gamepad_Mappings (Mappings : String) return Integer is
    begin
@@ -1260,9 +1242,7 @@ package body RayLib is
 
    procedure Set_Mouse_Cursor (Cursor : Mouse_Cursor) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Mouse_Cursor unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Mouse_Cursor";
+      raylib_h.SetMouseCursor (int (Cursor));
    end Set_Mouse_Cursor;
 
    function Get_Touch_X return Natural is (Natural (raylib_h.GetTouchX));
@@ -1270,129 +1250,65 @@ package body RayLib is
    function Get_Touch_Y return Natural is (Natural (raylib_h.GetTouchX));
 
    function Get_Touch_Position (Index : Natural) return RayLib.Vector2 is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Touch_Position unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Touch_Position";
-   end Get_Touch_Position;
+     (+raylib_h.GetTouchPosition (int (Index)));
 
    function Get_Touch_Point_Id (Index : Natural) return Natural is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Touch_Point_Id unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Touch_Point_Id";
-   end Get_Touch_Point_Id;
+     (Natural (raylib_h.GetTouchPointId (int (Index))));
 
    function Get_Touch_Point_Count return Natural is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Touch_Point_Count unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Touch_Point_Count";
-   end Get_Touch_Point_Count;
+     (Natural (raylib_h.GetTouchPointCount));
 
    procedure Set_Gestures_Enabled (Flags : RayLib.Gesture) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Gestures_Enabled unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Gestures_Enabled";
+      raylib_h.SetGesturesEnabled (unsigned (Flags));
    end Set_Gestures_Enabled;
 
    function Is_Gesture_Detected (Gesture : RayLib.Gesture) return Boolean is
      (Boolean (raylib_h.IsGestureDetected (int (Gesture))));
 
    function Get_Gesture_Detected return RayLib.Gesture is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Gesture_Detected unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Gesture_Detected";
-   end Get_Gesture_Detected;
+     (Gesture (raylib_h.GetGestureDetected));
 
    function Get_Gesture_Hold_Duration return Float is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Gesture_Hold_Duration unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Gesture_Hold_Duration";
-   end Get_Gesture_Hold_Duration;
+     (raylib_h.GetGestureHoldDuration);
 
    function Get_Gesture_Drag_Vector return RayLib.Vector2 is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Gesture_Drag_Vector unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Gesture_Drag_Vector";
-   end Get_Gesture_Drag_Vector;
+     (+raylib_h.GetGestureDragVector);
 
    function Get_Gesture_Drag_Angle return Float is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Gesture_Drag_Angle unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Gesture_Drag_Angle";
-   end Get_Gesture_Drag_Angle;
+     (raylib_h.GetGestureDragAngle);
 
    function Get_Gesture_Pinch_Vector return RayLib.Vector2 is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Gesture_Pinch_Vector unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Gesture_Pinch_Vector";
-   end Get_Gesture_Pinch_Vector;
+     (+raylib_h.GetGesturePinchVector);
 
    function Get_Gesture_Pinch_Angle return Float is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Gesture_Pinch_Angle unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Gesture_Pinch_Angle";
-   end Get_Gesture_Pinch_Angle;
+     (raylib_h.GetGesturePinchAngle);
 
    procedure Set_Camera_Mode (Camera : RayLib.Camera; Mode : Camera_Mode) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Camera_Mode unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Camera_Mode";
+      raylib_h.SetCameraMode (+Camera, int (Mode));
    end Set_Camera_Mode;
 
    procedure Update_Camera (Camera : in out RayLib.Camera) is
+      Camera_Copy : aliased raylib_h.Camera := +Camera;
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Update_Camera unimplemented");
-      raise Program_Error with "Unimplemented procedure Update_Camera";
+      raylib_h.UpdateCamera (Camera_Copy'Access);
+      Camera := +Camera_Copy;
    end Update_Camera;
 
    procedure Set_Camera_Pan_Control (Key_Pan : Keyboard_Key) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Camera_Pan_Control unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Set_Camera_Pan_Control";
+      raylib_h.SetCameraPanControl (int (Key_Pan));
    end Set_Camera_Pan_Control;
 
    procedure Set_Camera_Alt_Control (Key_Alt : Keyboard_Key) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Camera_Alt_Control unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Set_Camera_Alt_Control";
+      raylib_h.SetCameraAltControl (int (Key_Alt));
    end Set_Camera_Alt_Control;
 
    procedure Set_Camera_Smooth_Zoom_Control (Key_Smooth_Zoom : Keyboard_Key) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Camera_Smooth_Zoom_Control unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Set_Camera_Smooth_Zoom_Control";
+      raylib_h.SetCameraSmoothZoomControl (int (Key_Smooth_Zoom));
    end Set_Camera_Smooth_Zoom_Control;
 
    procedure Set_Camera_Move_Controls
@@ -1401,10 +1317,9 @@ package body RayLib is
       Key_Down  : Keyboard_Key)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Camera_Move_Controls unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Set_Camera_Move_Controls";
+      raylib_h.SetCameraMoveControls
+        (int (Key_Front), int (Key_Back), int (Key_Right), int (Key_Left),
+         int (Key_Up), int (Key_Down));
    end Set_Camera_Move_Controls;
 
    procedure Set_Shapes_Texture

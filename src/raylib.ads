@@ -2038,7 +2038,7 @@ package RayLib is
    function Get_Gamepad_Button_Pressed return Gamepad_Button;
    --  Get the last gamepad button pressed
 
-   function Get_Gamepad_Axis_Count (Gamepad : Gamepad_Id) return Integer;
+   function Get_Gamepad_Axis_Count (Gamepad : Gamepad_Id) return Natural;
    --  Get gamepad axis count for a gamepad
 
    function Get_Gamepad_Axis_Movement
