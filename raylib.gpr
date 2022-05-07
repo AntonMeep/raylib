@@ -34,7 +34,9 @@ project RayLib is
       "rtextures.c",
       "rtext.c",
       "utils.c",
-      "rglfw.c"
+      "rglfw.c",
+      "rmodels.c",
+      "raudio.c"
    );
 
    for Source_Files use Source_Files & Raylib_Source_Files;

@@ -1,7 +1,8 @@
 pragma Ada_2012;
 
-with Interfaces.C;         use Interfaces.C;
-with Interfaces.C.Strings; use Interfaces.C.Strings;
+with Interfaces.C;            use Interfaces.C;
+with Interfaces.C.Strings;    use Interfaces.C.Strings;
+with Interfaces.C.Extensions; use Interfaces.C.Extensions;
 with raylib_h;
 
 package body RayLib is
@@ -1119,27 +1120,17 @@ package body RayLib is
    end Decode_Data_Base64;
 
    function Save_Storage_Value
-     (Position : Natural; Value : Integer) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Save_Storage_Value unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Save_Storage_Value";
-   end Save_Storage_Value;
+     (Position : Natural; Value : Integer) return Boolean is
+     (Boolean (raylib_h.SaveStorageValue (unsigned (Position), int (Value))));
 
    function Load_Storage_Value (Position : Natural) return Integer is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Load_Storage_Value unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Load_Storage_Value";
-   end Load_Storage_Value;
+     (Integer (raylib_h.LoadStorageValue (unsigned (Position))));
 
    procedure Open_URL (Url : String) is
+      Url_Copy : chars_ptr := New_String (Url);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Open_URL unimplemented");
-      raise Program_Error with "Unimplemented procedure Open_URL";
+      raylib_h.OpenURL (Url_Copy);
+      Free (Url_Copy);
    end Open_URL;
 
    function Is_Key_Pressed (Key : Keyboard_Key) return Boolean is
@@ -3031,15 +3022,12 @@ package body RayLib is
       Color     : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Line3D unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Line3D";
+      raylib_h.DrawLine3D (+Start_Pos, +End_Pos, +Color);
    end Draw_Line3D;
 
    procedure Draw_Point3D (Position : RayLib.Vector3; Color : RayLib.Color) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Point3D unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Point3D";
+      raylib_h.DrawPoint3D (+Position, +Color);
    end Draw_Point3D;
 
    procedure Draw_Circle3D
@@ -3047,9 +3035,8 @@ package body RayLib is
       Rotation_Angle : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Circle3D unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Circle3D";
+      raylib_h.DrawCircle3D
+        (+Center, Radius, +Rotation_Axis, Rotation_Angle, +Color);
    end Draw_Circle3D;
 
    procedure Draw_Triangle3D
@@ -3057,9 +3044,7 @@ package body RayLib is
       Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Triangle3D unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Triangle3D";
+      raylib_h.DrawTriangle3D (+V1, +V2, +V3, +Color);
    end Draw_Triangle3D;
 
    procedure Draw_Triangle_Strip3D
@@ -3076,16 +3061,14 @@ package body RayLib is
       Color    : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Cube unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Cube";
+      raylib_h.DrawCube (+Position, Width, Height, Length, +Color);
    end Draw_Cube;
 
    procedure Draw_Cube
      (Position : RayLib.Vector3; Size : RayLib.Vector3; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Cube unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Cube";
+      raylib_h.DrawCubeV (+Position, +Size, +Color);
    end Draw_Cube;
 
    procedure Draw_Cube_Wires
@@ -3093,18 +3076,14 @@ package body RayLib is
       Color    : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Cube_Wires unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Cube_Wires";
+      raylib_h.DrawCubeWires (+Position, Width, Height, Length, +Color);
    end Draw_Cube_Wires;
 
    procedure Draw_Cube_Wires
      (Position : RayLib.Vector3; Size : RayLib.Vector3; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Cube_Wires unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Cube_Wires";
+      raylib_h.DrawCubeWiresV (+Position, +Size, +Color);
    end Draw_Cube_Wires;
 
    procedure Draw_Cube_Texture
@@ -3132,8 +3111,7 @@ package body RayLib is
      (Center_Pos : RayLib.Vector3; Radius : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Sphere unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Sphere";
+      raylib_h.DrawSphere (+Center_Pos, Radius, +Color);
    end Draw_Sphere;
 
    procedure Draw_Sphere
@@ -3141,8 +3119,8 @@ package body RayLib is
       Slices     : Natural; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Sphere unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Sphere";
+      raylib_h.DrawSphereEx
+        (+Center_Pos, Radius, int (Rings), int (Slices), +Color);
    end Draw_Sphere;
 
    procedure Draw_Sphere_Wires
@@ -3150,9 +3128,8 @@ package body RayLib is
       Slices     : Natural; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Sphere_Wires unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Sphere_Wires";
+      raylib_h.DrawSphereWires
+        (+Center_Pos, Radius, int (Rings), int (Slices), +Color);
    end Draw_Sphere_Wires;
 
    procedure Draw_Cylinder
@@ -3160,9 +3137,8 @@ package body RayLib is
       Height   : Float; Slices : Natural; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Cylinder unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Cylinder";
+      raylib_h.DrawCylinder
+        (+Position, Radius_Top, Radius_Bottom, Height, int (Slices), +Color);
    end Draw_Cylinder;
 
    procedure Draw_Cylinder
@@ -3171,9 +3147,8 @@ package body RayLib is
       Color        : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Cylinder unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Cylinder";
+      raylib_h.DrawCylinderEx
+        (+Start_Pos, +End_Pos, Start_Radius, End_Radius, int (Sides), +Color);
    end Draw_Cylinder;
 
    procedure Draw_Cylinder_Wires
@@ -3181,9 +3156,8 @@ package body RayLib is
       Height   : Float; Slices : Natural; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Cylinder_Wires unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Cylinder_Wires";
+      raylib_h.DrawCylinderWires
+        (+Position, Radius_Top, Radius_Bottom, Height, int (Slices), +Color);
    end Draw_Cylinder_Wires;
 
    procedure Draw_Cylinder_Wires
@@ -3192,29 +3166,25 @@ package body RayLib is
       Color        : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Cylinder_Wires unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Cylinder_Wires";
+      raylib_h.DrawCylinderWiresEx
+        (+Start_Pos, +End_Pos, Start_Radius, End_Radius, int (Sides), +Color);
    end Draw_Cylinder_Wires;
 
    procedure Draw_Plane
      (Center_Pos : RayLib.Vector3; Size : RayLib.Vector2; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Plane unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Plane";
+      raylib_h.DrawPlane (+Center_Pos, +Size, +Color);
    end Draw_Plane;
 
    procedure Draw_Ray (Ray : RayLib.Ray; Color : RayLib.Color) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Ray unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Ray";
+      raylib_h.DrawRay (+Ray, +Color);
    end Draw_Ray;
 
-   procedure Draw_Grid (Slices : Integer; Spacing : Float) is
+   procedure Draw_Grid (Slices : Natural; Spacing : Float) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Grid unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Grid";
+      raylib_h.DrawGrid (int (Slices), Spacing);
    end Draw_Grid;
 
    function Load_Model (File_Name : String) return RayLib.Model'Class is
@@ -3288,9 +3258,7 @@ package body RayLib is
      (Box : RayLib.Bounding_Box; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Bounding_Box unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Bounding_Box";
+      raylib_h.DrawBoundingBox (+Box, +Color);
    end Draw_Bounding_Box;
 
    procedure Draw_Billboard
@@ -3579,61 +3547,24 @@ package body RayLib is
 
    function Check_Collision_Spheres
      (Center1 : RayLib.Vector3; Radius1 : Float; Center2 : RayLib.Vector3;
-      Radius2 : Float) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Check_Collision_Spheres unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Check_Collision_Spheres";
-   end Check_Collision_Spheres;
+      Radius2 : Float) return Boolean is
+     (Boolean
+        (raylib_h.CheckCollisionSpheres
+           (+Center1, Radius1, +Center2, Radius2)));
 
    function Check_Collision_Boxes
-     (Box1 : RayLib.Bounding_Box; Box2 : RayLib.Bounding_Box) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Check_Collision_Boxes unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Check_Collision_Boxes";
-   end Check_Collision_Boxes;
-
-   function Check_Collision_Box_Sphere
-     (Box : RayLib.Bounding_Box; Center : RayLib.Vector3; Radius : Float)
-      return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Check_Collision_Box_Sphere unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Check_Collision_Box_Sphere";
-   end Check_Collision_Box_Sphere;
+     (Box1 : RayLib.Bounding_Box; Box2 : RayLib.Bounding_Box) return Boolean is
+     (Boolean (raylib_h.CheckCollisionBoxes (+Box1, +Box2)));
 
    function Get_Ray_Collision_Sphere
      (Ray : RayLib.Ray; Center : RayLib.Vector3; Radius : Float)
-      return RayLib.Ray_Collision
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Ray_Collision_Sphere unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Ray_Collision_Sphere";
-   end Get_Ray_Collision_Sphere;
+      return RayLib.Ray_Collision is
+     (+raylib_h.GetRayCollisionSphere (+Ray, +Center, Radius));
 
    function Get_Ray_Collision_Box
-     (Ray : RayLib.Ray; Box : RayLib.Bounding_Box) return RayLib.Ray_Collision
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Ray_Collision_Box unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Ray_Collision_Box";
-   end Get_Ray_Collision_Box;
+     (Ray : RayLib.Ray; Box : RayLib.Bounding_Box)
+      return RayLib.Ray_Collision is
+     (+raylib_h.GetRayCollisionBox (+Ray, +Box));
 
    function Get_Ray_Collision_Mesh
      (Ray : RayLib.Ray; Mesh : RayLib.Mesh; Transform : RayLib.Matrix)
@@ -3649,56 +3580,30 @@ package body RayLib is
 
    function Get_Ray_Collision_Triangle
      (Ray : RayLib.Ray; P1 : RayLib.Vector3; P2 : RayLib.Vector3;
-      P3  : RayLib.Vector3) return RayLib.Ray_Collision
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Ray_Collision_Triangle unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Ray_Collision_Triangle";
-   end Get_Ray_Collision_Triangle;
+      P3  : RayLib.Vector3) return RayLib.Ray_Collision is
+     (+raylib_h.GetRayCollisionTriangle (+Ray, +P1, +P2, +P3));
 
    function Get_Ray_Collision_Quad
      (Ray : RayLib.Ray; P1 : RayLib.Vector3; P2 : RayLib.Vector3;
-      P3  : RayLib.Vector3; P4 : RayLib.Vector3) return RayLib.Ray_Collision
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Ray_Collision_Quad unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Ray_Collision_Quad";
-   end Get_Ray_Collision_Quad;
+      P3  : RayLib.Vector3; P4 : RayLib.Vector3) return RayLib.Ray_Collision is
+     (+raylib_h.GetRayCollisionQuad (+Ray, +P1, +P2, +P3, +P4));
 
    procedure Init_Audio_Device is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Init_Audio_Device unimplemented");
-      raise Program_Error with "Unimplemented procedure Init_Audio_Device";
+      raylib_h.InitAudioDevice;
    end Init_Audio_Device;
 
    procedure Close_Audio_Device is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Close_Audio_Device unimplemented");
-      raise Program_Error with "Unimplemented procedure Close_Audio_Device";
+      raylib_h.CloseAudioDevice;
    end Close_Audio_Device;
 
    function Is_Audio_Device_Ready return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Audio_Device_Ready unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Is_Audio_Device_Ready";
-   end Is_Audio_Device_Ready;
+     (Boolean (raylib_h.IsAudioDeviceReady));
 
    procedure Set_Master_Volume (Volume : Float) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Master_Volume unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Master_Volume";
+      raylib_h.SetMasterVolume (Volume);
    end Set_Master_Volume;
 
    function Load_Wave (File_Name : String) return RayLib.Wave'Class is
@@ -3797,18 +3702,11 @@ package body RayLib is
 
    procedure Stop_Sound_Multi is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Stop_Sound_Multi unimplemented");
-      raise Program_Error with "Unimplemented procedure Stop_Sound_Multi";
+      raylib_h.StopSoundMulti;
    end Stop_Sound_Multi;
 
    function Get_Sounds_Playing return Natural is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Sounds_Playing unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Sounds_Playing";
-   end Get_Sounds_Playing;
+     (Natural (raylib_h.GetSoundsPlaying));
 
    function Is_Sound_Playing (Sound : RayLib.Sound'Class) return Boolean is
    begin
@@ -4308,4 +4206,18 @@ package body RayLib is
    function "+" (V : raylib_h.Camera2D) return RayLib.Camera2D is
      (Offset => +V.offset, Target => +V.target, Rotation => V.rotation,
       Zoom   => +V.zoom);
+   function "+" (V : RayLib.Ray) return raylib_h.Ray is
+     (position => +V.Position, direction => +V.Direction);
+   function "+" (V : raylib_h.Ray) return RayLib.Ray is
+     (Position => +V.position, Direction => +V.direction);
+   function "+" (V : RayLib.Ray_Collision) return raylib_h.RayCollision is
+     (hit    => bool (V.Hit), distance => V.Distance, point => +V.Point,
+      normal => +V.Normal);
+   function "+" (V : raylib_h.RayCollision) return RayLib.Ray_Collision is
+     (Hit    => Boolean (V.hit), Distance => V.distance, Point => +V.point,
+      Normal => +V.normal);
+   function "+" (V : RayLib.Bounding_Box) return raylib_h.BoundingBox is
+     (min => +V.Min, max => +V.Max);
+   function "+" (V : raylib_h.BoundingBox) return RayLib.Bounding_Box is
+     (Min => +V.min, Max => +V.max);
 end RayLib;

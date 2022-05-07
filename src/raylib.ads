@@ -3026,7 +3026,7 @@ package RayLib is
    procedure Draw_Ray (Ray : RayLib.Ray; Color : RayLib.Color);
    --  Draw a ray line
 
-   procedure Draw_Grid (Slices : Integer; Spacing : Float);
+   procedure Draw_Grid (Slices : Natural; Spacing : Float);
    --  Draw a grid (centered at (0, 0, 0))
 
    function Load_Model (File_Name : String) return RayLib.Model'Class;
@@ -3207,11 +3207,6 @@ package RayLib is
    function Check_Collision_Boxes
      (Box1 : RayLib.Bounding_Box; Box2 : RayLib.Bounding_Box) return Boolean;
    --  Check collision between two bounding boxes
-
-   function Check_Collision_Box_Sphere
-     (Box : RayLib.Bounding_Box; Center : RayLib.Vector3; Radius : Float)
-      return Boolean;
-   --  Check collision between box and sphere
 
    function Get_Ray_Collision_Sphere
      (Ray : RayLib.Ray; Center : RayLib.Vector3; Radius : Float)
@@ -3661,5 +3656,17 @@ private
    function "+" (V : RayLib.Camera2D) return raylib_h.Camera2D with
       Inline;
    function "+" (V : raylib_h.Camera2D) return RayLib.Camera2D with
+      Inline;
+   function "+" (V : RayLib.Ray) return raylib_h.Ray with
+      Inline;
+   function "+" (V : raylib_h.Ray) return RayLib.Ray with
+      Inline;
+   function "+" (V : RayLib.Ray_Collision) return raylib_h.RayCollision with
+      Inline;
+   function "+" (V : raylib_h.RayCollision) return RayLib.Ray_Collision with
+      Inline;
+   function "+" (V : RayLib.Bounding_Box) return raylib_h.BoundingBox with
+      Inline;
+   function "+" (V : raylib_h.BoundingBox) return RayLib.Bounding_Box with
       Inline;
 end RayLib;
