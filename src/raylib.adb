@@ -25,16 +25,10 @@ package body RayLib is
      (Natural (Self.Payload.all.Data.height));
 
    function Mipmaps (Self : Image'Class) return Natural is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Mipmaps unimplemented");
-      return raise Program_Error with "Unimplemented function Mipmaps";
-   end Mipmaps;
+     (Natural (Self.Payload.all.Data.mipmaps));
 
    function Format (Self : Image'Class) return Pixel_Format is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Format unimplemented");
-      return raise Program_Error with "Unimplemented function Format";
-   end Format;
+     (Pixel_Format (Self.Payload.all.Data.format));
 
    function Id (Self : Texture'Class) return OpenGL_Id is
      (OpenGL_Id (Self.Payload.all.Data.id));
@@ -46,16 +40,10 @@ package body RayLib is
      (Natural (Self.Payload.all.Data.height));
 
    function Mipmaps (Self : Texture'Class) return Natural is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Mipmaps unimplemented");
-      return raise Program_Error with "Unimplemented function Mipmaps";
-   end Mipmaps;
+     (Natural (Self.Payload.all.Data.mipmaps));
 
    function Format (Self : Texture'Class) return Pixel_Format is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Format unimplemented");
-      return raise Program_Error with "Unimplemented function Format";
-   end Format;
+     (Pixel_Format (Self.Payload.all.Data.format));
 
    function Id (Self : Render_Texture'Class) return OpenGL_Id is
    begin
@@ -1724,26 +1712,37 @@ package body RayLib is
 
    function Load_Image_Raw
      (File_Name : String; Width : Natural; Height : Natural;
-      Format : Pixel_Format; Header_Size : Natural) return RayLib.Image'Class
+      Format    : Pixel_Format; Header_Size : Natural) return RayLib.Image
    is
+      File_Name_Copy : chars_ptr    := New_String (File_Name);
+      Result         : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Load_Image_Raw unimplemented");
-      return raise Program_Error with "Unimplemented function Load_Image_Raw";
+      Result.Payload.all.Data :=
+        raylib_h.LoadImageRaw
+          (File_Name_Copy, int (Width), int (Height), int (Format),
+           int (Header_Size));
+      Free (File_Name_Copy);
+      return Result;
    end Load_Image_Raw;
 
    function Load_Image_Anim
-     (File_Name : String; Frames : out Natural) return RayLib.Image'Class
+     (File_Name : String; Frames : out Natural) return RayLib.Image
    is
+      File_Name_Copy : chars_ptr    := New_String (File_Name);
+      Frames_Copy    : aliased int;
+      Result         : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Load_Image_Anim unimplemented");
-      return raise Program_Error with "Unimplemented function Load_Image_Anim";
+      Result.Payload.all.Data :=
+        raylib_h.LoadImageAnim (File_Name_Copy, Frames_Copy'Access);
+      Frames := Natural (Frames_Copy);
+      Free (File_Name_Copy);
+      return Result;
    end Load_Image_Anim;
 
    function Load_Image_From_Memory
-     (File_Type : String; File_Data : Stream_Element_Array)
-      return RayLib.Image'Class
+     (File_Type : String; File_Data : Stream_Element_Array) return RayLib.Image
    is
    begin
       pragma Compile_Time_Warning
@@ -1754,155 +1753,174 @@ package body RayLib is
    end Load_Image_From_Memory;
 
    function Load_Image_From_Texture
-     (Texture : RayLib.Texture2D'Class) return RayLib.Image'Class
+     (Texture : RayLib.Texture2D'Class) return RayLib.Image
    is
+      Result : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Load_Image_From_Texture unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Load_Image_From_Texture";
+      Result.Payload.all.Data :=
+        raylib_h.LoadImageFromTexture (Texture.Payload.all.Data);
+      return Result;
    end Load_Image_From_Texture;
 
-   function Load_Image_From_Screen return RayLib.Image'Class is
+   function Load_Image_From_Screen return RayLib.Image is
+      Result : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Load_Image_From_Screen unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Load_Image_From_Screen";
+      Result.Payload.all.Data := raylib_h.LoadImageFromScreen;
+      return Result;
    end Load_Image_From_Screen;
 
    function Export_Image
      (Image : RayLib.Image'Class; File_Name : String) return Boolean
    is
+      File_Name_Copy : chars_ptr := New_String (File_Name);
+      Result         : Boolean;
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Export_Image unimplemented");
-      return raise Program_Error with "Unimplemented function Export_Image";
+      Result :=
+        Boolean
+          (raylib_h.ExportImage (Image.Payload.all.Data, File_Name_Copy));
+      Free (File_Name_Copy);
+      return Result;
    end Export_Image;
 
    function Export_Image_As_Code
      (Image : RayLib.Image'Class; File_Name : String) return Boolean
    is
+      File_Name_Copy : chars_ptr := New_String (File_Name);
+      Result         : Boolean;
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Export_Image_As_Code unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Export_Image_As_Code";
+      Result :=
+        Boolean
+          (raylib_h.ExportImageAsCode
+             (Image.Payload.all.Data, File_Name_Copy));
+      Free (File_Name_Copy);
+      return Result;
    end Export_Image_As_Code;
 
    function Gen_Image_Color
      (Width : Natural; Height : Natural; Color : RayLib.Color)
-      return RayLib.Image'Class
+      return RayLib.Image
    is
+      Result : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Gen_Image_Color unimplemented");
-      return raise Program_Error with "Unimplemented function Gen_Image_Color";
+      Result.Payload.all.Data :=
+        raylib_h.GenImageColor (int (Width), int (Height), +Color);
+      return Result;
    end Gen_Image_Color;
 
    function Gen_Image_Gradient_Vertical
      (Width  : Natural; Height : Natural; Top : RayLib.Color;
-      Bottom : RayLib.Color) return RayLib.Image'Class
+      Bottom : RayLib.Color) return RayLib.Image
    is
+      Result : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Gen_Image_Gradient_Vertical unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Gen_Image_Gradient_Vertical";
+      Result.Payload.all.Data :=
+        raylib_h.GenImageGradientV (int (Width), int (Height), +Top, +Bottom);
+      return Result;
    end Gen_Image_Gradient_Vertical;
 
    function Gen_Image_Gradient_Horizontal
      (Width : Natural; Height : Natural; Left : RayLib.Color;
-      Right : RayLib.Color) return RayLib.Image'Class
+      Right : RayLib.Color) return RayLib.Image
    is
+      Result : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Gen_Image_Gradient_Horizontal unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Gen_Image_Gradient_Horizontal";
+      Result.Payload.all.Data :=
+        raylib_h.GenImageGradientH (int (Width), int (Height), +Left, +Right);
+      return Result;
    end Gen_Image_Gradient_Horizontal;
 
    function Gen_Image_Gradient_Radial
      (Width : Natural; Height : Natural; Density : Float; Inner : RayLib.Color;
-      Outer : RayLib.Color) return RayLib.Image'Class
+      Outer : RayLib.Color) return RayLib.Image
    is
+      Result : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Gen_Image_Gradient_Radial unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Gen_Image_Gradient_Radial";
+      Result.Payload.all.Data :=
+        raylib_h.GenImageGradientRadial
+          (int (Width), int (Height), Density, +Inner, +Outer);
+      return Result;
    end Gen_Image_Gradient_Radial;
 
    function Gen_Image_Checked
      (Width    : Natural; Height : Natural; Checks_X : Natural;
       Checks_Y : Natural; Col1 : RayLib.Color; Col2 : RayLib.Color)
-      return RayLib.Image'Class
+      return RayLib.Image
    is
+      Result : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Gen_Image_Checked unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Gen_Image_Checked";
+      Result.Payload.all.Data :=
+        raylib_h.GenImageChecked
+          (int (Width), int (Height), int (Checks_X), int (Checks_Y), +Col1,
+           +Col2);
+      return Result;
    end Gen_Image_Checked;
 
    function Gen_Image_White_Noise
-     (Width : Natural; Height : Natural; Factor : Float)
-      return RayLib.Image'Class
+     (Width : Natural; Height : Natural; Factor : Float) return RayLib.Image
    is
+      Result : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Gen_Image_White_Noise unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Gen_Image_White_Noise";
+      Result.Payload.all.Data :=
+        raylib_h.GenImageWhiteNoise (int (Width), int (Height), Factor);
+      return Result;
    end Gen_Image_White_Noise;
 
    function Gen_Image_Cellular
      (Width : Natural; Height : Natural; Tile_Size : Natural)
-      return RayLib.Image'Class
+      return RayLib.Image
    is
+      Result : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Gen_Image_Cellular unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Gen_Image_Cellular";
+      Result.Payload.all.Data :=
+        raylib_h.GenImageCellular (int (Width), int (Height), int (Tile_Size));
+      return Result;
    end Gen_Image_Cellular;
 
-   function Image_Copy (Image : RayLib.Image'Class) return RayLib.Image'Class
-   is
+   function Image_Copy (Image : RayLib.Image'Class) return RayLib.Image is
+      Result : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Image_Copy unimplemented");
-      return raise Program_Error with "Unimplemented function Image_Copy";
+      Result.Payload.all.Data := raylib_h.ImageCopy (Image.Payload.all.Data);
+      return Result;
    end Image_Copy;
 
    function Image_From_Image
-     (Image : RayLib.Image'Class; Rec : RayLib.Rectangle)
-      return RayLib.Image'Class
+     (Image : RayLib.Image'Class; Rec : RayLib.Rectangle) return RayLib.Image
    is
+      Result : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_From_Image unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Image_From_Image";
+      Result.Payload.all.Data :=
+        raylib_h.ImageFromImage (Image.Payload.all.Data, +Rec);
+      return Result;
    end Image_From_Image;
 
    function Image_Text
      (Text : String; Font_Size : Natural; Color : RayLib.Color)
-      return RayLib.Image'Class
+      return RayLib.Image
    is
+      Text_Copy : chars_ptr    := New_String (Text);
+      Result    : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Image_Text unimplemented");
-      return raise Program_Error with "Unimplemented function Image_Text";
+      Result.Payload.all.Data :=
+        raylib_h.ImageText (Text_Copy, int (Font_Size), +Color);
+      Free (Text_Copy);
+      return Result;
    end Image_Text;
 
    function Image_Text
      (Font    : RayLib.Font'Class; Text : String; Font_Size : Float;
-      Spacing : Float; Tint : RayLib.Color) return RayLib.Image'Class
+      Spacing : Float; Tint : RayLib.Color) return RayLib.Image
    is
    begin
       pragma Compile_Time_Warning (Standard.True, "Image_Text unimplemented");
@@ -2303,7 +2321,7 @@ package body RayLib is
 
    function Load_Texture_Cubemap
      (Image : RayLib.Image'Class; Layout : Cubemap_Layout)
-      return RayLib.Texture_Cubemap'Class
+      return RayLib.Texture_Cubemap
    is
    begin
       pragma Compile_Time_Warning
@@ -2313,7 +2331,7 @@ package body RayLib is
    end Load_Texture_Cubemap;
 
    function Load_Render_Texture
-     (Width : Natural; Height : Natural) return RayLib.Render_Texture2D'Class
+     (Width : Natural; Height : Natural) return RayLib.Render_Texture2D
    is
    begin
       pragma Compile_Time_Warning

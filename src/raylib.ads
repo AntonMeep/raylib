@@ -2381,23 +2381,23 @@ package RayLib is
 
    function Load_Image_Raw
      (File_Name : String; Width : Natural; Height : Natural;
-      Format : Pixel_Format; Header_Size : Natural) return RayLib.Image'Class;
+      Format    : Pixel_Format; Header_Size : Natural) return RayLib.Image;
    --  Load image from RAW file data
 
    function Load_Image_Anim
-     (File_Name : String; Frames : out Natural) return RayLib.Image'Class;
+     (File_Name : String; Frames : out Natural) return RayLib.Image;
    --  Load image sequence from file (frames appended to image.data)
 
    function Load_Image_From_Memory
      (File_Type : String; File_Data : Stream_Element_Array)
-      return RayLib.Image'Class;
+      return RayLib.Image;
    --  Load image from memory buffer, fileType refers to extension: i.e. '.png'
 
    function Load_Image_From_Texture
-     (Texture : RayLib.Texture2D'Class) return RayLib.Image'Class;
+     (Texture : RayLib.Texture2D'Class) return RayLib.Image;
    --  Load image from GPU texture data
 
-   function Load_Image_From_Screen return RayLib.Image'Class;
+   function Load_Image_From_Screen return RayLib.Image;
    --  Load image from screen buffer and (screenshot)
 
    function Export_Image
@@ -2411,56 +2411,54 @@ package RayLib is
 
    function Gen_Image_Color
      (Width : Natural; Height : Natural; Color : RayLib.Color)
-      return RayLib.Image'Class;
+      return RayLib.Image;
    --  Generate image: plain color
 
    function Gen_Image_Gradient_Vertical
      (Width  : Natural; Height : Natural; Top : RayLib.Color;
-      Bottom : RayLib.Color) return RayLib.Image'Class;
+      Bottom : RayLib.Color) return RayLib.Image;
    --  Generate image: vertical gradient
 
    function Gen_Image_Gradient_Horizontal
      (Width : Natural; Height : Natural; Left : RayLib.Color;
-      Right : RayLib.Color) return RayLib.Image'Class;
+      Right : RayLib.Color) return RayLib.Image;
    --  Generate image: horizontal gradient
 
    function Gen_Image_Gradient_Radial
      (Width : Natural; Height : Natural; Density : Float; Inner : RayLib.Color;
-      Outer : RayLib.Color) return RayLib.Image'Class;
+      Outer : RayLib.Color) return RayLib.Image;
    --  Generate image: radial gradient
 
    function Gen_Image_Checked
      (Width    : Natural; Height : Natural; Checks_X : Natural;
       Checks_Y : Natural; Col1 : RayLib.Color; Col2 : RayLib.Color)
-      return RayLib.Image'Class;
+      return RayLib.Image;
    --  Generate image: checked
 
    function Gen_Image_White_Noise
-     (Width : Natural; Height : Natural; Factor : Float)
-      return RayLib.Image'Class;
+     (Width : Natural; Height : Natural; Factor : Float) return RayLib.Image;
    --  Generate image: white noise
 
    function Gen_Image_Cellular
      (Width : Natural; Height : Natural; Tile_Size : Natural)
-      return RayLib.Image'Class;
+      return RayLib.Image;
    --  Generate image: cellular algorithm, bigger tileSize means bigger cells
 
-   function Image_Copy (Image : RayLib.Image'Class) return RayLib.Image'Class;
+   function Image_Copy (Image : RayLib.Image'Class) return RayLib.Image;
    --  Create an image duplicate (useful for transformations)
 
    function Image_From_Image
-     (Image : RayLib.Image'Class; Rec : RayLib.Rectangle)
-      return RayLib.Image'Class;
+     (Image : RayLib.Image'Class; Rec : RayLib.Rectangle) return RayLib.Image;
    --  Create an image from another image piece
 
    function Image_Text
      (Text : String; Font_Size : Natural; Color : RayLib.Color)
-      return RayLib.Image'Class;
+      return RayLib.Image;
    --  Create an image from text (default font)
 
    function Image_Text
      (Font    : RayLib.Font'Class; Text : String; Font_Size : Float;
-      Spacing : Float; Tint : RayLib.Color) return RayLib.Image'Class;
+      Spacing : Float; Tint : RayLib.Color) return RayLib.Image;
    --  Create an image from text (custom sprite font)
 
    procedure Image_Format
@@ -2649,11 +2647,11 @@ package RayLib is
 
    function Load_Texture_Cubemap
      (Image : RayLib.Image'Class; Layout : Cubemap_Layout)
-      return RayLib.Texture_Cubemap'Class;
+      return RayLib.Texture_Cubemap;
    --  Load cubemap from image, multiple image cubemap layouts supported
 
    function Load_Render_Texture
-     (Width : Natural; Height : Natural) return RayLib.Render_Texture2D'Class;
+     (Width : Natural; Height : Natural) return RayLib.Render_Texture2D;
    --  Load texture for rendering (framebuffer)
 
    procedure Update_Texture
