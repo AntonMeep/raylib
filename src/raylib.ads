@@ -1177,11 +1177,10 @@ package RayLib is
    function Id (Self : Render_Texture'Class) return OpenGL_Id;
    --  OpenGL framebuffer object id
 
-   function Get_Texture
-     (Self : Render_Texture'Class) return RayLib.Texture'Class;
+   function Get_Texture (Self : Render_Texture'Class) return RayLib.Texture;
    --  Color buffer attachment texture
 
-   function Depth (Self : Render_Texture'Class) return RayLib.Texture'Class;
+   function Depth (Self : Render_Texture'Class) return RayLib.Texture;
    --  Depth buffer attachment texture
 
    subtype Render_Texture2D is RayLib.Render_Texture;
@@ -3401,8 +3400,10 @@ private
    use System.Atomic_Counters;
 
    type Image_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.Image;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.Image;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Image_Payload_Access is access all Image_Payload;
 
@@ -3414,8 +3415,10 @@ private
    overriding procedure Finalize (Self : in out Image);
 
    type Texture_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.Texture;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.Texture;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Texture_Payload_Access is access all Texture_Payload;
 
@@ -3427,8 +3430,10 @@ private
    overriding procedure Finalize (Self : in out Texture);
 
    type Render_Texture_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.RenderTexture;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.RenderTexture;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Render_Texture_Payload_Access is access all Render_Texture_Payload;
 
@@ -3440,8 +3445,10 @@ private
    overriding procedure Finalize (Self : in out Render_Texture);
 
    type Font_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.Font;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.Font;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Font_Payload_Access is access all Font_Payload;
 
@@ -3453,8 +3460,10 @@ private
    overriding procedure Finalize (Self : in out Font);
 
    type Mesh_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.Mesh;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.Mesh;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Mesh_Payload_Access is access all Mesh_Payload;
 
@@ -3463,8 +3472,10 @@ private
    end record;
 
    type Shader_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.Shader;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.Shader;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Shader_Payload_Access is access all Shader_Payload;
 
@@ -3476,8 +3487,10 @@ private
    overriding procedure Finalize (Self : in out Shader);
 
    type Material_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.Material;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.Material;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Material_Payload_Access is access all Material_Payload;
 
@@ -3489,8 +3502,10 @@ private
    overriding procedure Finalize (Self : in out Material);
 
    type Model_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.Model;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.Model;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Model_Payload_Access is access all Model_Payload;
 
@@ -3502,8 +3517,10 @@ private
    overriding procedure Finalize (Self : in out Model);
 
    type Model_Animation_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.ModelAnimation;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.ModelAnimation;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Model_Animation_Payload_Access is access all Model_Animation_Payload;
 
@@ -3515,8 +3532,10 @@ private
    overriding procedure Finalize (Self : in out Model_Animation);
 
    type Wave_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.Wave;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.Wave;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Wave_Payload_Access is access all Wave_Payload;
 
@@ -3528,8 +3547,10 @@ private
    overriding procedure Finalize (Self : in out Wave);
 
    type Audio_Stream_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.AudioStream;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.AudioStream;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Audio_Stream_Payload_Access is access all Audio_Stream_Payload;
 
@@ -3541,8 +3562,10 @@ private
    overriding procedure Finalize (Self : in out Audio_Stream);
 
    type Sound_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.Sound;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.Sound;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Sound_Payload_Access is access all Sound_Payload;
 
@@ -3554,8 +3577,10 @@ private
    overriding procedure Finalize (Self : in out Sound);
 
    type Music_Payload is record
-      Counter : Atomic_Counter;
-      Data    : aliased raylib_h.Music;
+      Counter        : Atomic_Counter;
+      Data           : aliased raylib_h.Music;
+      Parent_Unloads : Boolean := False;
+      --  If true, some other controlled object takes care of unloading Data
    end record;
    type Music_Payload_Access is access all Music_Payload;
 

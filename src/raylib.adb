@@ -47,24 +47,21 @@ package body RayLib is
      (Pixel_Format (Self.Payload.all.Data.format));
 
    function Id (Self : Render_Texture'Class) return OpenGL_Id is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Id unimplemented");
-      return raise Program_Error with "Unimplemented function Id";
-   end Id;
+     (OpenGL_Id (Self.Payload.all.Data.id));
 
-   function Get_Texture
-     (Self : Render_Texture'Class) return RayLib.Texture'Class
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Get_Texture unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Texture";
-   end Get_Texture;
+   function Get_Texture (Self : Render_Texture'Class) return RayLib.Texture is
+     (Ada.Finalization.Controlled with
+      Payload =>
+        new Texture_Payload'
+          (Data   => Self.Payload.all.Data.the_texture, Parent_Unloads => True,
+           others => <>));
 
-   function Depth (Self : Render_Texture'Class) return RayLib.Texture'Class is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Depth unimplemented");
-      return raise Program_Error with "Unimplemented function Depth";
-   end Depth;
+   function Depth (Self : Render_Texture'Class) return RayLib.Texture is
+     (Ada.Finalization.Controlled with
+      Payload =>
+        new Texture_Payload'
+          (Data   => Self.Payload.all.Data.depth, Parent_Unloads => True,
+           others => <>));
 
    function Glyph_Count (Self : Font'Class) return Natural is
    begin
@@ -3703,11 +3700,13 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Reference count reached 0, unloading the image from " &
-               System.Address_Image (Self.Payload.all.Data.data));
-            raylib_h.UnloadImage (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Reference count reached 0, unloading the image from " &
+                  System.Address_Image (Self.Payload.all.Data.data));
+               raylib_h.UnloadImage (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
@@ -3727,11 +3726,13 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Reference count reached 0, unloading the texture id " &
-               Self.Payload.all.Data.id'Image);
-            raylib_h.UnloadTexture (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Reference count reached 0, unloading the texture id " &
+                  Self.Payload.all.Data.id'Image);
+               raylib_h.UnloadTexture (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
@@ -3751,11 +3752,13 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Reference count reached 0, unloading the render texture id " &
-               Self.Payload.all.Data.id'Image);
-            raylib_h.UnloadRenderTexture (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Reference count reached 0, unloading the render texture id " &
+                  Self.Payload.all.Data.id'Image);
+               raylib_h.UnloadRenderTexture (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
@@ -3775,10 +3778,12 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Reference count reached 0, unloading the font");
-            raylib_h.UnloadFont (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Reference count reached 0, unloading the font");
+               raylib_h.UnloadFont (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
@@ -3798,11 +3803,13 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Reference count reached 0, unloading the shader id " &
-               Self.Payload.all.Data.id'Image);
-            raylib_h.UnloadShader (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Reference count reached 0, unloading the shader id " &
+                  Self.Payload.all.Data.id'Image);
+               raylib_h.UnloadShader (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
@@ -3822,10 +3829,12 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Reference count reached 0, unloading the material");
-            raylib_h.UnloadMaterial (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Reference count reached 0, unloading the material");
+               raylib_h.UnloadMaterial (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
@@ -3845,10 +3854,12 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Eeference count reached 0, unloading the model");
-            raylib_h.UnloadModel (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Eeference count reached 0, unloading the model");
+               raylib_h.UnloadModel (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
@@ -3868,10 +3879,12 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Reference count reached 0, unloading the model animation");
-            raylib_h.UnloadModelAnimation (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Reference count reached 0, unloading the model animation");
+               raylib_h.UnloadModelAnimation (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
@@ -3891,10 +3904,12 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Reference count reached 0, unloading the wave");
-            raylib_h.UnloadWave (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Reference count reached 0, unloading the wave");
+               raylib_h.UnloadWave (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
@@ -3914,10 +3929,12 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Reference count reached 0, unloading the audio stream");
-            raylib_h.UnloadAudioStream (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Reference count reached 0, unloading the audio stream");
+               raylib_h.UnloadAudioStream (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
@@ -3937,10 +3954,12 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Reference count reached 0, unloading the sound");
-            raylib_h.UnloadSound (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Reference count reached 0, unloading the sound");
+               raylib_h.UnloadSound (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
@@ -3960,10 +3979,12 @@ package body RayLib is
    begin
       if Self.Payload /= null then
          if Decrement (Self.Payload.all.Counter) then
-            Trace_Log
-              (Log_Debug,
-               "ADA: Reference count reached 0, unloading the music");
-            raylib_h.UnloadMusicStream (Self.Payload.all.Data);
+            if not Self.Payload.all.Parent_Unloads then
+               Trace_Log
+                 (Log_Debug,
+                  "ADA: Reference count reached 0, unloading the music");
+               raylib_h.UnloadMusicStream (Self.Payload.all.Data);
+            end if;
             Free (Self.Payload);
             Self.Payload := null;
          end if;
