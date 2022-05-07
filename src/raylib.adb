@@ -2315,10 +2315,13 @@ package body RayLib is
    end Image_Draw_Text;
 
    function Load_Texture (File_Name : String) return RayLib.Texture2D is
+      File_Name_Copy : chars_ptr        := New_String (File_Name);
+      Result         : RayLib.Texture2D :=
+        (Ada.Finalization.Controlled with Payload => new Texture_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Load_Texture unimplemented");
-      return raise Program_Error with "Unimplemented function Load_Texture";
+      Result.Payload.all.Data := raylib_h.LoadTexture (File_Name_Copy);
+      Free (File_Name_Copy);
+      return Result;
    end Load_Texture;
 
    function Load_Texture_From_Image
@@ -2336,21 +2339,24 @@ package body RayLib is
      (Image : RayLib.Image'Class; Layout : Cubemap_Layout)
       return RayLib.Texture_Cubemap
    is
+      Result : RayLib.Texture_Cubemap :=
+        (Ada.Finalization.Controlled with Payload => new Texture_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Load_Texture_Cubemap unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Load_Texture_Cubemap";
+      Result.Payload.all.Data :=
+        raylib_h.LoadTextureCubemap (Image.Payload.all.Data, int (Layout));
+      return Result;
    end Load_Texture_Cubemap;
 
    function Load_Render_Texture
      (Width : Natural; Height : Natural) return RayLib.Render_Texture2D
    is
+      Result : RayLib.Render_Texture2D :=
+        (Ada.Finalization.Controlled with
+         Payload => new Render_Texture_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Load_Render_Texture unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Load_Render_Texture";
+      Result.Payload.all.Data :=
+        raylib_h.LoadRenderTexture (int (Width), int (Height));
+      return Result;
    end Load_Render_Texture;
 
    procedure Update_Texture
@@ -2374,27 +2380,21 @@ package body RayLib is
 
    procedure Gen_Texture_Mipmaps (Texture : in out RayLib.Texture2D'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Gen_Texture_Mipmaps unimplemented");
-      raise Program_Error with "Unimplemented procedure Gen_Texture_Mipmaps";
+      raylib_h.GenTextureMipmaps (Texture.Payload.all.Data'Access);
    end Gen_Texture_Mipmaps;
 
    procedure Set_Texture_Filter
      (Texture : RayLib.Texture2D'Class; Filter : Texture_Filter)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Texture_Filter unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Texture_Filter";
+      raylib_h.SetTextureFilter (Texture.Payload.all.Data, int (Filter));
    end Set_Texture_Filter;
 
    procedure Set_Texture_Wrap
      (Texture : RayLib.Texture2D'Class; Wrap : Texture_Wrap)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Texture_Wrap unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Texture_Wrap";
+      raylib_h.SetTextureWrap (Texture.Payload.all.Data, int (Wrap));
    end Set_Texture_Wrap;
 
    procedure Draw_Texture
@@ -2411,9 +2411,7 @@ package body RayLib is
       Tint    : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Texture unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Texture";
+      raylib_h.DrawTextureV (Texture.Payload.all.Data, +Position, +Tint);
    end Draw_Texture;
 
    procedure Draw_Texture
@@ -2421,9 +2419,8 @@ package body RayLib is
       Rotation : Float; Scale : Float; Tint : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Texture unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Texture";
+      raylib_h.DrawTextureEx
+        (Texture.Payload.all.Data, +Position, Rotation, Scale, +Tint);
    end Draw_Texture;
 
    procedure Draw_Texture
@@ -2431,9 +2428,8 @@ package body RayLib is
       Position : RayLib.Vector2; Tint : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Texture unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Texture";
+      raylib_h.DrawTextureRec
+        (Texture.Payload.all.Data, +Source, +Position, +Tint);
    end Draw_Texture;
 
    procedure Draw_Texture_Quad
@@ -2441,9 +2437,8 @@ package body RayLib is
       Offset  : RayLib.Vector2; Quad : RayLib.Rectangle; Tint : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Texture_Quad unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Texture_Quad";
+      raylib_h.DrawTextureQuad
+        (Texture.Payload.all.Data, +Tiling, +Offset, +Quad, +Tint);
    end Draw_Texture_Quad;
 
    procedure Draw_Texture_Tiled
@@ -2452,9 +2447,9 @@ package body RayLib is
       Scale   : Float; Tint : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Texture_Tiled unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Texture_Tiled";
+      raylib_h.DrawTextureTiled
+        (Texture.Payload.all.Data, +Source, +Dest, +Origin, Rotation, Scale,
+         +Tint);
    end Draw_Texture_Tiled;
 
    procedure Draw_Texture
@@ -2463,9 +2458,8 @@ package body RayLib is
       Tint    : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Texture unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Texture";
+      raylib_h.DrawTexturePro
+        (Texture.Payload.all.Data, +Source, +Dest, +Origin, Rotation, +Tint);
    end Draw_Texture;
 
    procedure Draw_Texture_N_Patch
@@ -2491,104 +2485,53 @@ package body RayLib is
    end Draw_Texture_Poly;
 
    function Fade (Color : RayLib.Color; Alpha : Float) return RayLib.Color is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Fade unimplemented");
-      return raise Program_Error with "Unimplemented function Fade";
-   end Fade;
+     (+raylib_h.Fade (+Color, Alpha));
 
    function Color_To_Int (Color : RayLib.Color) return Natural is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Color_To_Int unimplemented");
-      return raise Program_Error with "Unimplemented function Color_To_Int";
-   end Color_To_Int;
+     (Natural (raylib_h.ColorToInt (+Color)));
 
    function Color_Normalize (Color : RayLib.Color) return RayLib.Vector4 is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Color_Normalize unimplemented");
-      return raise Program_Error with "Unimplemented function Color_Normalize";
-   end Color_Normalize;
+     (+raylib_h.ColorNormalize (+Color));
 
    function Color_From_Normalized
-     (Normalized : RayLib.Vector4) return RayLib.Color
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Color_From_Normalized unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Color_From_Normalized";
-   end Color_From_Normalized;
+     (Normalized : RayLib.Vector4) return RayLib.Color is
+     (+raylib_h.ColorFromNormalized (+Normalized));
 
    function Color_To_HSV (Color : RayLib.Color) return RayLib.Vector3 is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Color_To_HSV unimplemented");
-      return raise Program_Error with "Unimplemented function Color_To_HSV";
-   end Color_To_HSV;
+     (+raylib_h.ColorToHSV (+Color));
 
    function Color_From_HSV
-     (Hue : Float; Saturation : Float; Value : Float) return RayLib.Color
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Color_From_HSV unimplemented");
-      return raise Program_Error with "Unimplemented function Color_From_HSV";
-   end Color_From_HSV;
+     (Hue : Float; Saturation : Float; Value : Float) return RayLib.Color is
+     (+raylib_h.ColorFromHSV (Hue, Saturation, Value));
 
    function Color_Alpha
-     (Color : RayLib.Color; Alpha : Float) return RayLib.Color
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Color_Alpha unimplemented");
-      return raise Program_Error with "Unimplemented function Color_Alpha";
-   end Color_Alpha;
+     (Color : RayLib.Color; Alpha : Float) return RayLib.Color is
+     (+raylib_h.ColorAlpha (+Color, Alpha));
 
    function Color_Alpha_Blend
      (Dst : RayLib.Color; Src : RayLib.Color; Tint : RayLib.Color)
-      return RayLib.Color
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Color_Alpha_Blend unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Color_Alpha_Blend";
-   end Color_Alpha_Blend;
+      return RayLib.Color is
+     (+raylib_h.ColorAlphaBlend (+Dst, +Src, +Tint));
 
    function Get_Color (Hex_Value : Natural) return RayLib.Color is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Get_Color unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Color";
-   end Get_Color;
+     (+raylib_h.GetColor (unsigned (Hex_Value)));
 
    function Get_Pixel_Color
-     (Src_Ptr : System.Address; Format : Pixel_Format) return RayLib.Color
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Pixel_Color unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Pixel_Color";
-   end Get_Pixel_Color;
+     (Src_Ptr : System.Address; Format : Pixel_Format) return RayLib.Color is
+     (+raylib_h.GetPixelColor (Src_Ptr, int (Format)));
 
    procedure Set_Pixel_Color
      (Dst_Ptr : System.Address; Color : RayLib.Color; Format : Pixel_Format)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Pixel_Color unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Pixel_Color";
+      raylib_h.SetPixelColor (Dst_Ptr, +Color, int (Format));
    end Set_Pixel_Color;
 
    function Get_Pixel_Data_Size
-     (Width : Natural; Height : Natural; Format : Pixel_Format) return Natural
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Pixel_Data_Size unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Pixel_Data_Size";
-   end Get_Pixel_Data_Size;
+     (Width : Natural; Height : Natural; Format : Pixel_Format)
+      return Natural is
+     (Natural
+        (raylib_h.GetPixelDataSize (int (Width), int (Height), int (Format))));
 
    function Get_Font_Default return RayLib.Font'Class is
    begin
