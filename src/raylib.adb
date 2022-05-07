@@ -1241,61 +1241,31 @@ package body RayLib is
    function Is_Mouse_Button_Up (Button : Mouse_Button) return Boolean is
      (Boolean (raylib_h.IsMouseButtonUp (int (Button))));
 
-   function Get_Mouse_X return Natural is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Get_Mouse_X unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Mouse_X";
-   end Get_Mouse_X;
+   function Get_Mouse_X return Natural is (Natural (raylib_h.GetMouseX));
 
-   function Get_Mouse_Y return Natural is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Get_Mouse_Y unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Mouse_Y";
-   end Get_Mouse_Y;
+   function Get_Mouse_Y return Natural is (Natural (raylib_h.GetMouseY));
 
    function Get_Mouse_Position return RayLib.Vector2 is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Mouse_Position unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Mouse_Position";
-   end Get_Mouse_Position;
+     (+raylib_h.GetMousePosition);
 
-   function Get_Mouse_Delta return RayLib.Vector2 is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Mouse_Delta unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Mouse_Delta";
-   end Get_Mouse_Delta;
+   function Get_Mouse_Delta return RayLib.Vector2 is (+raylib_h.GetMouseDelta);
 
    procedure Set_Mouse_Position (X : Natural; Y : Natural) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Mouse_Position unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Mouse_Position";
+      raylib_h.SetMousePosition (int (X), int (Y));
    end Set_Mouse_Position;
 
    procedure Set_Mouse_Offset (Offset_X : Integer; Offset_Y : Integer) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Mouse_Offset unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Mouse_Offset";
+      raylib_h.SetMouseOffset (int (Offset_X), int (Offset_Y));
    end Set_Mouse_Offset;
 
    procedure Set_Mouse_Scale (Scale_X : Float; Scale_Y : Float) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Mouse_Scale unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Mouse_Scale";
+      raylib_h.SetMouseScale (Scale_X, Scale_Y);
    end Set_Mouse_Scale;
 
-   function Get_Mouse_Wheel_Move return Float is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Mouse_Wheel_Move unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Mouse_Wheel_Move";
-   end Get_Mouse_Wheel_Move;
+   function Get_Mouse_Wheel_Move return Float is (raylib_h.GetMouseWheelMove);
 
    procedure Set_Mouse_Cursor (Cursor : Mouse_Cursor) is
    begin
@@ -1459,14 +1429,12 @@ package body RayLib is
      (Pos_X : Natural; Pos_Y : Natural; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Pixel unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Pixel";
+      raylib_h.DrawPixel (int (Pos_X), int (Pos_Y), +Color);
    end Draw_Pixel;
 
    procedure Draw_Pixel (Position : RayLib.Vector2; Color : RayLib.Color) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Pixel unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Pixel";
+      raylib_h.DrawPixelV (+Position, +Color);
    end Draw_Pixel;
 
    procedure Draw_Line
@@ -1474,8 +1442,9 @@ package body RayLib is
       End_Pos_Y   : Natural; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Line unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Line";
+      raylib_h.DrawLine
+        (int (Start_Pos_X), int (Start_Pos_Y), int (End_Pos_X),
+         int (End_Pos_Y), +Color);
    end Draw_Line;
 
    procedure Draw_Line
@@ -1483,8 +1452,7 @@ package body RayLib is
       Color     : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Line unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Line";
+      raylib_h.DrawLineV (+Start_Pos, +End_Pos, +Color);
    end Draw_Line;
 
    procedure Draw_Line
@@ -1492,8 +1460,7 @@ package body RayLib is
       Color     : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Line unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Line";
+      raylib_h.DrawLineEx (+Start_Pos, +End_Pos, Thick, +Color);
    end Draw_Line;
 
    procedure Draw_Line_Bezier
@@ -1501,9 +1468,7 @@ package body RayLib is
       Color     : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Line_Bezier unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Line_Bezier";
+      raylib_h.DrawLineBezier (+Start_Pos, +End_Pos, Thick, +Color);
    end Draw_Line_Bezier;
 
    procedure Draw_Line_Bezier_Quad
@@ -1511,9 +1476,8 @@ package body RayLib is
       Control_Pos : RayLib.Vector2; Thick : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Line_Bezier_Quad unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Line_Bezier_Quad";
+      raylib_h.DrawLineBezierQuad
+        (+Start_Pos, +End_Pos, +Control_Pos, Thick, +Color);
    end Draw_Line_Bezier_Quad;
 
    procedure Draw_Line_Bezier_Cubic
@@ -1522,10 +1486,9 @@ package body RayLib is
       Thick             : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Line_Bezier_Cubic unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Draw_Line_Bezier_Cubic";
+      raylib_h.DrawLineBezierCubic
+        (+Start_Pos, +End_Pos, +Start_Control_Pos, +End_Control_Pos, Thick,
+         +Color);
    end Draw_Line_Bezier_Cubic;
 
    procedure Draw_Line_Strip
@@ -1542,8 +1505,7 @@ package body RayLib is
       Color    : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Circle unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Circle";
+      raylib_h.DrawCircle (int (Center_X), int (Center_Y), Radius, +Color);
    end Draw_Circle;
 
    procedure Draw_Circle_Sector
@@ -1551,9 +1513,8 @@ package body RayLib is
       End_Angle : Float; Segments : Natural; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Circle_Sector unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Circle_Sector";
+      raylib_h.DrawCircleSector
+        (+Center, Radius, Start_Angle, End_Angle, int (Segments), +Color);
    end Draw_Circle_Sector;
 
    procedure Draw_Circle_Sector_Lines
@@ -1561,10 +1522,8 @@ package body RayLib is
       End_Angle : Float; Segments : Natural; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Circle_Sector_Lines unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Draw_Circle_Sector_Lines";
+      raylib_h.DrawCircleSectorLines
+        (+Center, Radius, Start_Angle, End_Angle, int (Segments), +Color);
    end Draw_Circle_Sector_Lines;
 
    procedure Draw_Circle_Gradient
@@ -1572,17 +1531,15 @@ package body RayLib is
       Color1   : RayLib.Color; Color2 : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Circle_Gradient unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Circle_Gradient";
+      raylib_h.DrawCircleGradient
+        (int (Center_X), int (Center_Y), Radius, +Color1, +Color2);
    end Draw_Circle_Gradient;
 
    procedure Draw_Circle
      (Center : RayLib.Vector2; Radius : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Circle unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Circle";
+      raylib_h.DrawCircleV (+Center, Radius, +Color);
    end Draw_Circle;
 
    procedure Draw_Circle_Lines
@@ -1590,9 +1547,8 @@ package body RayLib is
       Color    : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Circle_Lines unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Circle_Lines";
+      raylib_h.DrawCircleLines
+        (int (Center_X), int (Center_Y), Radius, +Color);
    end Draw_Circle_Lines;
 
    procedure Draw_Ellipse
@@ -1600,9 +1556,8 @@ package body RayLib is
       Radius_V : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Ellipse unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Ellipse";
+      raylib_h.DrawEllipse
+        (int (Center_X), int (Center_Y), Radius_H, Radius_V, +Color);
    end Draw_Ellipse;
 
    procedure Draw_Ellipse_Lines
@@ -1610,9 +1565,8 @@ package body RayLib is
       Radius_V : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Ellipse_Lines unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Ellipse_Lines";
+      raylib_h.DrawEllipseLines
+        (int (Center_X), int (Center_Y), Radius_H, Radius_V, +Color);
    end Draw_Ellipse_Lines;
 
    procedure Draw_Ring
@@ -1621,8 +1575,9 @@ package body RayLib is
       Color       : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Ring unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Ring";
+      raylib_h.DrawRing
+        (+Center, Inner_Radius, Outer_Radius, Start_Angle, End_Angle,
+         int (Segments), +Color);
    end Draw_Ring;
 
    procedure Draw_Ring_Lines
@@ -1631,9 +1586,9 @@ package body RayLib is
       Color       : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Ring_Lines unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Ring_Lines";
+      raylib_h.DrawRingLines
+        (+Center, Inner_Radius, Outer_Radius, Start_Angle, End_Angle,
+         int (Segments), +Color);
    end Draw_Ring_Lines;
 
    procedure Draw_Rectangle
@@ -1649,16 +1604,12 @@ package body RayLib is
      (Position : RayLib.Vector2; Size : RayLib.Vector2; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Rectangle unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Rectangle";
+      raylib_h.DrawRectangleV (+Position, +Size, +Color);
    end Draw_Rectangle;
 
    procedure Draw_Rectangle (Rec : RayLib.Rectangle; Color : RayLib.Color) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Rectangle unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Rectangle";
+      raylib_h.DrawRectangleRec (+Rec, +Color);
    end Draw_Rectangle;
 
    procedure Draw_Rectangle
@@ -1666,9 +1617,7 @@ package body RayLib is
       Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Rectangle unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Rectangle";
+      raylib_h.DrawRectanglePro (+Rec, +Origin, Rotation, +Color);
    end Draw_Rectangle;
 
    procedure Draw_Rectangle_Gradient_Vertical
@@ -1676,10 +1625,9 @@ package body RayLib is
       Color1 : RayLib.Color; Color2 : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Rectangle_Gradient_Vertical unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Draw_Rectangle_Gradient_Vertical";
+      raylib_h.DrawRectangleGradientV
+        (int (Pos_X), int (Pos_Y), int (Width), int (Height), +Color1,
+         +Color2);
    end Draw_Rectangle_Gradient_Vertical;
 
    procedure Draw_Rectangle_Gradient_Horizontal
@@ -1687,10 +1635,9 @@ package body RayLib is
       Color1 : RayLib.Color; Color2 : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Rectangle_Gradient_Horizontal unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Draw_Rectangle_Gradient_Horizontal";
+      raylib_h.DrawRectangleGradientH
+        (int (Pos_X), int (Pos_Y), int (Width), int (Height), +Color1,
+         +Color2);
    end Draw_Rectangle_Gradient_Horizontal;
 
    procedure Draw_Rectangle_Gradient
@@ -1698,10 +1645,7 @@ package body RayLib is
       Col3 : RayLib.Color; Col4 : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Rectangle_Gradient unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Draw_Rectangle_Gradient";
+      raylib_h.DrawRectangleGradientEx (+Rec, +Col1, +Col2, +Col3, +Col4);
    end Draw_Rectangle_Gradient;
 
    procedure Draw_Rectangle_Lines
@@ -1709,18 +1653,15 @@ package body RayLib is
       Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Rectangle_Lines unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Rectangle_Lines";
+      raylib_h.DrawRectangleLines
+        (int (Pos_X), int (Pos_Y), int (Width), int (Height), +Color);
    end Draw_Rectangle_Lines;
 
    procedure Draw_Rectangle_Lines
      (Rec : RayLib.Rectangle; Line_Thick : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Rectangle_Lines unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Rectangle_Lines";
+      raylib_h.DrawRectangleLinesEx (+Rec, Line_Thick, +Color);
    end Draw_Rectangle_Lines;
 
    procedure Draw_Rectangle_Rounded
@@ -1728,10 +1669,7 @@ package body RayLib is
       Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Rectangle_Rounded unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Draw_Rectangle_Rounded";
+      raylib_h.DrawRectangleRounded (+Rec, Roundness, int (Segments), +Color);
    end Draw_Rectangle_Rounded;
 
    procedure Draw_Rectangle_Rounded_Lines
@@ -1739,10 +1677,8 @@ package body RayLib is
       Line_Thick : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Rectangle_Rounded_Lines unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Draw_Rectangle_Rounded_Lines";
+      raylib_h.DrawRectangleRoundedLines
+        (+Rec, Roundness, int (Segments), Line_Thick, +Color);
    end Draw_Rectangle_Rounded_Lines;
 
    procedure Draw_Triangle
@@ -2842,8 +2778,7 @@ package body RayLib is
 
    procedure Draw_FPS (Pos_X : Natural; Pos_Y : Natural) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_FPS unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_FPS";
+      raylib_h.DrawFPS (int (Pos_X), int (Pos_Y));
    end Draw_FPS;
 
    procedure Draw_Text

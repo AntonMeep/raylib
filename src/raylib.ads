@@ -83,6 +83,7 @@ package RayLib is
 
    Flag_Window_Unfocused : constant Config_Flag := 16#0000_0800#;
    --  Set to window non focused
+
    Flag_Window_Topmost : constant Config_Flag := 16#0000_1000#;
    --  Set to window always on top
 
