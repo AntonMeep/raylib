@@ -3302,9 +3302,6 @@ package RayLib is
    procedure Set_Sound_Pitch (Sound : RayLib.Sound'Class; Pitch : Float);
    --  Set pitch for a sound (1.0 is base level)
 
-   procedure Set_Sound_Pan (Sound : RayLib.Sound'Class; Pan : Float);
-   --  Set pan for a sound (0.5 is center)
-
    function Wave_Copy (Wave : RayLib.Wave'Class) return RayLib.Wave'Class;
    --  Copy a wave to a new wave
 
@@ -3352,10 +3349,6 @@ package RayLib is
    procedure Seek_Music_Stream (Music : RayLib.Music'Class; Position : Float);
    --  Seek music to a position (in seconds)
 
-   procedure Seek_Music_Stream
-     (Music : RayLib.Music'Class; Position : Duration);
-   --  Seek music to a position (in seconds)
-
    procedure Set_Music_Volume (Music : RayLib.Music'Class; Volume : Float) with
       Pre => Volume <= 1.0;
       --  Set volume for music (1.0 is max level)
@@ -3363,19 +3356,10 @@ package RayLib is
    procedure Set_Music_Pitch (Music : RayLib.Music'Class; Pitch : Float);
    --  Set pitch for a music (1.0 is base level)
 
-   procedure Set_Music_Pan (Music : RayLib.Music'Class; Pan : Float);
-   --  Set pan for a music (0.5 is center)
-
    function Get_Music_Time_Length (Music : RayLib.Music'Class) return Float;
    --  Get music time length (in seconds)
 
-   function Get_Music_Time_Length (Music : RayLib.Music'Class) return Duration;
-   --  Get music time length (in seconds)
-
    function Get_Music_Time_Played (Music : RayLib.Music'Class) return Float;
-   --  Get current music time played (in seconds)
-
-   function Get_Music_Time_Played (Music : RayLib.Music'Class) return Duration;
    --  Get current music time played (in seconds)
 
    function Load_Audio_Stream
@@ -3416,10 +3400,6 @@ package RayLib is
      (Stream : RayLib.Audio_Stream'Class; Pitch : Float);
    --  Set pitch for audio stream (1.0 is base level)
 
-   procedure Set_Audio_Stream_Pan
-     (Stream : RayLib.Audio_Stream'Class; Pan : Float);
-   --  Set pan for audio stream (0.5 is centered)
-
    procedure Set_Audio_Stream_Buffer_Size_Default (Size : Natural);
    --  Default size for new audio streams
 private
@@ -3427,7 +3407,7 @@ private
 
    type Image_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.Image;
+      Data    : aliased raylib_h.Image;
    end record;
    type Image_Payload_Access is access all Image_Payload;
 
@@ -3440,7 +3420,7 @@ private
 
    type Texture_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.Texture;
+      Data    : aliased raylib_h.Texture;
    end record;
    type Texture_Payload_Access is access all Texture_Payload;
 
@@ -3453,7 +3433,7 @@ private
 
    type Render_Texture_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.RenderTexture;
+      Data    : aliased raylib_h.RenderTexture;
    end record;
    type Render_Texture_Payload_Access is access all Render_Texture_Payload;
 
@@ -3466,7 +3446,7 @@ private
 
    type Font_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.Font;
+      Data    : aliased raylib_h.Font;
    end record;
    type Font_Payload_Access is access all Font_Payload;
 
@@ -3479,7 +3459,7 @@ private
 
    type Mesh_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.Mesh;
+      Data    : aliased raylib_h.Mesh;
    end record;
    type Mesh_Payload_Access is access all Mesh_Payload;
 
@@ -3489,7 +3469,7 @@ private
 
    type Shader_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.Shader;
+      Data    : aliased raylib_h.Shader;
    end record;
    type Shader_Payload_Access is access all Shader_Payload;
 
@@ -3502,7 +3482,7 @@ private
 
    type Material_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.Material;
+      Data    : aliased raylib_h.Material;
    end record;
    type Material_Payload_Access is access all Material_Payload;
 
@@ -3515,7 +3495,7 @@ private
 
    type Model_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.Model;
+      Data    : aliased raylib_h.Model;
    end record;
    type Model_Payload_Access is access all Model_Payload;
 
@@ -3528,7 +3508,7 @@ private
 
    type Model_Animation_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.ModelAnimation;
+      Data    : aliased raylib_h.ModelAnimation;
    end record;
    type Model_Animation_Payload_Access is access all Model_Animation_Payload;
 
@@ -3541,7 +3521,7 @@ private
 
    type Wave_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.Wave;
+      Data    : aliased raylib_h.Wave;
    end record;
    type Wave_Payload_Access is access all Wave_Payload;
 
@@ -3554,7 +3534,7 @@ private
 
    type Audio_Stream_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.AudioStream;
+      Data    : aliased raylib_h.AudioStream;
    end record;
    type Audio_Stream_Payload_Access is access all Audio_Stream_Payload;
 
@@ -3567,7 +3547,7 @@ private
 
    type Sound_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.Sound;
+      Data    : aliased raylib_h.Sound;
    end record;
    type Sound_Payload_Access is access all Sound_Payload;
 
@@ -3580,7 +3560,7 @@ private
 
    type Music_Payload is record
       Counter : Atomic_Counter;
-      Data    : raylib_h.Music;
+      Data    : aliased raylib_h.Music;
    end record;
    type Music_Payload_Access is access all Music_Payload;
 

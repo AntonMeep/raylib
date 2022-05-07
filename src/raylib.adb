@@ -1,6 +1,7 @@
 pragma Ada_2012;
 
 with Ada.Finalization;
+with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
 
 with Interfaces.C;            use Interfaces.C;
@@ -1744,12 +1745,24 @@ package body RayLib is
    function Load_Image_From_Memory
      (File_Type : String; File_Data : Stream_Element_Array) return RayLib.Image
    is
+      type File_Data_Type is
+        array
+          (int range int (File_Data'First) ..
+               int (File_Data'Last)) of aliased unsigned_char;
+      function Convert is new Ada.Unchecked_Conversion
+        (Stream_Element_Array, File_Data_Type);
+
+      File_Type_Copy : chars_ptr              := New_String (File_Type);
+      File_Data_Copy : aliased File_Data_Type := Convert (File_Data);
+      Result         : RayLib.Image           :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Load_Image_From_Memory unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Load_Image_From_Memory";
+      Result.Payload.all.Data :=
+        raylib_h.LoadImageFromMemory
+          (File_Type_Copy, File_Data_Copy (File_Data_Copy'First)'Access,
+           File_Data_Copy'Length);
+      Free (File_Type_Copy);
+      return Result;
    end Load_Image_From_Memory;
 
    function Load_Image_From_Texture
@@ -3599,33 +3612,17 @@ package body RayLib is
      (Natural (raylib_h.GetSoundsPlaying));
 
    function Is_Sound_Playing (Sound : RayLib.Sound'Class) return Boolean is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Sound_Playing unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Is_Sound_Playing";
-   end Is_Sound_Playing;
+     (Boolean (raylib_h.IsSoundPlaying (Sound.Payload.all.Data)));
 
    procedure Set_Sound_Volume (Sound : RayLib.Sound'Class; Volume : Float) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Sound_Volume unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Sound_Volume";
+      raylib_h.SetSoundVolume (Sound.Payload.all.Data, Volume);
    end Set_Sound_Volume;
 
    procedure Set_Sound_Pitch (Sound : RayLib.Sound'Class; Pitch : Float) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Sound_Pitch unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Sound_Pitch";
+      raylib_h.SetSoundPitch (Sound.Payload.all.Data, Pitch);
    end Set_Sound_Pitch;
-
-   procedure Set_Sound_Pan (Sound : RayLib.Sound'Class; Pan : Float) is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Sound_Pan unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Sound_Pan";
-   end Set_Sound_Pan;
 
    function Wave_Copy (Wave : RayLib.Wave'Class) return RayLib.Wave'Class is
    begin
@@ -3638,8 +3635,8 @@ package body RayLib is
       Final_Sample :        Natural)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Wave_Crop unimplemented");
-      raise Program_Error with "Unimplemented procedure Wave_Crop";
+      raylib_h.WaveCrop
+        (Wave.Payload.all.Data'Access, int (Init_Sample), int (Final_Sample));
    end Wave_Crop;
 
    procedure Wave_Format
@@ -3647,8 +3644,9 @@ package body RayLib is
       Sample_Size :        Natural; Channels : Natural)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Wave_Format unimplemented");
-      raise Program_Error with "Unimplemented procedure Wave_Format";
+      raylib_h.WaveFormat
+        (Wave.Payload.all.Data'Access, int (Sample_Rate), int (Sample_Size),
+         int (Channels));
    end Wave_Format;
 
    function Load_Wave_Samples
@@ -3683,124 +3681,54 @@ package body RayLib is
 
    procedure Play_Music_Stream (Music : RayLib.Music'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Play_Music_Stream unimplemented");
-      raise Program_Error with "Unimplemented procedure Play_Music_Stream";
+      raylib_h.PlayMusicStream (Music.Payload.all.Data);
    end Play_Music_Stream;
 
-   function Is_Music_Stream_Playing (Music : RayLib.Music'Class) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Music_Stream_Playing unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Is_Music_Stream_Playing";
-   end Is_Music_Stream_Playing;
+   function Is_Music_Stream_Playing
+     (Music : RayLib.Music'Class) return Boolean is
+     (Boolean (raylib_h.IsMusicStreamPlaying (Music.Payload.all.Data)));
 
    procedure Update_Music_Stream (Music : RayLib.Music'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Update_Music_Stream unimplemented");
-      raise Program_Error with "Unimplemented procedure Update_Music_Stream";
+      raylib_h.UpdateMusicStream (Music.Payload.all.Data);
    end Update_Music_Stream;
 
    procedure Stop_Music_Stream (Music : RayLib.Music'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Stop_Music_Stream unimplemented");
-      raise Program_Error with "Unimplemented procedure Stop_Music_Stream";
+      raylib_h.StopMusicStream (Music.Payload.all.Data);
    end Stop_Music_Stream;
 
    procedure Pause_Music_Stream (Music : RayLib.Music'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Pause_Music_Stream unimplemented");
-      raise Program_Error with "Unimplemented procedure Pause_Music_Stream";
+      raylib_h.PauseMusicStream (Music.Payload.all.Data);
    end Pause_Music_Stream;
 
    procedure Resume_Music_Stream (Music : RayLib.Music'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Resume_Music_Stream unimplemented");
-      raise Program_Error with "Unimplemented procedure Resume_Music_Stream";
+      raylib_h.ResumeMusicStream (Music.Payload.all.Data);
    end Resume_Music_Stream;
 
    procedure Seek_Music_Stream (Music : RayLib.Music'Class; Position : Float)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Seek_Music_Stream unimplemented");
-      raise Program_Error with "Unimplemented procedure Seek_Music_Stream";
-   end Seek_Music_Stream;
-
-   procedure Seek_Music_Stream
-     (Music : RayLib.Music'Class; Position : Duration)
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Seek_Music_Stream unimplemented");
-      raise Program_Error with "Unimplemented procedure Seek_Music_Stream";
+      raylib_h.SeekMusicStream (Music.Payload.all.Data, Position);
    end Seek_Music_Stream;
 
    procedure Set_Music_Volume (Music : RayLib.Music'Class; Volume : Float) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Music_Volume unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Music_Volume";
+      raylib_h.SetMusicVolume (Music.Payload.all.Data, Volume);
    end Set_Music_Volume;
 
    procedure Set_Music_Pitch (Music : RayLib.Music'Class; Pitch : Float) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Music_Pitch unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Music_Pitch";
+      raylib_h.SetMusicPitch (Music.Payload.all.Data, Pitch);
    end Set_Music_Pitch;
 
-   procedure Set_Music_Pan (Music : RayLib.Music'Class; Pan : Float) is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Music_Pan unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Music_Pan";
-   end Set_Music_Pan;
-
    function Get_Music_Time_Length (Music : RayLib.Music'Class) return Float is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Music_Time_Length unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Music_Time_Length";
-   end Get_Music_Time_Length;
-
-   function Get_Music_Time_Length (Music : RayLib.Music'Class) return Duration
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Music_Time_Length unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Music_Time_Length";
-   end Get_Music_Time_Length;
+     (raylib_h.GetMusicTimeLength (Music.Payload.all.Data));
 
    function Get_Music_Time_Played (Music : RayLib.Music'Class) return Float is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Music_Time_Played unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Music_Time_Played";
-   end Get_Music_Time_Played;
-
-   function Get_Music_Time_Played (Music : RayLib.Music'Class) return Duration
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Music_Time_Played unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Music_Time_Played";
-   end Get_Music_Time_Played;
+     (raylib_h.GetMusicTimePlayed (Music.Payload.all.Data));
 
    function Load_Audio_Stream
      (Sample_Rate : Natural; Sample_Size : Natural; Channels : Natural)
@@ -3824,90 +3752,50 @@ package body RayLib is
    end Update_Audio_Stream;
 
    function Is_Audio_Stream_Processed
-     (Stream : RayLib.Audio_Stream'Class) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Audio_Stream_Processed unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Is_Audio_Stream_Processed";
-   end Is_Audio_Stream_Processed;
+     (Stream : RayLib.Audio_Stream'Class) return Boolean is
+     (Boolean (raylib_h.IsAudioStreamProcessed (Stream.Payload.all.Data)));
 
    procedure Play_Audio_Stream (Stream : RayLib.Audio_Stream'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Play_Audio_Stream unimplemented");
-      raise Program_Error with "Unimplemented procedure Play_Audio_Stream";
+      raylib_h.PlayAudioStream (Stream.Payload.all.Data);
    end Play_Audio_Stream;
 
    procedure Pause_Audio_Stream (Stream : RayLib.Audio_Stream'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Pause_Audio_Stream unimplemented");
-      raise Program_Error with "Unimplemented procedure Pause_Audio_Stream";
+      raylib_h.PauseAudioStream (Stream.Payload.all.Data);
    end Pause_Audio_Stream;
 
    procedure Resume_Audio_Stream (Stream : RayLib.Audio_Stream'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Resume_Audio_Stream unimplemented");
-      raise Program_Error with "Unimplemented procedure Resume_Audio_Stream";
+      raylib_h.ResumeAudioStream (Stream.Payload.all.Data);
    end Resume_Audio_Stream;
 
    function Is_Audio_Stream_Playing
-     (Stream : RayLib.Audio_Stream'Class) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Audio_Stream_Playing unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Is_Audio_Stream_Playing";
-   end Is_Audio_Stream_Playing;
+     (Stream : RayLib.Audio_Stream'Class) return Boolean is
+     (Boolean (raylib_h.IsAudioStreamPlaying (Stream.Payload.all.Data)));
 
    procedure Stop_Audio_Stream (Stream : RayLib.Audio_Stream'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Stop_Audio_Stream unimplemented");
-      raise Program_Error with "Unimplemented procedure Stop_Audio_Stream";
+      raylib_h.StopAudioStream (Stream.Payload.all.Data);
    end Stop_Audio_Stream;
 
    procedure Set_Audio_Stream_Volume
      (Stream : RayLib.Audio_Stream'Class; Volume : Float)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Audio_Stream_Volume unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Set_Audio_Stream_Volume";
+      raylib_h.SetAudioStreamVolume (Stream.Payload.all.Data, Volume);
    end Set_Audio_Stream_Volume;
 
    procedure Set_Audio_Stream_Pitch
      (Stream : RayLib.Audio_Stream'Class; Pitch : Float)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Audio_Stream_Pitch unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Set_Audio_Stream_Pitch";
+      raylib_h.SetAudioStreamPitch (Stream.Payload.all.Data, Pitch);
    end Set_Audio_Stream_Pitch;
-
-   procedure Set_Audio_Stream_Pan
-     (Stream : RayLib.Audio_Stream'Class; Pan : Float)
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Audio_Stream_Pan unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Audio_Stream_Pan";
-   end Set_Audio_Stream_Pan;
 
    procedure Set_Audio_Stream_Buffer_Size_Default (Size : Natural) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Audio_Stream_Buffer_Size_Default unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Set_Audio_Stream_Buffer_Size_Default";
+      raylib_h.SetAudioStreamBufferSizeDefault (int (Size));
    end Set_Audio_Stream_Buffer_Size_Default;
 
    use System.Atomic_Counters;
