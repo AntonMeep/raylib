@@ -3115,63 +3115,58 @@ package RayLib is
    procedure Gen_Mesh_Binormals (Mesh : in out RayLib.Mesh'Class);
    --  Compute mesh binormals
 
-   function Gen_Mesh_Poly
-     (Sides : Natural; Radius : Float) return RayLib.Mesh'Class;
+   function Gen_Mesh_Poly (Sides : Natural; Radius : Float) return RayLib.Mesh;
    --  Generate polygonal mesh
 
    function Gen_Mesh_Plane
      (Width : Float; Length : Float; Res_X : Integer; Res_Z : Natural)
-      return RayLib.Mesh'Class;
+      return RayLib.Mesh;
    --  Generate plane mesh (with subdivisions)
 
    function Gen_Mesh_Cube
-     (Width : Float; Height : Float; Length : Float) return RayLib.Mesh'Class;
+     (Width : Float; Height : Float; Length : Float) return RayLib.Mesh;
    --  Generate cuboid mesh
 
    function Gen_Mesh_Sphere
-     (Radius : Float; Rings : Natural; Slices : Natural)
-      return RayLib.Mesh'Class;
+     (Radius : Float; Rings : Natural; Slices : Natural) return RayLib.Mesh;
    --  Generate sphere mesh (standard sphere)
 
    function Gen_Mesh_Hemi_Sphere
-     (Radius : Float; Rings : Natural; Slices : Natural)
-      return RayLib.Mesh'Class;
+     (Radius : Float; Rings : Natural; Slices : Natural) return RayLib.Mesh;
    --  Generate half-sphere mesh (no bottom cap)
 
    function Gen_Mesh_Cylinder
-     (Radius : Float; Height : Float; Slices : Natural)
-      return RayLib.Mesh'Class;
+     (Radius : Float; Height : Float; Slices : Natural) return RayLib.Mesh;
    --  Generate cylinder mesh
 
    function Gen_Mesh_Cone
-     (Radius : Float; Height : Float; Slices : Natural)
-      return RayLib.Mesh'Class;
+     (Radius : Float; Height : Float; Slices : Natural) return RayLib.Mesh;
    --  Generate cone/pyramid mesh
 
    function Gen_Mesh_Torus
      (Radius : Float; Size : Float; Rad_Seg : Natural; Sides : Natural)
-      return RayLib.Mesh'Class;
+      return RayLib.Mesh;
    --  Generate torus mesh
 
    function Gen_Mesh_Knot
      (Radius : Float; Size : Float; Rad_Seg : Natural; Sides : Natural)
-      return RayLib.Mesh'Class;
+      return RayLib.Mesh;
    --  Generate trefoil knot mesh
 
    function Gen_Mesh_Heightmap
      (Heightmap : RayLib.Image'Class; Size : RayLib.Vector3)
-      return RayLib.Mesh'Class;
+      return RayLib.Mesh;
    --  Generate heightmap mesh from image data
 
    function Gen_Mesh_Cubicmap
      (Cubicmap : RayLib.Image'Class; Cube_Size : RayLib.Vector3)
-      return RayLib.Mesh'Class;
+      return RayLib.Mesh;
    --  Generate cubes-based map mesh from image data
 
    function Load_Materials (File_Name : String) return RayLib.Material_Array;
    --  Load materials from model file
 
-   function Load_Material_Default return RayLib.Material'Class;
+   function Load_Material_Default return RayLib.Material;
    --  Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 
    procedure Set_Material_Texture
@@ -3218,7 +3213,7 @@ package RayLib is
    --  Get collision info between ray and box
 
    function Get_Ray_Collision_Mesh
-     (Ray : RayLib.Ray; Mesh : RayLib.Mesh; Transform : RayLib.Matrix)
+     (Ray : RayLib.Ray; Mesh : RayLib.Mesh'Class; Transform : RayLib.Matrix)
       return RayLib.Ray_Collision;
    --  Get collision info between ray and mesh
 

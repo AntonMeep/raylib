@@ -3200,8 +3200,7 @@ package body RayLib is
    procedure Upload_Mesh (Mesh : in out RayLib.Mesh'Class; Dynamic : Boolean)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Upload_Mesh unimplemented");
-      raise Program_Error with "Unimplemented procedure Upload_Mesh";
+      raylib_h.UploadMesh (Mesh.Payload.all.Data'Access, bool (Dynamic));
    end Upload_Mesh;
 
    procedure Update_Mesh_Buffer
@@ -3218,8 +3217,8 @@ package body RayLib is
       Transform : RayLib.Matrix)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Mesh unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Mesh";
+      raylib_h.DrawMesh
+        (Mesh.Payload.all.Data, Material.Payload.all.Data, +Transform);
    end Draw_Mesh;
 
    procedure Draw_Mesh_Instanced
@@ -3241,32 +3240,20 @@ package body RayLib is
    end Export_Mesh;
 
    function Get_Mesh_Bounding_Box
-     (Mesh : RayLib.Mesh'Class) return RayLib.Bounding_Box
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Mesh_Bounding_Box unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Mesh_Bounding_Box";
-   end Get_Mesh_Bounding_Box;
+     (Mesh : RayLib.Mesh'Class) return RayLib.Bounding_Box is
+     (+raylib_h.GetMeshBoundingBox (Mesh.Payload.all.Data));
 
    procedure Gen_Mesh_Tangents (Mesh : in out RayLib.Mesh'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Gen_Mesh_Tangents unimplemented");
-      raise Program_Error with "Unimplemented procedure Gen_Mesh_Tangents";
+      raylib_h.GenMeshTangents (Mesh.Payload.all.Data'Access);
    end Gen_Mesh_Tangents;
 
    procedure Gen_Mesh_Binormals (Mesh : in out RayLib.Mesh'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Gen_Mesh_Binormals unimplemented");
-      raise Program_Error with "Unimplemented procedure Gen_Mesh_Binormals";
+      raylib_h.GenMeshBinormals (Mesh.Payload.all.Data'Access);
    end Gen_Mesh_Binormals;
 
-   function Gen_Mesh_Poly
-     (Sides : Natural; Radius : Float) return RayLib.Mesh'Class
+   function Gen_Mesh_Poly (Sides : Natural; Radius : Float) return RayLib.Mesh
    is
    begin
       pragma Compile_Time_Warning
@@ -3276,7 +3263,7 @@ package body RayLib is
 
    function Gen_Mesh_Plane
      (Width : Float; Length : Float; Res_X : Integer; Res_Z : Natural)
-      return RayLib.Mesh'Class
+      return RayLib.Mesh
    is
    begin
       pragma Compile_Time_Warning
@@ -3285,7 +3272,7 @@ package body RayLib is
    end Gen_Mesh_Plane;
 
    function Gen_Mesh_Cube
-     (Width : Float; Height : Float; Length : Float) return RayLib.Mesh'Class
+     (Width : Float; Height : Float; Length : Float) return RayLib.Mesh
    is
    begin
       pragma Compile_Time_Warning
@@ -3294,8 +3281,7 @@ package body RayLib is
    end Gen_Mesh_Cube;
 
    function Gen_Mesh_Sphere
-     (Radius : Float; Rings : Natural; Slices : Natural)
-      return RayLib.Mesh'Class
+     (Radius : Float; Rings : Natural; Slices : Natural) return RayLib.Mesh
    is
    begin
       pragma Compile_Time_Warning
@@ -3304,8 +3290,7 @@ package body RayLib is
    end Gen_Mesh_Sphere;
 
    function Gen_Mesh_Hemi_Sphere
-     (Radius : Float; Rings : Natural; Slices : Natural)
-      return RayLib.Mesh'Class
+     (Radius : Float; Rings : Natural; Slices : Natural) return RayLib.Mesh
    is
    begin
       pragma Compile_Time_Warning
@@ -3315,8 +3300,7 @@ package body RayLib is
    end Gen_Mesh_Hemi_Sphere;
 
    function Gen_Mesh_Cylinder
-     (Radius : Float; Height : Float; Slices : Natural)
-      return RayLib.Mesh'Class
+     (Radius : Float; Height : Float; Slices : Natural) return RayLib.Mesh
    is
    begin
       pragma Compile_Time_Warning
@@ -3326,8 +3310,7 @@ package body RayLib is
    end Gen_Mesh_Cylinder;
 
    function Gen_Mesh_Cone
-     (Radius : Float; Height : Float; Slices : Natural)
-      return RayLib.Mesh'Class
+     (Radius : Float; Height : Float; Slices : Natural) return RayLib.Mesh
    is
    begin
       pragma Compile_Time_Warning
@@ -3337,7 +3320,7 @@ package body RayLib is
 
    function Gen_Mesh_Torus
      (Radius : Float; Size : Float; Rad_Seg : Natural; Sides : Natural)
-      return RayLib.Mesh'Class
+      return RayLib.Mesh
    is
    begin
       pragma Compile_Time_Warning
@@ -3347,7 +3330,7 @@ package body RayLib is
 
    function Gen_Mesh_Knot
      (Radius : Float; Size : Float; Rad_Seg : Natural; Sides : Natural)
-      return RayLib.Mesh'Class
+      return RayLib.Mesh
    is
    begin
       pragma Compile_Time_Warning
@@ -3356,8 +3339,7 @@ package body RayLib is
    end Gen_Mesh_Knot;
 
    function Gen_Mesh_Heightmap
-     (Heightmap : RayLib.Image'Class; Size : RayLib.Vector3)
-      return RayLib.Mesh'Class
+     (Heightmap : RayLib.Image'Class; Size : RayLib.Vector3) return RayLib.Mesh
    is
    begin
       pragma Compile_Time_Warning
@@ -3368,7 +3350,7 @@ package body RayLib is
 
    function Gen_Mesh_Cubicmap
      (Cubicmap : RayLib.Image'Class; Cube_Size : RayLib.Vector3)
-      return RayLib.Mesh'Class
+      return RayLib.Mesh
    is
    begin
       pragma Compile_Time_Warning
@@ -3384,7 +3366,7 @@ package body RayLib is
       return raise Program_Error with "Unimplemented function Load_Materials";
    end Load_Materials;
 
-   function Load_Material_Default return RayLib.Material'Class is
+   function Load_Material_Default return RayLib.Material is
    begin
       pragma Compile_Time_Warning
         (Standard.True, "Load_Material_Default unimplemented");
@@ -3398,9 +3380,9 @@ package body RayLib is
       Texture  :        RayLib.Texture2D'Class)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Material_Texture unimplemented");
-      raise Program_Error with "Unimplemented procedure Set_Material_Texture";
+      raylib_h.SetMaterialTexture
+        (Material.Payload.all.Data'Access, int (Map_Type),
+         Texture.Payload.all.Data);
    end Set_Material_Texture;
 
    procedure Set_Model_Mesh_Material
@@ -3408,10 +3390,8 @@ package body RayLib is
       Material_Id :        Natural)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Set_Model_Mesh_Material unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Set_Model_Mesh_Material";
+      raylib_h.SetModelMeshMaterial
+        (Model.Payload.all.Data'Access, int (Mesh_Id), int (Material_Id));
    end Set_Model_Mesh_Material;
 
    function Load_Model_Animations
@@ -3430,23 +3410,16 @@ package body RayLib is
       Frame : Natural)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Update_Model_Animation unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Update_Model_Animation";
+      raylib_h.UpdateModelAnimation
+        (Model.Payload.all.Data, Anim.Payload.all.Data, int (Frame));
    end Update_Model_Animation;
 
    function Is_Model_Animation_Valid
      (Model : RayLib.Model'Class; Anim : RayLib.Model_Animation'Class)
-      return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Is_Model_Animation_Valid unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Is_Model_Animation_Valid";
-   end Is_Model_Animation_Valid;
+      return Boolean is
+     (Boolean
+        (raylib_h.IsModelAnimationValid
+           (Model.Payload.all.Data, Anim.Payload.all.Data)));
 
    function Check_Collision_Spheres
      (Center1 : RayLib.Vector3; Radius1 : Float; Center2 : RayLib.Vector3;
@@ -3470,16 +3443,9 @@ package body RayLib is
      (+raylib_h.GetRayCollisionBox (+Ray, +Box));
 
    function Get_Ray_Collision_Mesh
-     (Ray : RayLib.Ray; Mesh : RayLib.Mesh; Transform : RayLib.Matrix)
-      return RayLib.Ray_Collision
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Ray_Collision_Mesh unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Ray_Collision_Mesh";
-   end Get_Ray_Collision_Mesh;
+     (Ray : RayLib.Ray; Mesh : RayLib.Mesh'Class; Transform : RayLib.Matrix)
+      return RayLib.Ray_Collision is
+     (+raylib_h.GetRayCollisionMesh (+Ray, Mesh.Payload.all.Data, +Transform));
 
    function Get_Ray_Collision_Triangle
      (Ray : RayLib.Ray; P1 : RayLib.Vector3; P2 : RayLib.Vector3;
@@ -3573,34 +3539,27 @@ package body RayLib is
 
    procedure Play_Sound (Sound : RayLib.Sound'Class) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Play_Sound unimplemented");
-      raise Program_Error with "Unimplemented procedure Play_Sound";
+      raylib_h.PlaySound (Sound.Payload.all.Data);
    end Play_Sound;
 
    procedure Stop_Sound (Sound : RayLib.Sound'Class) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Stop_Sound unimplemented");
-      raise Program_Error with "Unimplemented procedure Stop_Sound";
+      raylib_h.StopSound (Sound.Payload.all.Data);
    end Stop_Sound;
 
    procedure Pause_Sound (Sound : RayLib.Sound'Class) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Pause_Sound unimplemented");
-      raise Program_Error with "Unimplemented procedure Pause_Sound";
+      raylib_h.PauseSound (Sound.Payload.all.Data);
    end Pause_Sound;
 
    procedure Resume_Sound (Sound : RayLib.Sound'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Resume_Sound unimplemented");
-      raise Program_Error with "Unimplemented procedure Resume_Sound";
+      raylib_h.ResumeSound (Sound.Payload.all.Data);
    end Resume_Sound;
 
    procedure Play_Sound_Multi (Sound : RayLib.Sound'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Play_Sound_Multi unimplemented");
-      raise Program_Error with "Unimplemented procedure Play_Sound_Multi";
+      raylib_h.PlaySoundMulti (Sound.Payload.all.Data);
    end Play_Sound_Multi;
 
    procedure Stop_Sound_Multi is
