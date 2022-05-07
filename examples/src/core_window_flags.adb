@@ -17,7 +17,7 @@ begin
    Ball_Speed  := (5.0, 4.0);
    Ball_Radius := 20.0;
 
-   -- Set_Target_FPS (60);
+   --  Set_Target_FPS (60);
 
    while not Window_Should_Close loop
       if Is_Key_Pressed (Key_F) then
@@ -42,7 +42,7 @@ begin
 
       if Is_Key_Pressed (Key_H) then
          if not Is_Window_State (Flag_Window_Hidden) then
-            Set_Window_State (Flag_Window_Undecorated);
+            Set_Window_State (Flag_Window_Hidden);
          end if;
 
          Frame_Counter := 0;
