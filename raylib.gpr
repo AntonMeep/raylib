@@ -25,7 +25,8 @@ project RayLib is
    Source_Files := (
       "raylib.ads",
       "raylib.adb",
-      "raylib_h.ads"
+      "raylib_h.ads",
+      "glue.c"
    );
 
    Raylib_Source_Files := (

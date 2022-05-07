@@ -1,8 +1,14 @@
 pragma Ada_2012;
 
+with Ada.Finalization;
+with Ada.Unchecked_Deallocation;
+
 with Interfaces.C;            use Interfaces.C;
 with Interfaces.C.Strings;    use Interfaces.C.Strings;
 with Interfaces.C.Extensions; use Interfaces.C.Extensions;
+
+with System.Address_Image;
+
 with raylib_h;
 
 package body RayLib is
@@ -12,19 +18,13 @@ package body RayLib is
       return raise Program_Error with "Unimplemented function Data";
    end Data;
 
-   function Width (Self : Image'Class) return Integer is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Width unimplemented");
-      return raise Program_Error with "Unimplemented function Width";
-   end Width;
+   function Width (Self : Image'Class) return Natural is
+     (Natural (Self.Payload.all.Data.width));
 
-   function Height (Self : Image'Class) return Integer is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Height unimplemented");
-      return raise Program_Error with "Unimplemented function Height";
-   end Height;
+   function Height (Self : Image'Class) return Natural is
+     (Natural (Self.Payload.all.Data.height));
 
-   function Mipmaps (Self : Image'Class) return Integer is
+   function Mipmaps (Self : Image'Class) return Natural is
    begin
       pragma Compile_Time_Warning (Standard.True, "Mipmaps unimplemented");
       return raise Program_Error with "Unimplemented function Mipmaps";
@@ -37,24 +37,15 @@ package body RayLib is
    end Format;
 
    function Id (Self : Texture'Class) return OpenGL_Id is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Id unimplemented");
-      return raise Program_Error with "Unimplemented function Id";
-   end Id;
+     (OpenGL_Id (Self.Payload.all.Data.id));
 
-   function Width (Self : Texture'Class) return Integer is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Width unimplemented");
-      return raise Program_Error with "Unimplemented function Width";
-   end Width;
+   function Width (Self : Texture'Class) return Natural is
+     (Natural (Self.Payload.all.Data.width));
 
-   function Height (Self : Texture'Class) return Integer is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Height unimplemented");
-      return raise Program_Error with "Unimplemented function Height";
-   end Height;
+   function Height (Self : Texture'Class) return Natural is
+     (Natural (Self.Payload.all.Data.height));
 
-   function Mipmaps (Self : Texture'Class) return Integer is
+   function Mipmaps (Self : Texture'Class) return Natural is
    begin
       pragma Compile_Time_Warning (Standard.True, "Mipmaps unimplemented");
       return raise Program_Error with "Unimplemented function Mipmaps";
@@ -866,9 +857,15 @@ package body RayLib is
    end Set_Config_Flags;
 
    procedure Trace_Log (Log_Level : Trace_Log_Level; Text : String) is
+      procedure Internal (logLevel : int; text : chars_ptr) with
+         Import,
+         Convention    => C,
+         External_Name => "Ada_Trace_Log";
+
+      Text_Copy : chars_ptr := New_String (Text);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Trace_Log unimplemented");
-      raise Program_Error with "Unimplemented procedure Trace_Log";
+      Internal (int (Log_Level), Text_Copy);
+      Free (Text_Copy);
    end Trace_Log;
 
    procedure Set_Trace_Log_Level (Log_Level : Trace_Log_Level) is
@@ -1715,10 +1712,14 @@ package body RayLib is
       return RayLib.Rectangle is
      (+raylib_h.GetCollisionRec (+Rec1, +Rec2));
 
-   function Load_Image (File_Name : String) return RayLib.Image'Class is
+   function Load_Image (File_Name : String) return RayLib.Image is
+      File_Name_Copy : chars_ptr    := New_String (File_Name);
+      Result         : RayLib.Image :=
+        (Ada.Finalization.Controlled with Payload => new Image_Payload);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Load_Image unimplemented");
-      return raise Program_Error with "Unimplemented function Load_Image";
+      Result.Payload.all.Data := raylib_h.LoadImage (File_Name_Copy);
+      Free (File_Name_Copy);
+      return Result;
    end Load_Image;
 
    function Load_Image_Raw
@@ -2282,7 +2283,7 @@ package body RayLib is
       raise Program_Error with "Unimplemented procedure Image_Draw_Text";
    end Image_Draw_Text;
 
-   function Load_Texture (File_Name : String) return RayLib.Texture2D'Class is
+   function Load_Texture (File_Name : String) return RayLib.Texture2D is
    begin
       pragma Compile_Time_Warning
         (Standard.True, "Load_Texture unimplemented");
@@ -2290,14 +2291,14 @@ package body RayLib is
    end Load_Texture;
 
    function Load_Texture_From_Image
-     (Image : RayLib.Image'Class) return RayLib.Texture2D'Class
+     (Image : RayLib.Image'Class) return RayLib.Texture2D
    is
+      Result : RayLib.Texture :=
+        (Ada.Finalization.Controlled with Payload => new Texture_Payload);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Load_Texture_From_Image unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Load_Texture_From_Image";
+      Result.Payload.all.Data :=
+        raylib_h.LoadTextureFromImage (Image.Payload.all.Data);
+      return Result;
    end Load_Texture_From_Image;
 
    function Load_Texture_Cubemap
@@ -2370,9 +2371,8 @@ package body RayLib is
       Tint    : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Texture unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Texture";
+      raylib_h.DrawTexture
+        (Texture.Payload.all.Data, int (Pos_X), int (Pos_Y), +Tint);
    end Draw_Texture;
 
    procedure Draw_Texture
@@ -3892,28 +3892,54 @@ package body RayLib is
         with "Unimplemented procedure Set_Audio_Stream_Buffer_Size_Default";
    end Set_Audio_Stream_Buffer_Size_Default;
 
+   use System.Atomic_Counters;
+
    overriding procedure Adjust (Self : in out Image) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Image) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Image_Payload, Image_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: reference count reached 0, unloading the image from " &
+               System.Address_Image (Self.Payload.all.Data.data));
+            raylib_h.UnloadImage (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    overriding procedure Adjust (Self : in out Texture) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Texture) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Texture_Payload, Texture_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: reference count reached 0, unloading the texture id " &
+               Self.Payload.all.Data.id'Image);
+            raylib_h.UnloadTexture (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    overriding procedure Adjust (Self : in out Render_Texture) is

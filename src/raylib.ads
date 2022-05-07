@@ -7,6 +7,8 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Interfaces.C;
 with System;
 
+with System.Atomic_Counters;
+
 with raylib_h;
 
 package RayLib is
@@ -1133,13 +1135,13 @@ package RayLib is
    function Data (Self : Image'Class) return Stream_Element_Array;
    --  Image raw data
 
-   function Width (Self : Image'Class) return Integer;
+   function Width (Self : Image'Class) return Natural;
    --  Image base width
 
-   function Height (Self : Image'Class) return Integer;
+   function Height (Self : Image'Class) return Natural;
    --  Image base height
 
-   function Mipmaps (Self : Image'Class) return Integer;
+   function Mipmaps (Self : Image'Class) return Natural;
    --  Mipmap levels, 1 by default
 
    function Format (Self : Image'Class) return Pixel_Format;
@@ -1151,13 +1153,13 @@ package RayLib is
    function Id (Self : Texture'Class) return OpenGL_Id;
    --  OpenGL texture id
 
-   function Width (Self : Texture'Class) return Integer;
+   function Width (Self : Texture'Class) return Natural;
    --  Texture base width
 
-   function Height (Self : Texture'Class) return Integer;
+   function Height (Self : Texture'Class) return Natural;
    --  Texture base height
 
-   function Mipmaps (Self : Texture'Class) return Integer;
+   function Mipmaps (Self : Texture'Class) return Natural;
    --  Mipmap levels, 1 by default
 
    function Format (Self : Texture'Class) return Pixel_Format;
@@ -2374,7 +2376,7 @@ package RayLib is
       return RayLib.Rectangle;
    --  Get collision rectangle for two rectangles collision
 
-   function Load_Image (File_Name : String) return RayLib.Image'Class;
+   function Load_Image (File_Name : String) return RayLib.Image;
    --  Load image from file into CPU memory (RAM)
 
    function Load_Image_Raw
@@ -2638,11 +2640,11 @@ package RayLib is
       Tint     :        RayLib.Color);
    --  Draw text (custom sprite font) within an image (destination)
 
-   function Load_Texture (File_Name : String) return RayLib.Texture2D'Class;
+   function Load_Texture (File_Name : String) return RayLib.Texture2D;
    --  Load texture from file into GPU memory (VRAM)
 
    function Load_Texture_From_Image
-     (Image : RayLib.Image'Class) return RayLib.Texture2D'Class;
+     (Image : RayLib.Image'Class) return RayLib.Texture2D;
    --  Load texture from image data
 
    function Load_Texture_Cubemap
@@ -3423,12 +3425,11 @@ package RayLib is
    procedure Set_Audio_Stream_Buffer_Size_Default (Size : Natural);
    --  Default size for new audio streams
 private
+   use System.Atomic_Counters;
+
    type Image_Payload is record
-      Data    : System.Address;
-      Width   : Integer;
-      Height  : Integer;
-      Mipmaps : Integer;
-      Format  : Pixel_Format;
+      Counter : Atomic_Counter;
+      Data    : raylib_h.Image;
    end record;
    type Image_Payload_Access is access all Image_Payload;
 
@@ -3440,11 +3441,8 @@ private
    overriding procedure Finalize (Self : in out Image);
 
    type Texture_Payload is record
-      Id      : OpenGL_Id;
-      Width   : Integer;
-      Height  : Integer;
-      Mipmaps : Integer;
-      Format  : Pixel_Format;
+      Counter : Atomic_Counter;
+      Data    : raylib_h.Texture;
    end record;
    type Texture_Payload_Access is access all Texture_Payload;
 
