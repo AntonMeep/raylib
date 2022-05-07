@@ -3927,7 +3927,7 @@ package body RayLib is
          if Decrement (Self.Payload.all.Counter) then
             Trace_Log
               (Log_Debug,
-               "ADA: reference count reached 0, unloading the image from " &
+               "ADA: Reference count reached 0, unloading the image from " &
                System.Address_Image (Self.Payload.all.Data.data));
             raylib_h.UnloadImage (Self.Payload.all.Data);
             Free (Self.Payload);
@@ -3951,7 +3951,7 @@ package body RayLib is
          if Decrement (Self.Payload.all.Counter) then
             Trace_Log
               (Log_Debug,
-               "ADA: reference count reached 0, unloading the texture id " &
+               "ADA: Reference count reached 0, unloading the texture id " &
                Self.Payload.all.Data.id'Image);
             raylib_h.UnloadTexture (Self.Payload.all.Data);
             Free (Self.Payload);
@@ -3962,122 +3962,234 @@ package body RayLib is
 
    overriding procedure Adjust (Self : in out Render_Texture) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Render_Texture) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Render_Texture_Payload, Render_Texture_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: Reference count reached 0, unloading the render texture id " &
+               Self.Payload.all.Data.id'Image);
+            raylib_h.UnloadRenderTexture (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    overriding procedure Adjust (Self : in out Font) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Font) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Font_Payload, Font_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: Reference count reached 0, unloading the font");
+            raylib_h.UnloadFont (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    overriding procedure Adjust (Self : in out Shader) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Shader) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Shader_Payload, Shader_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: Reference count reached 0, unloading the shader id " &
+               Self.Payload.all.Data.id'Image);
+            raylib_h.UnloadShader (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    overriding procedure Adjust (Self : in out Material) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Material) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Material_Payload, Material_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: Reference count reached 0, unloading the material");
+            raylib_h.UnloadMaterial (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    overriding procedure Adjust (Self : in out Model) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Model) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Model_Payload, Model_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: Eeference count reached 0, unloading the model");
+            raylib_h.UnloadModel (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    overriding procedure Adjust (Self : in out Model_Animation) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Model_Animation) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Model_Animation_Payload, Model_Animation_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: Reference count reached 0, unloading the model animation");
+            raylib_h.UnloadModelAnimation (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    overriding procedure Adjust (Self : in out Wave) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Wave) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Wave_Payload, Wave_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: Reference count reached 0, unloading the wave");
+            raylib_h.UnloadWave (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    overriding procedure Adjust (Self : in out Audio_Stream) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Audio_Stream) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Audio_Stream_Payload, Audio_Stream_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: Reference count reached 0, unloading the audio stream");
+            raylib_h.UnloadAudioStream (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    overriding procedure Adjust (Self : in out Sound) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Sound) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Sound_Payload, Sound_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: Reference count reached 0, unloading the sound");
+            raylib_h.UnloadSound (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    overriding procedure Adjust (Self : in out Music) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Adjust unimplemented");
-      raise Program_Error with "Unimplemented procedure Adjust";
+      if Self.Payload /= null then
+         Increment (Self.Payload.all.Counter);
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Self : in out Music) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Music_Payload, Music_Payload_Access);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Finalize unimplemented");
-      raise Program_Error with "Unimplemented procedure Finalize";
+      if Self.Payload /= null then
+         if Decrement (Self.Payload.all.Counter) then
+            Trace_Log
+              (Log_Debug,
+               "ADA: Reference count reached 0, unloading the music");
+            raylib_h.UnloadMusicStream (Self.Payload.all.Data);
+            Free (Self.Payload);
+            Self.Payload := null;
+         end if;
+      end if;
    end Finalize;
 
    function "+" (V : RayLib.Vector2) return raylib_h.Vector2 is

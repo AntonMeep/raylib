@@ -3452,9 +3452,8 @@ private
    overriding procedure Finalize (Self : in out Texture);
 
    type Render_Texture_Payload is record
-      Id      : OpenGL_Id;
-      Texture : RayLib.Texture;
-      Depth   : RayLib.Texture;
+      Counter : Atomic_Counter;
+      Data    : raylib_h.RenderTexture;
    end record;
    type Render_Texture_Payload_Access is access all Render_Texture_Payload;
 
@@ -3465,12 +3464,9 @@ private
    overriding procedure Adjust (Self : in out Render_Texture);
    overriding procedure Finalize (Self : in out Render_Texture);
 
-   type Font_Payload (Glyph_Count : Natural) is record
-      Base_Size     : Integer;
-      Glyph_Padding : Integer;
-      Texture       : RayLib.Texture2D;
-      Recs          : Rectangle_Array (1 .. Glyph_Count);
-      Glyphs        : Glyph_Info_Array (1 .. Glyph_Count);
+   type Font_Payload is record
+      Counter : Atomic_Counter;
+      Data    : raylib_h.Font;
    end record;
    type Font_Payload_Access is access all Font_Payload;
 
@@ -3481,20 +3477,9 @@ private
    overriding procedure Adjust (Self : in out Font);
    overriding procedure Finalize (Self : in out Font);
 
-   type Mesh_Payload (Vertex_Count, Triangle_Count : Natural) is record
-      Vertices      : Vector3_Array (1 .. Vertex_Count);
-      Texcoords     : Vector2_Array (1 .. Vertex_Count);
-      Texcoords2    : Vector2_Array (1 .. Vertex_Count);
-      Normals       : Vector3_Array (1 .. Vertex_Count);
-      Tangents      : Vector4_Array (1 .. Vertex_Count);
-      Colors        : Color_Array (1 .. Vertex_Count);
-      Indices       : Integer_Array (1 .. Vertex_Count);
-      Anim_Vertices : Vector3_Array (1 .. Vertex_Count);
-      Anim_Normals  : Vector3_Array (1 .. Vertex_Count);
-      Bone_Ids      : Stream_Element_Array (1 .. 255);
-      Bone_Weights  : Float_Array (1 .. Vertex_Count); -- * 4
-      VAO_Id        : OpenGL_Id;
-      VBO_Id        : OpenGL_Id_Array (1 .. Max_Mesh_Vertex_Buffers);
+   type Mesh_Payload is record
+      Counter : Atomic_Counter;
+      Data    : raylib_h.Mesh;
    end record;
    type Mesh_Payload_Access is access all Mesh_Payload;
 
@@ -3503,8 +3488,8 @@ private
    end record;
 
    type Shader_Payload is record
-      Id        : OpenGL_Id;
-      Locations : Integer_Array (1 .. Rl_Max_Shader_Locations);
+      Counter : Atomic_Counter;
+      Data    : raylib_h.Shader;
    end record;
    type Shader_Payload_Access is access all Shader_Payload;
 
@@ -3516,9 +3501,8 @@ private
    overriding procedure Finalize (Self : in out Shader);
 
    type Material_Payload is record
-      Shader : RayLib.Shader;
-      Maps   : Material_Map_Array (1 .. Max_Material_Maps);
-      Params : Float_Array (1 .. 4);
+      Counter : Atomic_Counter;
+      Data    : raylib_h.Material;
    end record;
    type Material_Payload_Access is access all Material_Payload;
 
@@ -3529,14 +3513,9 @@ private
    overriding procedure Adjust (Self : in out Material);
    overriding procedure Finalize (Self : in out Material);
 
-   type Model_Payload (Mesh_Count, Material_Count, Bone_Count : Natural)
-   is record
-      Transform     : RayLib.Matrix;
-      Meshes        : Mesh_Array (1 .. Mesh_Count);
-      Materials     : Material_Array (1 .. Material_Count);
-      Mesh_Material : Integer_Array (1 .. Mesh_Count);
-      Bones         : Bone_Info_Array (1 .. Bone_Count);
-      Bind_Pose     : Transform_Array (1 .. Bone_Count);
+   type Model_Payload is record
+      Counter : Atomic_Counter;
+      Data    : raylib_h.Model;
    end record;
    type Model_Payload_Access is access all Model_Payload;
 
@@ -3547,9 +3526,9 @@ private
    overriding procedure Adjust (Self : in out Model);
    overriding procedure Finalize (Self : in out Model);
 
-   type Model_Animation_Payload (Bone_Count, Frame_Count : Natural) is record
-      Bones       : Bone_Info_Array (1 .. Bone_Count);
-      Frame_Poses : Transform_Array (1 .. Frame_Count);
+   type Model_Animation_Payload is record
+      Counter : Atomic_Counter;
+      Data    : raylib_h.ModelAnimation;
    end record;
    type Model_Animation_Payload_Access is access all Model_Animation_Payload;
 
@@ -3561,11 +3540,8 @@ private
    overriding procedure Finalize (Self : in out Model_Animation);
 
    type Wave_Payload is record
-      Frame_Count : Natural;
-      Sample_Rate : Natural;
-      Sample_Size : Natural;
-      Channels    : Natural;
-      Data        : System.Address;
+      Counter : Atomic_Counter;
+      Data    : raylib_h.Wave;
    end record;
    type Wave_Payload_Access is access all Wave_Payload;
 
@@ -3577,11 +3553,8 @@ private
    overriding procedure Finalize (Self : in out Wave);
 
    type Audio_Stream_Payload is record
-      Buffer      : System.Address;
-      Processor   : System.Address;
-      Sample_Rate : Natural;
-      Sample_Size : Natural;
-      Channels    : Natural;
+      Counter : Atomic_Counter;
+      Data    : raylib_h.AudioStream;
    end record;
    type Audio_Stream_Payload_Access is access all Audio_Stream_Payload;
 
@@ -3593,8 +3566,8 @@ private
    overriding procedure Finalize (Self : in out Audio_Stream);
 
    type Sound_Payload is record
-      Stream      : RayLib.Audio_Stream;
-      Frame_Count : Natural;
+      Counter : Atomic_Counter;
+      Data    : raylib_h.Sound;
    end record;
    type Sound_Payload_Access is access all Sound_Payload;
 
@@ -3606,11 +3579,8 @@ private
    overriding procedure Finalize (Self : in out Sound);
 
    type Music_Payload is record
-      Stream      : RayLib.Audio_Stream;
-      Frame_Count : Natural;
-      Looping     : Boolean;
-      Ctx_Type    : Integer;
-      Ctx_Data    : System.Address;
+      Counter : Atomic_Counter;
+      Data    : raylib_h.Music;
    end record;
    type Music_Payload_Access is access all Music_Payload;
 
