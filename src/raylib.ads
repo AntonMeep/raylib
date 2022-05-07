@@ -1409,6 +1409,8 @@ package RayLib is
    function Bind_Pose (Self : Model'Class) return Natural;
    --  Bones base transformation (pose)
 
+   type Model_Array is array (Natural range <>) of Model;
+
    type Model_Animation is tagged private;
    --  ModelAnimation
 

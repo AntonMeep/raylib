@@ -3030,9 +3030,13 @@ package body RayLib is
    end Draw_Grid;
 
    function Load_Model (File_Name : String) return RayLib.Model is
+      File_Name_Copy : chars_ptr    := New_String (File_Name);
+      Result         : RayLib.Model :=
+        (Ada.Finalization.Controlled with Payload => new Model_Payload);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Load_Model unimplemented");
-      return raise Program_Error with "Unimplemented function Load_Model";
+      Result.Payload.all.Data := raylib_h.LoadModel (File_Name_Copy);
+      Free (File_Name_Copy);
+      return Result;
    end Load_Model;
 
    function Load_Model_From_Mesh (Mesh : RayLib.Mesh'Class) return RayLib.Model
@@ -3857,7 +3861,7 @@ package body RayLib is
             if not Self.Payload.all.Parent_Unloads then
                Trace_Log
                  (Log_Debug,
-                  "ADA: Eeference count reached 0, unloading the model");
+                  "ADA: Reference count reached 0, unloading the model");
                raylib_h.UnloadModel (Self.Payload.all.Data);
             end if;
             Free (Self.Payload);
@@ -4022,10 +4026,10 @@ package body RayLib is
    function "+" (V : raylib_h.Rectangle) return RayLib.Rectangle is
      (X => V.x, Y => V.y, Width => V.width, Height => V.height);
    function "+" (V : RayLib.Camera3D) return raylib_h.Camera3D is
-     (position => +V.Position, target => +V.Position, up => +V.Up,
+     (position => +V.Position, target => +V.Target, up => +V.Up,
       fovy     => V.Fov_Y, projection => int (V.Projection));
    function "+" (V : raylib_h.Camera3D) return RayLib.Camera3D is
-     (Position => +V.position, Target => +V.position, Up => +V.up,
+     (Position => +V.position, Target => +V.target, Up => +V.up,
       Fov_Y    => V.fovy, Projection => Camera_Projection (V.projection));
    function "+" (V : RayLib.Camera2D) return raylib_h.Camera2D is
      (offset => +V.Offset, target => +V.Target, rotation => V.Rotation,

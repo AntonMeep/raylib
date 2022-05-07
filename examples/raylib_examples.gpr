@@ -9,7 +9,8 @@ project RayLib_Examples is
       "core_basic_window.adb",
       "core_basic_screen_manager.adb",
       "core_window_flags.adb",
-      "textures_image_loading.adb"
+      "textures_image_loading.adb",
+      "models_loading_gltf.adb"
    );
 
    type Enabled_Kind is ("enabled", "disabled");
