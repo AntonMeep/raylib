@@ -1592,9 +1592,7 @@ package body RayLib is
       Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Triangle unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Triangle";
+      raylib_h.DrawTriangle (+V1, +V2, +V3, +Color);
    end Draw_Triangle;
 
    procedure Draw_Triangle_Lines
@@ -1602,27 +1600,35 @@ package body RayLib is
       Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Triangle_Lines unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Triangle_Lines";
+      raylib_h.DrawTriangleLines (+V1, +V2, +V3, +Color);
    end Draw_Triangle_Lines;
 
    procedure Draw_Triangle_Fan
      (Points : RayLib.Vector2_Array; Color : RayLib.Color)
    is
+      type Vec2_Array is array (Natural range <>) of aliased raylib_h.Vector2;
+      Points_Copy : aliased Vec2_Array (Points'First .. Points'Last);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Triangle_Fan unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Triangle_Fan";
+      for I in Points'Range loop
+         Points_Copy (I) := +Points (I);
+      end loop;
+      raylib_h.DrawTriangleFan
+        (Points_Copy (Points_Copy'First)'Access, int (Points_Copy'Length),
+         +Color);
    end Draw_Triangle_Fan;
 
    procedure Draw_Triangle_Strip
      (Points : RayLib.Vector2_Array; Color : RayLib.Color)
    is
+      type Vec2_Array is array (Natural range <>) of aliased raylib_h.Vector2;
+      Points_Copy : aliased Vec2_Array (Points'First .. Points'Last);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Triangle_Strip unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Triangle_Strip";
+      for I in Points'Range loop
+         Points_Copy (I) := +Points (I);
+      end loop;
+      raylib_h.DrawTriangleStrip
+        (Points_Copy (Points_Copy'First)'Access, int (Points_Copy'Length),
+         +Color);
    end Draw_Triangle_Strip;
 
    procedure Draw_Poly
@@ -1630,8 +1636,7 @@ package body RayLib is
       Rotation : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Draw_Poly unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Poly";
+      raylib_h.DrawPoly (+Center, int (Sides), Radius, Rotation, +Color);
    end Draw_Poly;
 
    procedure Draw_Poly_Lines
@@ -1639,9 +1644,7 @@ package body RayLib is
       Rotation : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Poly_Lines unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Poly_Lines";
+      raylib_h.DrawPolyLines (+Center, int (Sides), Radius, Rotation, +Color);
    end Draw_Poly_Lines;
 
    procedure Draw_Poly_Lines
@@ -1649,114 +1652,68 @@ package body RayLib is
       Rotation : Float; Line_Thick : Float; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Draw_Poly_Lines unimplemented");
-      raise Program_Error with "Unimplemented procedure Draw_Poly_Lines";
+      raylib_h.DrawPolyLinesEx
+        (+Center, int (Sides), Radius, Rotation, Line_Thick, +Color);
    end Draw_Poly_Lines;
 
    function Check_Collision_Recs
-     (Rec1 : RayLib.Rectangle; Rec2 : RayLib.Rectangle) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Check_Collision_Recs unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Check_Collision_Recs";
-   end Check_Collision_Recs;
+     (Rec1 : RayLib.Rectangle; Rec2 : RayLib.Rectangle) return Boolean is
+     (Boolean (raylib_h.CheckCollisionRecs (+Rec1, +Rec2)));
 
    function Check_Collision_Circles
      (Center1 : RayLib.Vector2; Radius1 : Float; Center2 : RayLib.Vector2;
-      Radius2 : Float) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Check_Collision_Circles unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Check_Collision_Circles";
-   end Check_Collision_Circles;
+      Radius2 : Float) return Boolean is
+     (Boolean
+        (raylib_h.CheckCollisionCircles
+           (+Center1, Radius1, +Center2, Radius2)));
 
    function Check_Collision_Circle_Rec
      (Center : RayLib.Vector2; Radius : Float; Rec : RayLib.Rectangle)
-      return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Check_Collision_Circle_Rec unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Check_Collision_Circle_Rec";
-   end Check_Collision_Circle_Rec;
+      return Boolean is
+     (Boolean (raylib_h.CheckCollisionCircleRec (+Center, Radius, +Rec)));
 
    function Check_Collision_Point_Rec
-     (Point : RayLib.Vector2; Rec : RayLib.Rectangle) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Check_Collision_Point_Rec unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Check_Collision_Point_Rec";
-   end Check_Collision_Point_Rec;
+     (Point : RayLib.Vector2; Rec : RayLib.Rectangle) return Boolean is
+     (Boolean (raylib_h.CheckCollisionPointRec (+Point, +Rec)));
 
    function Check_Collision_Point_Circle
      (Point : RayLib.Vector2; Center : RayLib.Vector2; Radius : Float)
-      return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Check_Collision_Point_Circle unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Check_Collision_Point_Circle";
-   end Check_Collision_Point_Circle;
+      return Boolean is
+     (Boolean (raylib_h.CheckCollisionPointCircle (+Point, +Center, Radius)));
 
    function Check_Collision_Point_Triangle
      (Point : RayLib.Vector2; P1 : RayLib.Vector2; P2 : RayLib.Vector2;
-      P3    : RayLib.Vector2) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Check_Collision_Point_Triangle unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Check_Collision_Point_Triangle";
-   end Check_Collision_Point_Triangle;
+      P3    : RayLib.Vector2) return Boolean is
+     (Boolean (raylib_h.CheckCollisionPointTriangle (+Point, +P1, +P2, +P3)));
 
    function Check_Collision_Lines
      (Start_Pos1      :     RayLib.Vector2; End_Pos1 : RayLib.Vector2;
       Start_Pos2      :     RayLib.Vector2; End_Pos2 : RayLib.Vector2;
       Collision_Point : out RayLib.Vector2) return Boolean
    is
+      Collision_Point_Copy : aliased raylib_h.Vector2;
+      Result               : Boolean;
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Check_Collision_Lines unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Check_Collision_Lines";
+      Result :=
+        Boolean
+          (raylib_h.CheckCollisionLines
+             (+Start_Pos1, +End_Pos1, +Start_Pos2, +End_Pos2,
+              Collision_Point_Copy'Access));
+      Collision_Point := +Collision_Point_Copy;
+      return Result;
    end Check_Collision_Lines;
 
    function Check_Collision_Point_Line
      (Point     : RayLib.Vector2; P1 : RayLib.Vector2; P2 : RayLib.Vector2;
-      Threshold : Natural) return Boolean
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Check_Collision_Point_Line unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Check_Collision_Point_Line";
-   end Check_Collision_Point_Line;
+      Threshold : Natural) return Boolean is
+     (Boolean
+        (raylib_h.CheckCollisionPointLine
+           (+Point, +P1, +P2, int (Threshold))));
 
    function Get_Collision_Rec
-     (Rec1 : RayLib.Rectangle; Rec2 : RayLib.Rectangle) return RayLib.Rectangle
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Collision_Rec unimplemented");
-      return
-        raise Program_Error with "Unimplemented function Get_Collision_Rec";
-   end Get_Collision_Rec;
+     (Rec1 : RayLib.Rectangle; Rec2 : RayLib.Rectangle)
+      return RayLib.Rectangle is
+     (+raylib_h.GetCollisionRec (+Rec1, +Rec2));
 
    function Load_Image (File_Name : String) return RayLib.Image'Class is
    begin
