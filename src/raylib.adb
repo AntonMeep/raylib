@@ -1941,35 +1941,28 @@ package body RayLib is
      (Image : in out RayLib.Image'Class; New_Format : Pixel_Format)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Format unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Format";
+      raylib_h.ImageFormat (Image.Payload.all.Data'Access, int (New_Format));
    end Image_Format;
 
    procedure Image_To_POT
      (Image : in out RayLib.Image'Class; Fill : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_To_POT unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_To_POT";
+      raylib_h.ImageToPOT (Image.Payload.all.Data'Access, +Fill);
    end Image_To_POT;
 
    procedure Image_Crop
      (Image : in out RayLib.Image'Class; Crop : RayLib.Rectangle)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Image_Crop unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Crop";
+      raylib_h.ImageCrop (Image.Payload.all.Data'Access, +Crop);
    end Image_Crop;
 
    procedure Image_Alpha_Crop
      (Image : in out RayLib.Image'Class; Threshold : Float)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Alpha_Crop unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Alpha_Crop";
+      raylib_h.ImageAlphaCrop (Image.Payload.all.Data'Access, Threshold);
    end Image_Alpha_Crop;
 
    procedure Image_Alpha_Clear
@@ -1977,26 +1970,21 @@ package body RayLib is
       Threshold :        Float)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Alpha_Clear unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Alpha_Clear";
+      raylib_h.ImageAlphaClear
+        (Image.Payload.all.Data'Access, +Color, Threshold);
    end Image_Alpha_Clear;
 
    procedure Image_Alpha_Mask
      (Image : in out RayLib.Image'Class; Alpha_Mask : RayLib.Image'Class)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Alpha_Mask unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Alpha_Mask";
+      raylib_h.ImageAlphaMask
+        (Image.Payload.all.Data'Access, Alpha_Mask.Payload.all.Data);
    end Image_Alpha_Mask;
 
    procedure Image_Alpha_Premultiply (Image : in out RayLib.Image'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Alpha_Premultiply unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Image_Alpha_Premultiply";
+      raylib_h.ImageAlphaPremultiply (Image.Payload.all.Data'Access);
    end Image_Alpha_Premultiply;
 
    procedure Image_Resize
@@ -2004,9 +1992,8 @@ package body RayLib is
       New_Height :        Natural)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Resize unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Resize";
+      raylib_h.ImageResize
+        (Image.Payload.all.Data'Access, int (New_Width), int (New_Height));
    end Image_Resize;
 
    procedure Image_Resize_NN
@@ -2014,9 +2001,8 @@ package body RayLib is
       New_Height :        Natural)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Resize_NN unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Resize_NN";
+      raylib_h.ImageResizeNN
+        (Image.Payload.all.Data'Access, int (New_Width), int (New_Height));
    end Image_Resize_NN;
 
    procedure Image_Resize_Canvas
@@ -2025,16 +2011,14 @@ package body RayLib is
       Fill       :        RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Resize_Canvas unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Resize_Canvas";
+      raylib_h.ImageResizeCanvas
+        (Image.Payload.all.Data'Access, int (New_Width), int (New_Height),
+         int (Offset_X), int (Offset_Y), +Fill);
    end Image_Resize_Canvas;
 
    procedure Image_Mipmaps (Image : in out RayLib.Image'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Mipmaps unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Mipmaps";
+      raylib_h.ImageMipmaps (Image.Payload.all.Data'Access);
    end Image_Mipmaps;
 
    procedure Image_Dither
@@ -2042,79 +2026,61 @@ package body RayLib is
       B_Bpp :        Natural; A_Bpp : Natural)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Dither unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Dither";
+      raylib_h.ImageDither
+        (Image.Payload.all.Data'Access, int (R_Bpp), int (G_Bpp), int (B_Bpp),
+         int (A_Bpp));
    end Image_Dither;
 
    procedure Image_Flip_Vertical (Image : in out RayLib.Image'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Flip_Vertical unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Flip_Vertical";
+      raylib_h.ImageFlipVertical (Image.Payload.all.Data'Access);
    end Image_Flip_Vertical;
 
    procedure Image_Flip_Horizontal (Image : in out RayLib.Image'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Flip_Horizontal unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Flip_Horizontal";
+      raylib_h.ImageFlipHorizontal (Image.Payload.all.Data'Access);
    end Image_Flip_Horizontal;
 
    procedure Image_Rotate_CW (Image : in out RayLib.Image'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Rotate_CW unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Rotate_CW";
+      raylib_h.ImageRotateCW (Image.Payload.all.Data'Access);
    end Image_Rotate_CW;
 
    procedure Image_Rotate_CCW (Image : in out RayLib.Image'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Rotate_CCW unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Rotate_CCW";
+      raylib_h.ImageRotateCCW (Image.Payload.all.Data'Access);
    end Image_Rotate_CCW;
 
    procedure Image_Color_Tint
      (Image : in out RayLib.Image'Class; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Color_Tint unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Color_Tint";
+      raylib_h.ImageColorTint (Image.Payload.all.Data'Access, +Color);
    end Image_Color_Tint;
 
    procedure Image_Color_Invert (Image : in out RayLib.Image'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Color_Invert unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Color_Invert";
+      raylib_h.ImageColorInvert (Image.Payload.all.Data'Access);
    end Image_Color_Invert;
 
    procedure Image_Color_Grayscale (Image : in out RayLib.Image'Class) is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Color_Grayscale unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Color_Grayscale";
+      raylib_h.ImageColorGrayscale (Image.Payload.all.Data'Access);
    end Image_Color_Grayscale;
 
    procedure Image_Color_Contrast
      (Image : in out RayLib.Image'Class; Contrast : Float)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Color_Contrast unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Color_Contrast";
+      raylib_h.ImageColorContrast (Image.Payload.all.Data'Access, Contrast);
    end Image_Color_Contrast;
 
    procedure Image_Color_Brightness
      (Image : in out RayLib.Image'Class; Brightness : Integer)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Color_Brightness unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Image_Color_Brightness";
+      raylib_h.ImageColorBrightness
+        (Image.Payload.all.Data'Access, int (Brightness));
    end Image_Color_Brightness;
 
    procedure Image_Color_Replace
@@ -2122,9 +2088,8 @@ package body RayLib is
       Replace :        RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Color_Replace unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Color_Replace";
+      raylib_h.ImageColorReplace
+        (Image.Payload.all.Data'Access, +Color, +Replace);
    end Image_Color_Replace;
 
    function Load_Image_Colors
@@ -2149,33 +2114,19 @@ package body RayLib is
    end Load_Image_Palette;
 
    function Get_Image_Alpha_Border
-     (Image : RayLib.Image'Class; Threshold : Float) return RayLib.Rectangle
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Image_Alpha_Border unimplemented");
-      return
-        raise Program_Error
-          with "Unimplemented function Get_Image_Alpha_Border";
-   end Get_Image_Alpha_Border;
+     (Image : RayLib.Image'Class; Threshold : Float) return RayLib.Rectangle is
+     (+raylib_h.GetImageAlphaBorder (Image.Payload.all.Data, Threshold));
 
    function Get_Image_Color
-     (Image : RayLib.Image'Class; X : Natural; Y : Natural) return RayLib.Color
-   is
-   begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Get_Image_Color unimplemented");
-      return raise Program_Error with "Unimplemented function Get_Image_Color";
-   end Get_Image_Color;
+     (Image : RayLib.Image'Class; X : Natural; Y : Natural)
+      return RayLib.Color is
+     (+raylib_h.GetImageColor (Image.Payload.all.Data, int (X), int (Y)));
 
    procedure Image_Clear_Background
      (Dst : in out RayLib.Image'Class; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Clear_Background unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Image_Clear_Background";
+      raylib_h.ImageClearBackground (Dst.Payload.all.Data'Access, +Color);
    end Image_Clear_Background;
 
    procedure Image_Draw_Pixel
@@ -2183,9 +2134,8 @@ package body RayLib is
       Color :        RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Pixel unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw_Pixel";
+      raylib_h.ImageDrawPixel
+        (Dst.Payload.all.Data'Access, int (Pos_X), int (Pos_Y), +Color);
    end Image_Draw_Pixel;
 
    procedure Image_Draw_Pixel
@@ -2193,9 +2143,8 @@ package body RayLib is
       Color :        RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Pixel unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw_Pixel";
+      raylib_h.ImageDrawPixelV
+        (Dst.Payload.all.Data'Access, +Position, +Color);
    end Image_Draw_Pixel;
 
    procedure Image_Draw_Line
@@ -2204,9 +2153,9 @@ package body RayLib is
       Color       :        RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Line unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw_Line";
+      raylib_h.ImageDrawLine
+        (Dst.Payload.all.Data'Access, int (Start_Pos_X), int (Start_Pos_Y),
+         int (End_Pos_X), int (End_Pos_Y), +Color);
    end Image_Draw_Line;
 
    procedure Image_Draw_Line
@@ -2214,9 +2163,8 @@ package body RayLib is
       Finish :        RayLib.Vector2; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Line unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw_Line";
+      raylib_h.ImageDrawLineV
+        (Dst.Payload.all.Data'Access, +Start, +Finish, +Color);
    end Image_Draw_Line;
 
    procedure Image_Draw_Circle
@@ -2224,9 +2172,9 @@ package body RayLib is
       Radius :        Natural; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Circle unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw_Circle";
+      raylib_h.ImageDrawCircle
+        (Dst.Payload.all.Data'Access, int (Center_X), int (Center_Y),
+         int (Radius), +Color);
    end Image_Draw_Circle;
 
    procedure Image_Draw_Circle
@@ -2234,9 +2182,8 @@ package body RayLib is
       Radius :        Integer; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Circle unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw_Circle";
+      raylib_h.ImageDrawCircleV
+        (Dst.Payload.all.Data'Access, +Center, int (Radius), +Color);
    end Image_Draw_Circle;
 
    procedure Image_Draw_Rectangle
@@ -2244,9 +2191,9 @@ package body RayLib is
       Width :        Natural; Height : Natural; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Rectangle unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw_Rectangle";
+      raylib_h.ImageDrawRectangle
+        (Dst.Payload.all.Data'Access, int (Pos_X), int (Pos_Y), int (Width),
+         int (Height), +Color);
    end Image_Draw_Rectangle;
 
    procedure Image_Draw_Rectangle
@@ -2254,9 +2201,8 @@ package body RayLib is
       Size :        RayLib.Vector2; Color : RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Rectangle unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw_Rectangle";
+      raylib_h.ImageDrawRectangleV
+        (Dst.Payload.all.Data'Access, +Position, +Size, +Color);
    end Image_Draw_Rectangle;
 
    procedure Image_Draw_Rectangle
@@ -2264,9 +2210,8 @@ package body RayLib is
       Color :        RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Rectangle unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw_Rectangle";
+      raylib_h.ImageDrawRectangleRec
+        (Dst.Payload.all.Data'Access, +Rec, +Color);
    end Image_Draw_Rectangle;
 
    procedure Image_Draw_Rectangle_Lines
@@ -2274,10 +2219,8 @@ package body RayLib is
       Color :        RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Rectangle_Lines unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Image_Draw_Rectangle_Lines";
+      raylib_h.ImageDrawRectangleLines
+        (Dst.Payload.all.Data'Access, +Rec, int (Thick), +Color);
    end Image_Draw_Rectangle_Lines;
 
    procedure Image_Draw
@@ -2286,18 +2229,21 @@ package body RayLib is
       Tint    :        RayLib.Color)
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Image_Draw unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw";
+      raylib_h.ImageDraw
+        (Dst.Payload.all.Data'Access, Src.Payload.all.Data, +Src_Rec, +Dst_Rec,
+         +Tint);
    end Image_Draw;
 
    procedure Image_Draw_Text
      (Dst   : in out RayLib.Image'Class; Text : String; Pos_X : Integer;
       Pos_Y :        Integer; Font_Size : Natural; Color : RayLib.Color)
    is
+      Text_Copy : chars_ptr := New_String (Text);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Text unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw_Text";
+      raylib_h.ImageDrawText
+        (Dst.Payload.all.Data'Access, Text_Copy, int (Pos_X), int (Pos_Y),
+         int (Font_Size), +Color);
+      Free (Text_Copy);
    end Image_Draw_Text;
 
    procedure Image_Draw_Text
@@ -2305,10 +2251,12 @@ package body RayLib is
       Position :        RayLib.Vector2; Font_Size : Float; Spacing : Float;
       Tint     :        RayLib.Color)
    is
+      Text_Copy : chars_ptr := New_String (Text);
    begin
-      pragma Compile_Time_Warning
-        (Standard.True, "Image_Draw_Text unimplemented");
-      raise Program_Error with "Unimplemented procedure Image_Draw_Text";
+      raylib_h.ImageDrawTextEx
+        (Dst.Payload.all.Data'Access, Font.Payload.all.Data, Text_Copy,
+         +Position, Font_Size, Spacing, +Tint);
+      Free (Text_Copy);
    end Image_Draw_Text;
 
    function Load_Texture (File_Name : String) return RayLib.Texture2D is
