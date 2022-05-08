@@ -27,19 +27,3 @@ compiler more information to help you and prevents trivial errors
 are used
 
 Otherwise, it is the same awesome raylib underneath.
-
-# RayGen
-
-Starting with raylib 4.0.0, which this crate builds upon, raylib started to ship
-with [raylib-parser](https://github.com/raysan5/raylib/tree/master/parser) - a
-tool to parse `raylib.h` header to speed up development of bindings. While still
-work-in-progress, I am using it to generate this wrapper. Check out `raygen`
-directory for implementation.
-
-Unfortunately, parser is quite unfinished at the time of writing, so quite a bit
-of wrapper's code has to be written manually. What's more, there are certain
-limitations of it associated with C programming language, that will make
-it impossible to generate meaningful Ada wrappers even in the future. For example,
-a pointer in C can correspond to Ada's access type, an array type, an `[in] out`
-parameter, or even all of the abovementioned. Because of this, to correctly
-translate such constructs, it is important to look into raylib's implementation. 
